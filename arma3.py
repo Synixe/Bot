@@ -108,19 +108,16 @@ class Commands():
 
     async def post(self, data, client, message):
         channel = self.getEventChannel(message.channel.guild)
-        if(message.author.id == "307524009854107648"):
-            id = await client.send_message(channel, "Loading Data")
-            data = {}
-            f = open(data[0])
-            data = json.loads(f.read())
-            f.close()
-            data['id'] = id.id
-            f = open(data[0],'w')
-            f.write(json.dumps(data, indent=4, sort_keys=True))
-            f.close()
-            await self.displayEvent(message.channel.guild, data[0], id)
-        else:
-            await client.send_message(channel, "Sorry "+message.author.name+", I can't let you do that.")
+        id = await channel.send("Loading Data")
+        info = {}
+        f = open(data[0])
+        info = json.loads(f.read())
+        f.close()
+        info['id'] = id.id
+        f = open(data[0],'w')
+        f.write(json.dumps(info, indent=4, sort_keys=True))
+        f.close()
+        await self.displayEvent(message.channel.guild, data[0], id)
 
     async def refresh(self, data, client, message):
         channel = self.getEventChannel(message.channel.guild)
