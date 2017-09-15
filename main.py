@@ -10,7 +10,6 @@ import managers
 import youtube
 import arma3
 import helper
-import aar
 import update
 
 class SynixeBot(discord.Client):
@@ -27,7 +26,6 @@ class SynixeBot(discord.Client):
         self.commands.update(youtube.Commands().register(self))
         self.commands.update(arma3.Commands().register(self))
         self.commands.update(helper.Commands().register(self))
-        self.commands.update(aar.Commands().register(self))
         self.commands.update(update.Commands().register(self))
 
     async def on_message(self, message):
@@ -69,6 +67,17 @@ class SynixeBot(discord.Client):
             if r.name.lower() in roles:
                 return True
         return False
+
+    def getChannel(self, guild, channel):
+        for c in guild.channels:
+            if c.name.lower() == channel:
+                return c
+        return None
+    def getGuild(self, guild):
+        for g in client.guilds:
+            if guild.lower() in g.name.lower():
+                return g
+        return None
 
 client = SynixeBot()
 client.run(tokens.getToken("discord"))

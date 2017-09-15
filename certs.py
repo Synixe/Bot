@@ -2,8 +2,8 @@ import discord
 import json
 import asyncio
 
-CERT_FILE = "certifications"
-COURSE_FILE = "courses"
+CERT_FILE = "./data/certifications.json"
+COURSE_FILE = "./data/courses.json"
 
 class Commands():
     def register(self, _):

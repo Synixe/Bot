@@ -5,6 +5,8 @@ import asyncio
 
 import tokens
 
+YOUTUBE_FILE = "./data/youtube.txt"
+
 class Commands():
     def register(self, client):
         self.new_video_loop = client.loop.create_task(self.new_video_loop_task(client))
@@ -15,11 +17,11 @@ class Commands():
         while not client.is_closed():
             print("Youtube Loop Started")
             video = get_most_recent("UCiBR5odYpO1_hcOyvzvuWhg")
-            f = open("youtube")
+            f = open(YOUTUBE_FILE)
             youtube = f.read().strip()
             f.close()
             if youtube != video["id"]["videoId"]:
-                f = open("youtube","w")
+                f = open(YOUTUBE_FILE,"w")
                 f.write(video["id"]["videoId"])
                 f.close()
                 print("Posting New Video")

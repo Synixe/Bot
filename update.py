@@ -1,11 +1,31 @@
 import urllib.request
 import json
 import discord
+import asyncio
+import re
 
 GITHUB = {
-    "acemod" : ["ACE3"],
-    "CBATeam" : ["CBA_A3"]
+    "acemod": ["ACE3"],
+    "CBATeam": ["CBA_A3"],
+    "Synixe": ["TFAR-ACE"]
 }
+
+ARMAHOLIC = {
+    "30461": "3den Enhanced",
+    "30367": "Advanced Sling Loading",
+    "30575": "Advanced Towing",
+    "23899": "Blastcore: Phoenix 2",
+    "32595": "Zeus FPS Monitor",
+    "27224": "Enhanced Movement",
+    "26780": "Enhanced Soundscape",
+    "27996": "Gorgona",
+    "29327": "ShackTac User Interface",
+    "25381": "Vcom AI"
+}
+
+REGEX = r"Version\:<\/font> (.+?)<br>"
+
+MOD_FILE = "./data/mods.json"
 
 class Commands():
     def register(self, client):
@@ -16,15 +36,28 @@ class Commands():
         await client.wait_until_ready()
         while not client.is_closed():
             print("Mod Loop Started")
-            with open("./data/mods.json") as f:
-                current = json.loads(f.read().decode("UTF-8"))
+            with open(MOD_FILE) as f:
+                current = json.loads(f.read())
+            update = False
             for author in GITHUB:
                 for repo in GITHUB[author]:
                     version = latest(author,repo)
-                    print(version)
-                    if version != current[author+"/"+repo]:
-                        print("Update to:",repo,version)
-            await asyncio.sleep(60 * 30) #Check every 30 minutes
+                    if version.strip() != current[author+"/"+repo].strip():
+                        update = True
+                        current[author+"/"+repo] = version.strip()
+                        await client.getChannel(client.getGuild("Synixe"),"bot").send("Update to: "+repo+" "+version)
+            for mod in ARMAHOLIC:
+                f = urllib.request.urlopen("http://armaholic.com/page.php?id="+str(mod))
+                html = f.read().decode("UTF-8")
+                version = re.search(REGEX, html).group(1)
+                if version.strip() != current[ARMAHOLIC[mod]].strip():
+                    update = True
+                    current[ARMAHOLIC[mod]] = version.strip()
+                    await client.getChannel(client.getGuild("Synixe"),"bot").send("Update to: "+ARMAHOLIC[mod]+" "+version+"\nhttp://armaholic.com/page.php?id="+str(mod))
+            if update:
+                with open(MOD_FILE,"w") as f:
+                    f.write(json.dumps(current, indent=4, sort_keys=True))
+            await asyncio.sleep(60 * 60)
 
 def latest(owner, repo):
     f = urllib.request.urlopen("https://api.github.com/repos/"+owner+"/"+repo+"/releases")
