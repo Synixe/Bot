@@ -12,8 +12,8 @@ class Commands():
 
     async def new_video_loop_task(self, client):
         await client.wait_until_ready()
-        print("Youtube Loop Started")
         while not client.is_closed():
+            print("Youtube Loop Started")
             video = get_most_recent("UCiBR5odYpO1_hcOyvzvuWhg")
             f = open("youtube")
             youtube = f.read().strip()
