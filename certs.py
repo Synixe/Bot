@@ -100,7 +100,7 @@ class Commands():
                 if cert not in certs[str(message.author.id)]:
                     available.append(cert)
         else:
-            available = certs
+            available = getCourses()
         if len(available) != 0:
             await message.channel.send(
                 "Available Courses: " + (
