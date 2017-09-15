@@ -95,9 +95,12 @@ class Commands():
                 "You do not have any certifications"
             )
         available = []
-        for cert in certs:
-            if cert not in certs[str(message.author.id)]:
-                available.append(cert)
+        if str(message.author.id) in certs:
+            for cert in certs:
+                if cert not in certs[str(message.author.id)]:
+                    available.append(cert)
+        else:
+            available = certs
         if len(available) != 0:
             await message.channel.send(
                 "Available Courses: " + (
