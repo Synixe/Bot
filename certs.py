@@ -81,6 +81,7 @@ class Commands():
             saveCerts(certs)
         else:
             await user.send("Sorry, you'll need to take this course again.")
+
     async def cert(self, data, client, message):
         certs = getCerts()
         if str(message.author.id) in certs:
@@ -92,6 +93,16 @@ class Commands():
         else:
             await message.channel.send(
                 "You do not have any certifications"
+            )
+        available = []
+        for cert in certs:
+            if cert not in certs[str(message.author.id)]:
+                available.append(cert)
+        if len(available) != 0:
+            await message.channel.send(
+                "Available Courses: " + (
+                    ", ".join(available)
+                )
             )
 
     async def givecert(self, data, client, message):
