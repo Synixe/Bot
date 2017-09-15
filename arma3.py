@@ -48,7 +48,7 @@ class Commands():
             if log.content.startswith("|EVENT"):
                 lines = log.content.split("\n")
                 fname = lines[0].split(": ")[1][:-1]
-                f = open(fname)
+                f = open("./missions/"+fname)
                 post = json.loads(f.read())
                 f.close()
                 for s in post['slots']:
@@ -74,7 +74,7 @@ class Commands():
                 lines = log.content.split("\n")
                 fname = lines[0].split(": ")[1][:-1]
                 await self._unslot(message.channel.guild, message.author.id)
-                f = open(fname)
+                f = open("./missions/"+fname)
                 post = json.loads(f.read())
                 f.close()
                 for s in post['slots']:
@@ -110,11 +110,11 @@ class Commands():
         channel = self.getEventChannel(message.channel.guild)
         id = await channel.send("Loading Data")
         info = {}
-        f = open(data[0])
+        f = open("./missions/"+data[0])
         info = json.loads(f.read())
         f.close()
         info['id'] = id.id
-        f = open(data[0],'w')
+        f = open("./missions/"+data[0],'w')
         f.write(json.dumps(info, indent=4, sort_keys=True))
         f.close()
         await self.displayEvent(message.channel.guild, data[0], id)
@@ -135,7 +135,7 @@ class Commands():
         return None
 
     async def displayEvent(self, guild, event, message):
-        with open(event) as f:
+        with open("./missions/"+event) as f:
             data = json.loads(f.read())
             slots = "__Slots:__\n\n"
             for s in data['slots']:
@@ -149,6 +149,6 @@ class Commands():
             await message.edit(content="|EVENT: "+event+"|\n\n**"+data['name']+"**\n\n"+"__Date__: "+data['date']+"\n__Map:__ "+data['map']+"\n\n"+data['desc']+"\n\n"+slots+"\n")
 
     async def savePost(self, fname, post):
-        f = open(fname,'w')
+        f = open("./missions/"+fname,'w')
         f.write(json.dumps(post, indent=4, sort_keys=True))
         f.close()

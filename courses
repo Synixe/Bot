@@ -32,5 +32,36 @@
         "answer" : "D"
       }
     ]
-  }
+  },
+  "cqb" : {
+    "name" : "Close Quaters Combat",
+    "description" : "You will fail this at least once",
+    "steps" : [
+      {
+        "text" : "You are approaching a building, what color designation is the wall facing you?",
+        "question" : "A: Yellow\nB: Red\nC: Green\nD: White",
+        "answer" : "D"
+      },
+      {
+        "text" : "What color is the left hand wall?",
+        "question" : "A: Blue\nB: Red\nC: Green\nD: Black",
+        "answer" : "B"
+      },
+      {
+        "text" : "What color is the right hand wall?",
+        "question" : "A: Orange\nB: Blue\nC: Green\nD: Black",
+        "answer": "C"
+      },
+      {
+        "text" : "What color is the roof?",
+        "question" : "A: Orange\nB: Black\nC: Blue\nD: Yellow",
+        "answer" : "C"
+      },
+      {
+        "text" : "What color is the opposite wall (back wall)?",
+        "question" : "A: Yellow\nB: Orange\nC: Black\nD:Red",
+        "answer" : "C"
+      }
+    ]
+  } 
 }
