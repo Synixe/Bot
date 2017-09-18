@@ -11,6 +11,7 @@ import youtube
 import arma3
 import helper
 import update
+import server
 
 class SynixeBot(discord.Client):
     async def on_ready(self):
@@ -27,6 +28,7 @@ class SynixeBot(discord.Client):
         self.commands.update(arma3.Commands().register(self))
         self.commands.update(helper.Commands().register(self))
         self.commands.update(update.Commands().register(self))
+        self.commands.update(server.Commands().register(self))
 
     async def on_message(self, message):
         await self.execute(message)
