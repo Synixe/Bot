@@ -7,7 +7,7 @@ class Commands():
         return {
             "start" : {
                 "function" : self.start,
-                "description" : "Start up a service",
+                "description" : "Start ",
                 "roles" : ["manager"]
             }
         }

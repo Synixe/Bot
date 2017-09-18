@@ -39,6 +39,7 @@ class Commands():
     async def mission_loop_task(self, client):
         await client.wait_until_ready()
         while not client.is_closed():
+            print("Checking AAR")
             db = pymysql.connect("ts.synixe.com","r3",tokens.getToken("mysql"),"r3")
             cursor = db.cursor()
             cursor.execute("SELECT * FROM `replays` WHERE `hidden` = '0' ORDER BY `id` DESC LIMIT 1")
@@ -58,21 +59,13 @@ class Commands():
                     f = open(AAR_FILE ,"w")
                     f.write(str(data[0])+"|done")
                     f.close()
-                    for guild in client.guilds:
-                        if "synixe" in guild.name.lower():
-                            for c in guild.channels:
-                                if c.name.lower() == "postop":
-                                    await c.send("AAR for "+data[1]+"\nhttp://ts.synixe.com/arma3-aar/"+str(data[0])+"/"+data[2])
+                    await client.getGuild("synixe").getChannel("postop").send("AAR for "+data[1]+"\nhttp://ts.synixe.com/arma3-aar/"+data[7]+"/"+data[2])
             else:
                 if last[1] == "progress" and data[5] != None:
                     f = open(AAR_FILE ,"w")
                     f.write(str(data[0])+"|done")
                     f.close()
-                    for guild in client.guilds:
-                        if "synixe" in guild.name.lower():
-                            for c in guild.channels:
-                                if c.name.lower() == "postop":
-                                    await c.send("AAR for "+data[1]+"\nhttp://ts.synixe.com/arma3-aar/"+data[7]+"/"+data[2])
+                    await client.getGuild("synixe").getChannel("postop").send("AAR for "+data[1]+"\nhttp://ts.synixe.com/arma3-aar/"+data[7]+"/"+data[2])
             await asyncio.sleep(60)
 
     async def missionup(self, data, client, message):

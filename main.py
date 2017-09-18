@@ -75,11 +75,16 @@ class SynixeBot(discord.Client):
             if c.name.lower() == channel:
                 return c
         return None
+
     def getGuild(self, guild):
         for g in client.guilds:
             if guild.lower() in g.name.lower():
                 return g
         return None
 
-client = SynixeBot()
-client.run(tokens.getToken("discord"))
+try:
+    client = SynixeBot()
+    client.run(tokens.getToken("discord"))
+except KeyboardInterrupt:
+    print("Shutting Down")
+    client.close()

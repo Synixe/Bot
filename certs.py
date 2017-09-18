@@ -28,6 +28,11 @@ class Commands():
                 "function" : self.remcert,
                 "description" : "Remove a user's certification.",
                 "roles" : ["manager"]
+            },
+            "withcert" : {
+                "function" : self.withcert,
+                "description": "Find everyone with a certification.",
+                "roles" : ["@everyone"]
             }
         }
 
@@ -143,6 +148,17 @@ class Commands():
                 saveCerts(certs)
             else:
                 await message.channel.send(user.name+" does not have that certification.")
+
+    async def withcert(self, data, client, message):
+        users = []
+        certs = getCerts()
+        for cert in certs:
+            if data[0].lower() in certs[cert]:
+                try:
+                    users.append(message.channel.guild.get_member(int(cert)).name)
+                except:
+                    pass
+        await message.channel.send("Users with "+data[0].lower()+": "+(", ".join(users)))
 
 def getCerts():
     f = open(CERT_FILE)
