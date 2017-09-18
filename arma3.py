@@ -38,12 +38,14 @@ class Commands():
 
     async def mission_loop_task(self, client):
         await client.wait_until_ready()
-        db = pymysql.connect("ts.synixe.com","r3",tokens.getToken("mysql"),"r3")
         while not client.is_closed():
+            db = pymysql.connect("ts.synixe.com","r3",tokens.getToken("mysql"),"r3")
             cursor = db.cursor()
             cursor.execute("SELECT * FROM `replays` WHERE `hidden` = '0' ORDER BY `id` DESC LIMIT 1")
             data = cursor.fetchone()
-            f = open(AAR_FILE )
+            cursor.close()
+            db.close()
+            f = open(AAR_FILE)
             last = f.read().strip().split("|")
             last[0] = int(last[0])
             f.close()
