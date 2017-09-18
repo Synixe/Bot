@@ -23,12 +23,16 @@
             "slots": [
                 {
                     "name": "[RAVEN-1] Lead Helicopter Pilot",
+                    "player": "Munchies",
+                    "playerid": 341991902012375041,
                     "requirement": [
                         "radio"
                     ]
                 },
                 {
-                    "name": "[RAVEN-2] Helicopter Pilot"
+                    "name": "[RAVEN-2] Helicopter Pilot",
+                    "player": "Brett",
+                    "playerid": 307524009854107648
                 }
             ]
         },
@@ -51,7 +55,9 @@
                     ]
                 },
                 {
-                    "name": "[ALPHA-3] Rifleman"
+                    "name": "[ALPHA-3] Rifleman",
+                    "player": "TheBEASTisnear",
+                    "playerid": 358146229626077187
                 },
                 {
                     "name": "[ALPHA-4] Rifleman"
@@ -63,6 +69,8 @@
                 },
                 {
                     "name": "[ALPHA-6] Rifleman (AT)",
+                    "player": "Edmunds.Z",
+                    "playerid": 229109158375456788,
                     "requirement": [
                         "at"
                     ]
@@ -73,9 +81,7 @@
                     "playerid": 196341824481263616
                 },
                 {
-                    "name": "[ALPHA-8] Engineer",
-                    "player": "Brett",
-                    "playerid": 307524009854107648
+                    "name": "[ALPHA-8] Engineer"
                 }
             ]
         }
