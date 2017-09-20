@@ -120,7 +120,7 @@ class Commands():
                             if "playerid" not in r:
                                 if "requirement" in r:
                                     qualified = certs.isQualified(message.author.id, r["requirement"])
-                                    if qualified:
+                                    if qualified and type(qualified) == bool:
                                         r['player'] = message.author.name
                                         r['playerid'] = message.author.id
                                         await message.channel.send("Slotted "+message.author.name+" into "+r['name'])

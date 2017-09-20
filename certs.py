@@ -100,10 +100,11 @@ class Commands():
                 "You do not have any certifications"
             )
         available = []
+        courses = getCourses()
         if str(message.author.id) in certs:
-            for cert in certs:
-                if cert not in certs[str(message.author.id)]:
-                    available.append(cert)
+            for course in courses:
+                if course not in certs[str(message.author.id)]:
+                    available.append(course)
         else:
             available = getCourses()
         if len(available) != 0:

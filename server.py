@@ -16,4 +16,4 @@ class Commands():
         if data[0].lower() not in SERVERS:
             await message.channel.send("Unknown Server")
         else:
-            await message.channel.send("Starting: "+SERVERS[data[0].lower()])
+            await message.channel.send("Unable to start: "+SERVERS[data[0].lower()])
