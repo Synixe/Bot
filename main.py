@@ -99,6 +99,16 @@ class SynixeBot(discord.Client):
             c = self.getChannel(self.getGuild("synixe"), "botevents")
             await c.send(nickbefore + " is now known as " + nickafter)
 
+        print(after.game)
+        if after.game != None:
+            print(after.game.url)
+            if after.game.url != None:
+                if before.game.url == None:
+                    c = self.getChannel(self.getGuild("synixe"), "random")
+                    import random
+                    lines = open('./data/streaming').read().splitlines()
+                    await c.send(random.choice(lines).format(nickafter) + "\n"+ after.game.url)
+
 try:
     client = SynixeBot()
     client.run(tokens.getToken("discord"))
