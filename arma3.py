@@ -18,7 +18,7 @@ class Commands():
                 "description" : "Upload a mission to the server",
                 "roles" : ["missionmaker"]
             },
-            "eventup" {
+            "eventup" : {
                 "function" : self.eventup,
                 "description" : "Upload an event sheet to the server",
                 "roles" : ["missionmaker"]
