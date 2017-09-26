@@ -18,6 +18,11 @@ class Commands():
                 "description" : "Upload a mission to the server",
                 "roles" : ["missionmaker"]
             },
+            "eventup" {
+                "function" : self.eventup,
+                "description" : "Upload an event sheet to the server",
+                "roles" : ["missionmaker"]
+            },
 
             "slot" : {
                 "function" : self.slot,
@@ -72,6 +77,14 @@ class Commands():
         for attach in message.attachments:
             id = await message.channel.send("Downloading "+attach.filename)
             with open("/opt/steam/arma3-mods/mpmissions/"+attach.filename,'wb') as f:
+                headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+                f.write(requests.get(attach.url, headers=headers).content)
+            await id.edit(content="Downloaded "+attach.filename)
+
+    async def eventup(self, data, client, message):
+        for attach in message.attachments:
+            id = await message.channel.send("Downloading "+attach.filename)
+            with open("/opt/slotbot/missions/"+attach.filename,'wb') as f:
                 headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
                 f.write(requests.get(attach.url, headers=headers).content)
             await id.edit(content="Downloaded "+attach.filename)
