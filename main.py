@@ -82,6 +82,23 @@ class SynixeBot(discord.Client):
                 return g
         return None
 
+    async def on_member_remove(self, member):
+        c = self.getChannel(self.getGuild("synixe"), "botevents")
+        await c.send(member.name + " is no longer in the server.")
+
+    async def on_member_update(self, before, after):
+        if before.nick == None:
+            nickbefore = before.name
+        else:
+            nickbefore = before.nick
+        if after.nick == None:
+            nickafter = after.name
+        else:
+            nickafter = after.nick
+        if nickbefore != nickafter:
+            c = self.getChannel(self.getGuild("synixe"), "botevents")
+            await c.send(nickbefore + " is now known as " + nickafter)
+
 try:
     client = SynixeBot()
     client.run(tokens.getToken("discord"))

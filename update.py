@@ -49,7 +49,7 @@ class Commands():
                     if version.strip() != current[author+"/"+repo].strip():
                         update = True
                         current[author+"/"+repo] = version.strip()
-                        await client.getChannel(client.getGuild("Synixe"),"bot").send("Update to: "+repo+" "+version)
+                        await client.getChannel(client.getGuild("Synixe"),"botevents").send("Update to: "+repo+" "+version)
             for mod in ARMAHOLIC:
                 f = urllib.request.urlopen("http://armaholic.com/page.php?id="+str(mod))
                 html = f.read().decode("UTF-8")
@@ -57,7 +57,7 @@ class Commands():
                 if version.strip() != current[ARMAHOLIC[mod]].strip():
                     update = True
                     current[ARMAHOLIC[mod]] = version.strip()
-                    await client.getChannel(client.getGuild("Synixe"),"bot").send("Update to: "+ARMAHOLIC[mod]+" "+version+"\nhttp://armaholic.com/page.php?id="+str(mod))
+                    await client.getChannel(client.getGuild("Synixe"),"botevents").send("Update to: "+ARMAHOLIC[mod]+" "+version+"\nhttp://armaholic.com/page.php?id="+str(mod))
             if update:
                 with open(MOD_FILE,"w") as f:
                     f.write(json.dumps(current, indent=4, sort_keys=True))

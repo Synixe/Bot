@@ -11,7 +11,7 @@ AAR_FILE = "./data/aar.txt"
 
 class Commands():
     def register(self, client):
-        self.mission_loop = client.loop.create_task(self.mission_loop_task(client))
+        # AAR DISABLED - self.mission_loop = client.loop.create_task(self.mission_loop_task(client))
         return {
             "missionup" : {
                 "function" : self.missionup,
