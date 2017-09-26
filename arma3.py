@@ -134,9 +134,14 @@ class Commands():
                                 if "requirement" in r:
                                     qualified = certs.isQualified(message.author.id, r["requirement"])
                                     if qualified and type(qualified) == bool:
-                                        r['player'] = message.author.name
+                                        user = message.channel.guild.get_member(int(message.author.id))
+                                        try:
+                                            name = user.nick
+                                        except:
+                                            name = message.author.name
+                                        r['player'] = name
                                         r['playerid'] = message.author.id
-                                        await message.channel.send("Slotted "+message.author.name+" into "+r['name'])
+                                        await message.channel.send("Slotted "+name+" into "+r['name'])
                                         await self.savePost(fname,post)
                                         await self.displayEvent(message.channel.guild, fname, log)
                                         return
