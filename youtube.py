@@ -9,7 +9,7 @@ YOUTUBE_FILE = "./data/youtube.txt"
 
 class Commands():
     def register(self, client):
-        self.new_video_loop = client.loop.create_task(self.new_video_loop_task(client))
+        #self.new_video_loop = client.loop.create_task(self.new_video_loop_task(client))
         return {}
 
     async def new_video_loop_task(self, client):
