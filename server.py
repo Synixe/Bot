@@ -1,6 +1,11 @@
 import discord
+import re
+import asyncio
 
 SERVERS = {"arma3":"Primary Arma 3"}
+
+REGEX_PROGRESS = r"progress: (\d.?\.\d\d)"
+REGEX_LOGIN = r"Logged in OK"
 
 class Commands():
     def register(self, _):
@@ -44,7 +49,7 @@ class Commands():
             return False
         try:
             confirm = await client.wait_for('message', check=question_check, timeout=60.0)
-            if confirm.lower() != "y":
+            if confirm.content.lower() != "y":
                 await message.channel.send("This operation has been cancelled.")
                 return
             import subprocess
@@ -54,11 +59,11 @@ class Commands():
             import re
             process = subprocess.Popen(
                 [
-                    "./steamcmd.sh",
+                    "/opt/steam/steamcmd.sh",
                     "+login",
                     "anonymous",
                     "+force_install_dir",
-                    "/opt/steam/"+data[1]"/",
+                    "/opt/steam/"+data[1]+"/",
                     "+app_update",
                     data[0],
                     "validate",
@@ -82,13 +87,13 @@ class Commands():
                         if progress == False:
                             progress = "0.00"
                         text = "\n".join(text.split("\n")[:-1])+"Progress: "+progress+"%"
-                        await message.edit(content=text)
+                        await id.edit(content=text)
                     if "Success" in out:
                         text = "\n".join(text.split("\n")[:-1])+"Progress: 100.00%"
                         text += "\nDownloaded"
-                        await message.edit(content=text)
+                        await id.edit(content=text)
                         break
 
         except asyncio.TimeoutError:
-            await message.channel.send("Timeout, this operation has been cancelled.")
+            await id.channel.send("Timeout, this operation has been cancelled.")
             return

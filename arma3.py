@@ -135,10 +135,12 @@ class Commands():
                                     qualified = certs.isQualified(message.author.id, r["requirement"])
                                     if qualified and type(qualified) == bool:
                                         user = message.channel.guild.get_member(int(message.author.id))
-                                        try:
+                                        name = None
+                                        if user.nick != None:
                                             name = user.nick
-                                        except:
+                                        else:
                                             name = message.author.name
+                                        print(name)
                                         r['player'] = name
                                         r['playerid'] = message.author.id
                                         await message.channel.send("Slotted "+name+" into "+r['name'])
