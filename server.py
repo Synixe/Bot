@@ -72,7 +72,7 @@ class Commands():
                 stderr=subprocess.STDOUT
             )
             logged = False
-            text = "SteamCMD Logged In & Ready\n"
+            text = "SteamCMD Logged In & Ready\nProgress: 0.00%\n"
             while True:
                 out = process.stdout.readline().decode("UTF-8")
                 if out == '' and process.poll() != None:
@@ -86,10 +86,10 @@ class Commands():
                         progress = getRegex(REGEX_PROGRESS, out)
                         if progress == False:
                             progress = "0.00"
-                        text = "\n".join(text.split("\n")[:-1])+"Progress: "+progress+"%"
+                        text = "\n".join(text.split("\n")[:-1])+"\nProgress: "+progress+"%"
                         await id.edit(content=text)
                     if "Success" in out:
-                        text = "\n".join(text.split("\n")[:-1])+"Progress: 100.00%"
+                        text = "\n".join(text.split("\n")[:-1])+"\nProgress: 100.00%"
                         text += "\nDownloaded"
                         await id.edit(content=text)
                         break
