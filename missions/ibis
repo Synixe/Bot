@@ -1,23 +1,11 @@
 {
     "date": "Friday, September 22nd",
     "desc": "With CAF peacekeeping and training operations underway in the war-torn nation of Takistan, a small outpost up in the mountains is tasked with finding and securing a crashed cargo plane before the enemy guerrilla forces can.\n\nNo DLC Required for any roles.",
-    "id": 357624930675720199,
+    "host": 181205184565870592,
+    "id": 372696785367597068,
     "map": "Takistan Mountains",
     "name": "Operation Ibis",
     "slots": [
-        {
-            "name": "Command",
-            "slots": [
-                {
-                    "name": "[GOLIATH] Commanding Officer",
-                    "player": "PSNJ96",
-                    "playerid": 181205184565870592,
-                    "requirement": [
-                        "zeus"
-                    ]
-                }
-            ]
-        },
         {
             "name": "Pilots",
             "slots": [

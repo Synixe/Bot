@@ -33,7 +33,7 @@ MOD_FILE = "./data/mods.json"
 
 class Commands():
     def register(self, client):
-        self.mod_loop = client.loop.create_task(self.mod_loop_task(client))
+        #self.mod_loop = client.loop.create_task(self.mod_loop_task(client))
         return {}
 
     async def mod_loop_task(self, client):

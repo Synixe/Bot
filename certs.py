@@ -127,9 +127,9 @@ class Commands():
             if data[1].lower() not in certs[str(user.id)]:
                 certs[str(user.id)].append(data[1].lower())
                 await user.send("Congrats! You now have "+data[1].lower()+" certification! :thumbsup:")
-                await message.channel.send(user.name+" now has "+data[1].lower())
+                await message.channel.send(user.display_name+" now has "+data[1].lower())
             else:
-                await message.channel.send(user.name+" already has that certification.")
+                await message.channel.send(user.display_name+" already has that certification.")
                 return
         saveCerts(certs)
 
@@ -145,10 +145,10 @@ class Commands():
         else:
             if data[1].lower() in certs[str(user.id)]:
                 certs[str(user.id)].remove(data[1].lower())
-                await message.channel.send(user.name+" no longer has "+data[1].lower())
+                await message.channel.send(user.display_name+" no longer has "+data[1].lower())
                 saveCerts(certs)
             else:
-                await message.channel.send(user.name+" does not have that certification.")
+                await message.channel.send(user.display_name+" does not have that certification.")
 
     async def withcert(self, data, client, message):
         users = []
@@ -156,7 +156,7 @@ class Commands():
         for cert in certs:
             if data[0].lower() in certs[cert]:
                 try:
-                    users.append(message.channel.guild.get_member(int(cert)).name)
+                    users.append(message.channel.guild.get_member(int(cert)).display_name)
                 except:
                     pass
         await message.channel.send("Users with "+data[0].lower()+": "+(", ".join(users)))

@@ -11,6 +11,7 @@ AAR_FILE = "./data/aar.txt"
 
 class Commands():
     def register(self, client):
+        self.client = client
         # AAR DISABLED - self.mission_loop = client.loop.create_task(self.mission_loop_task(client))
         return {
             "missionup" : {
@@ -93,75 +94,59 @@ class Commands():
         await self._unslot(message.channel.guild, message.author.id, message.channel)
 
     async def _unslot(self, guild, id, reply=None):
-        channel = self.getEventChannel(guild)
-        async for log in channel.history(limit=5):
-            if log.content.startswith("|EVENT"):
-                lines = log.content.split("\n")
-                fname = lines[0].split(": ")[1][:-1]
-                f = open("./missions/"+fname)
-                post = json.loads(f.read())
-                f.close()
-                for s in post['slots']:
-                    for r in s['slots']:
-                        if "playerid" in r:
-                            if str(r['playerid']) == str(id):
-                                del r['playerid']
-                                del r['player']
-                                await self.savePost(fname, post)
-                                if reply != None:
-                                    await reply.send("Unslotted :cry:")
-                                    await self.displayEvent(reply.guild, fname, log)
-                                return
-                if reply != None:
-                    await reply.send("You were not slotted.")
-                return
+        f = open("./missions/"+self.getCurrentMission())
+        post = json.loads(f.read())
+        f.close()
+        for s in post['slots']:
+            for r in s['slots']:
+                if "playerid" in r:
+                    if str(r['playerid']) == str(id):
+                        del r['playerid']
+                        del r['player']
+                        await self.savePost(self.getCurrentMission(), post)
+                        if reply != None:
+                            await reply.send("Unslotted :cry:")
+                            await self.displayEvent(reply.guild, self.getCurrentMission())
+                        return
+        if reply != None:
+            await reply.send("You were not slotted.")
+        return
 
     async def slot(self, data, client, message):
         role = data[0]
-        channel = self.getEventChannel(message.channel.guild)
-        async for log in channel.history(limit=5):
-            if log.content.startswith("|EVENT"):
-                lines = log.content.split("\n")
-                fname = lines[0].split(": ")[1][:-1]
-                await self._unslot(message.channel.guild, message.author.id)
-                f = open("./missions/"+fname)
-                post = json.loads(f.read())
-                f.close()
-                for s in post['slots']:
-                    for r in s['slots']:
-                        if role.lower() in r['name'].lower():
-                            if "playerid" not in r:
-                                if "requirement" in r:
-                                    qualified = certs.isQualified(message.author.id, r["requirement"])
-                                    if qualified and type(qualified) == bool:
-                                        user = message.channel.guild.get_member(int(message.author.id))
-                                        name = None
-                                        if user.nick != None:
-                                            name = user.nick
-                                        else:
-                                            name = message.author.name
-                                        print(name)
-                                        r['player'] = name
-                                        r['playerid'] = message.author.id
-                                        await message.channel.send("Slotted "+name+" into "+r['name'])
-                                        await self.savePost(fname,post)
-                                        await self.displayEvent(message.channel.guild, fname, log)
-                                        return
-                                    else:
-                                        await message.channel.send("You are missing the following certifications: "+(", ".join(qualified)))
-                                        return
-                                else:
-                                    r['player'] = message.author.name
-                                    r['playerid'] = message.author.id
-                                    await message.channel.send("Slotted "+message.author.name+" into "+r['name'])
-                                    await self.savePost(fname,post)
-                                    await self.displayEvent(message.channel.guild, fname, log)
-                                    return
-                            else:
-                                await message.channel.send(r['name'] + " is already slotted by "+r['player']+"!")
+        await self._unslot(message.channel.guild, message.author.id)
+        f = open("./missions/"+self.getCurrentMission())
+        post = json.loads(f.read())
+        f.close()
+        for s in post['slots']:
+            for r in s['slots']:
+                if role.lower() in r['name'].lower():
+                    if "playerid" not in r:
+                        if "requirement" in r:
+                            qualified = certs.isQualified(message.author.id, r["requirement"])
+                            if qualified and type(qualified) == bool:
+                                user = message.channel.guild.get_member(int(message.author.id))
+                                r['player'] = user.display_name
+                                r['playerid'] = message.author.id
+                                await message.channel.send("Slotted "+user.display_name+" into "+r['name'])
+                                await self.savePost(self.getCurrentMission(),post)
+                                await self.displayEvent(message.channel.guild, self.getCurrentMission())
                                 return
-                await message.channel.send(role+" not found for "+post['name'])
-                return
+                            else:
+                                await message.channel.send("You are missing the following certifications: "+(", ".join(qualified)))
+                                return
+                        else:
+                            r['player'] = message.author.display_name
+                            r['playerid'] = message.author.id
+                            await message.channel.send("Slotted "+message.author.display_name+" into "+r['name'])
+                            await self.savePost(self.getCurrentMission(),post)
+                            await self.displayEvent(message.channel.guild, self.getCurrentMission())
+                            return
+                    else:
+                        await message.channel.send(r['name'] + " is already slotted by "+r['player']+"!")
+                        return
+        await message.channel.send(role+" not found for "+post['name'])
+        return
 
     async def post(self, data, client, message):
         channel = self.getEventChannel(message.channel.guild)
@@ -174,16 +159,18 @@ class Commands():
         f = open("./missions/"+data[0],'w')
         f.write(json.dumps(info, indent=4, sort_keys=True))
         f.close()
+        f = open("./missions/current",'w')
+        f.write(data[0])
+        f.close()
         await self.displayEvent(message.channel.guild, data[0], id)
 
     async def refresh(self, data, client, message):
-        channel = self.getEventChannel(message.channel.guild)
-        async for log in channel.history(limit=5):
-            if log.content.startswith("|EVENT"):
-                lines = log.content.split("\n")
-                fname = lines[0].split(": ")[1][:-1]
-                await self.displayEvent(message.channel.guild, fname, id)
-                return
+        await self.displayEvent(message.channel.guild, self.getCurrentMission(), id)
+        return
+
+    def getCurrentMission(self):
+        with open("missions/current") as f:
+            return f.read().strip()
 
     def getEventChannel(self, guild):
         for c in guild.channels:
@@ -191,19 +178,36 @@ class Commands():
                 return c
         return None
 
-    async def displayEvent(self, guild, event, message):
+    async def displayEvent(self, guild, event, message = None):
         with open("./missions/"+event) as f:
             data = json.loads(f.read())
-            slots = "__Slots:__\n\n"
-            for s in data['slots']:
-               slots += "\n**"+s['name']+"**\n\n"
-               for r in s['slots']:
-                   slots += "    " + r['name'] + ": "
-                   if "player" in r:
-                       slots += "**"+r['player']+"**\n"
-                   else:
-                       slots += "\n"
-            await message.edit(content="|EVENT: "+event+"|\n\n**"+data['name']+"**\n\n"+"__Date__: "+data['date']+"\n__Map:__ "+data['map']+"\n\n"+data['desc']+"\n\n"+slots+"\n")
+            embed = discord.Embed(
+                title = data["name"],
+                description = data["desc"],
+                color = discord.Colour.from_rgb(r=255,g=192,b=60),
+                url = data["url"] if "url" in data else None
+            )
+            if "host" in data:
+                user = self.client.getGuild("synixe").get_member(int(data["host"]))
+                embed.set_author(name=user.name,icon_url=user.avatar_url)
+            if "image" in data:
+                embed.set_image(url=data["image"])
+            if "date" in data:
+                embed.add_field(name="Date",value=data["date"])
+            if "map" in data:
+                embed.add_field(name="Map",value=data["map"])
+            for squad in data['slots']:
+                slots = ""
+                for role in squad['slots']:
+                    slots += role['name'] + ": "
+                    if "player" in role:
+                        slots += "**"+role['player']+"**\n"
+                    else:
+                        slots += "\n"
+                embed.add_field(name=squad["name"],value=slots,inline=False)
+            if message == None:
+                message = await self.client.getChannel(self.client.getGuild("synixe"),"events").get_message(data["id"])
+            await message.edit(content=None, embed = embed)
 
     async def savePost(self, fname, post):
         f = open("./missions/"+fname,'w')

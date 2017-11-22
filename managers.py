@@ -24,7 +24,7 @@ class Commands():
             return
         message.author = user
         message.content = " ".join(data[1:])
-        await message.channel.send("Executing as "+user.name)
+        await message.channel.send("Executing as "+user.display_name)
         await client.execute(message)
 
     async def clear(self, data, client, message):

@@ -43,6 +43,7 @@ class SynixeBot(discord.Client):
             except:
                 #No args
                 pass
+            print("Incoming Command:",cmd)
             if cmd in self.commands:
                 try:
                     if self.inRoleList(message.channel.guild, message.author.id, self.commands[cmd]["roles"]):
