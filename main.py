@@ -85,7 +85,7 @@ class SynixeBot(discord.Client):
 
     async def on_member_remove(self, member):
         c = self.getChannel(self.getGuild("synixe"), "botevents")
-        await c.send(member.name + " is no longer in the server.")
+        await c.send("<@"+str(member.id) + "> is no longer in the server.")
 
     async def on_member_update(self, before, after):
         if before.nick == None:
