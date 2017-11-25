@@ -22,9 +22,7 @@ ARMAHOLIC = {
     "27996": "Gorgona",
     "29327": "ShackTac User Interface",
     "25381": "Vcom AI",
-    "27285": "Ares",
     "31357": "Advanced Urban Rappelling",
-    "22594": "F/A-18 Super Hornet"
 }
 
 REGEX = r"Version\:<\/font> (.+?)<br>"

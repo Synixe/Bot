@@ -118,6 +118,7 @@ class Commands():
         f = open("./missions/"+self.getCurrentMission())
         post = json.loads(f.read())
         f.close()
+        taken = False
         for s in post['slots']:
             for r in s['slots']:
                 if role.lower() in r['name'].lower():
@@ -143,9 +144,11 @@ class Commands():
                             await self.displayEvent(message.channel.guild, self.getCurrentMission())
                             return
                     else:
-                        await message.channel.send(r['name'] + " is already slotted by "+r['player']+"!")
-                        return
-        await message.channel.send(role+" not found for "+post['name'])
+                        taken = True
+        if taken:
+            await message.channel.send("No matching slots are free!")
+        else:
+            await message.channel.send(role+" not found for "+post['name'])
         return
 
     async def post(self, data, client, message):

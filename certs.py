@@ -123,10 +123,10 @@ class Commands():
         certs = getCerts()
         if str(user.id) not in certs:
             certs[str(user.id)] = [data[1].lower()]
+            await message.channel.send(user.display_name+" now has "+data[1].lower())
         else:
             if data[1].lower() not in certs[str(user.id)]:
                 certs[str(user.id)].append(data[1].lower())
-                await user.send("Congrats! You now have "+data[1].lower()+" certification! :thumbsup:")
                 await message.channel.send(user.display_name+" now has "+data[1].lower())
             else:
                 await message.channel.send(user.display_name+" already has that certification.")
@@ -179,16 +179,17 @@ def getCourses():
     return courses
 
 def isQualified(id, requirements):
-    if requirements == []:
-        return True
-    missing = []
-    certs = getCerts()
-    if str(id) not in certs:
-        return requirements
-    for q in requirements:
-        if q not in certs[str(id)]:
-            missing.append(q)
-    if missing == []:
-        return True
-    else:
-        return missing
+    return True #Temporarily grant all certs
+    #if requirements == []:
+    #    return True
+    #missing = []
+    #certs = getCerts()
+    #if str(id) not in certs:
+    #    return requirements
+    #for q in requirements:
+    #    if q not in certs[str(id)]:
+    #        missing.append(q)
+    #if missing == []:
+    #    return True
+    #else:
+    #    return missing
