@@ -204,7 +204,7 @@ class Commands():
                 for role in squad['slots']:
                     slots += role['name'] + ": "
                     if "player" in role:
-                        slots += "**"+role['player']+"**\n"
+                        slots += "<@"+str(role['playerid'])+">\n"
                     else:
                         slots += "\n"
                 embed.add_field(name=squad["name"],value=slots,inline=False)
