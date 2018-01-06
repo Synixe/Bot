@@ -89,7 +89,7 @@ class SynixeBot(discord.Client):
 
     def getChannel(self, guild, channel):
         for c in guild.channels:
-            if c.name.lower() == channel:
+            if c.name.lower() == channel.lower():
                 return c
         return None
 
@@ -99,6 +99,12 @@ class SynixeBot(discord.Client):
                 return g
         return None
 
+    def getRole(self, guild, name):
+        for r in guild.roles:
+            if name.lower() == r.name.lower()
+                return r
+        return None
+
     async def on_member_join(self, member):
         g = self.getGuild("synixe")
         c = self.getChannel(g, "lobby")
@@ -106,7 +112,7 @@ class SynixeBot(discord.Client):
         e = self.getChannel(g, "events")
         r = self.getChannel(g, "repohelp")
         await c.send("<@"+str(member.id) + ">! Welcome to Synixe! Here is some basic info about our group: If you check out <#"+str(e.id)+"> you can see our upcoming missions. We play at 7pm PST / 10pm EST. We have some mods you'll need to download from <#"+str(i.id)+">. If you have any questions while getting those setup we're more than happy to help in <#"+str(r.id)+">.")
-        await member.add_roles(discord.utils.get(g.roles, name="New"))
+        await member.add_roles(self.getRole(g, "new"))
 
     async def on_member_remove(self, member):
         c = self.getChannel(self.getGuild("synixe"), "botevents")
