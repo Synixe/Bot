@@ -101,7 +101,7 @@ class SynixeBot(discord.Client):
 
     def getRole(self, guild, name):
         for r in guild.roles:
-            if name.lower() == r.name.lower()
+            if name.lower() == r.name.lower():
                 return r
         return None
 
@@ -118,15 +118,15 @@ class SynixeBot(discord.Client):
         c = self.getChannel(self.getGuild("synixe"), "botevents")
         await c.send("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") is no longer in the server.")
 
-    async def on_member_ban(g, member):
+    async def on_member_ban(self, g, member):
         c = self.getChannel(g, "botevents")
         await c.send("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") has been banned.")
 
-    async def on_member_unban(g, member):
+    async def on_member_unban(self, g, member):
         c = self.getChannel(g, "botevents")
         await c.send("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") has been unbanned.")
 
-    async def on_message_delete(message):
+    async def on_message_delete(self, message):
         if not self.inRoleList(message.channel.guild,message.author.id,["manager","moderator","bot"]):
             c = self.getChannel(self.getGuild("synixe"), "botevents")
             c.send("<@"+str(message.author.id) + "> ("+message.author.name+"#"+message.author.discriminator+") Deleted: "+message.content)
