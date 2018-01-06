@@ -12,6 +12,7 @@ import arma3
 import helper
 import update
 import server
+import poll
 
 class SynixeBot(discord.Client):
     async def on_ready(self):
@@ -29,9 +30,13 @@ class SynixeBot(discord.Client):
         self.commands.update(helper.Commands().register(self))
         self.commands.update(update.Commands().register(self))
         self.commands.update(server.Commands().register(self))
+        self.commands.update(poll.Commands().register(self))
 
     async def on_message(self, message):
         await self.execute(message)
+        if "www.change.org" in message.content:
+            await message.channel.send("That is an illegitimate petition service and is not recognized by Synixe")
+            await message.delete()
 
     async def execute(self, message):
         if message.content.startswith("!"):
@@ -71,6 +76,15 @@ class SynixeBot(discord.Client):
                 return True
         return False
 
+    def getIDFromTag(self, text):
+        if text.startswith("<@") or text.startswith("<#"):
+            return int(text[2:-1])
+        else:
+            try:
+                return int(text)
+            except:
+                return text
+
     def getChannel(self, guild, channel):
         for c in guild.channels:
             if c.name.lower() == channel:
@@ -85,7 +99,7 @@ class SynixeBot(discord.Client):
 
     async def on_member_remove(self, member):
         c = self.getChannel(self.getGuild("synixe"), "botevents")
-        await c.send("<@"+str(member.id) + "> ("+member.name+") is no longer in the server.")
+        await c.send("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") is no longer in the server.")
 
     async def on_member_update(self, before, after):
         if before.nick == None:

@@ -7,7 +7,7 @@ import re
 GITHUB = {
     "acemod": ["ACE3"],
     "CBATeam": ["CBA_A3"],
-    "Synixe": ["TFAR-ACE"],
+    "Synixe": [],
     "DerZade": ["BackpackOnChest"]
 }
 
@@ -22,7 +22,7 @@ ARMAHOLIC = {
     "27996": "Gorgona",
     "29327": "ShackTac User Interface",
     "25381": "Vcom AI",
-    "31357": "Advanced Urban Rappelling",
+    "31357": "Advanced Urban Rappelling"
 }
 
 REGEX = r"Version\:<\/font> (.+?)<br>"
@@ -31,7 +31,7 @@ MOD_FILE = "./data/mods.json"
 
 class Commands():
     def register(self, client):
-        #self.mod_loop = client.loop.create_task(self.mod_loop_task(client))
+        self.mod_loop = client.loop.create_task(self.mod_loop_task(client))
         return {}
 
     async def mod_loop_task(self, client):

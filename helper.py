@@ -29,7 +29,7 @@ class Commands():
         if len(data) == 0:
             user = message.author
         else:
-            user = message.channel.guild.get_member(int(data[0]))
+            user = message.channel.guild.get_member(client.getIDFromTag(data[0]))
         embed = discord.Embed(
             title = user.name,
             color = user.colour

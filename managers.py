@@ -18,7 +18,7 @@ class Commands():
 
     async def runas(self, data, client, message):
         try:
-            user = message.channel.guild.get_member(int(data[0]))
+            user = message.channel.guild.get_member(client.getIDFromTag(data[0]))
         except:
             await message.channel.send("Unable to find that user.")
             return

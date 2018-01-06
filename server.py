@@ -1,6 +1,7 @@
 import discord
 import re
 import asyncio
+import os
 
 SERVERS = {"arma3":"Primary Arma 3"}
 
@@ -13,12 +14,12 @@ class Commands():
             "start" : {
                 "function" : self.start,
                 "description" : "Start ",
-                "roles" : ["manager"]
+                "roles" : ["manager","moderator"]
             },
             "steam" : {
                 "function" : self.steam,
                 "description" : "Download a steam server",
-                "roles" : ["servermanager"]
+                "roles" : ["manager"]
             }
         }
 
@@ -26,7 +27,16 @@ class Commands():
         if data[0].lower() not in SERVERS:
             await message.channel.send("Unknown Server")
         else:
-            await message.channel.send("Unable to start: "+SERVERS[data[0].lower()])
+            if data[0].lower() == "arma3":
+                import subprocess
+                r = subprocess.run(["systemctl","is-active","arma3-mod"], stdout=subprocess.PIPE)
+                if r.stdout.decode("UTF-8")[:-1] == "active":
+                    await message.channel.send("The Arma 3 Server is already running.")
+                else:
+                    os.system("sudo systemctl start arma3-mod")
+                    await message.channel.send("Starting Arma 3 Server")
+            else:
+                await message.channel.send("Unable to start: "+SERVERS[data[0].lower()])
 
     async def steam(self, data, client, message):
         if len(data) != 2:
