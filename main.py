@@ -39,6 +39,8 @@ class SynixeBot(discord.Client):
             await message.delete()
 
     async def execute(self, message):
+        if message.author.id == self.user.id:
+            return
         if message.content.startswith("!"):
             data = message.content.split(" ")
             cmd = data[0][1:]
@@ -63,7 +65,7 @@ class SynixeBot(discord.Client):
         else:
             #Regular message
             if "ts.synixe.com" in message.content:
-                await message.channel.send("Please don't post the TeamSpeak Address. Instead an @Active member needs to use !ts [user] to send someone the address.")
+                await message.channel.send("Please don't post the TeamSpeak Address. Instead an @Active member needs to use `!ts [user]` to send someone the address.")
                 await message.delete()
             pass
 
