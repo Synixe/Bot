@@ -34,9 +34,6 @@ class SynixeBot(discord.Client):
 
     async def on_message(self, message):
         await self.execute(message)
-        if "www.change.org" in message.content:
-            await message.channel.send("That is an illegitimate petition service and is not recognized by Synixe")
-            await message.delete()
 
     async def execute(self, message):
         if message.author.id == self.user.id:
