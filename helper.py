@@ -14,6 +14,11 @@ class Commands():
                 "function" : self.card,
                 "description" : "Print a user card for yourself or another user",
                 "roles" : ["@everyone"]
+            },
+            "ts" : {
+                "function" : self.ts,
+                "description" : "Send a user the TS details",
+                "roles" : ["Active"]
             }
         }
 
@@ -40,3 +45,10 @@ class Commands():
         if str(user.id) in c:
             embed.set_footer(text=", ".join(c[str(user.id)]))
         await message.channel.send(embed=embed)
+
+    async def ts(self, data, client, message):
+        try:
+            user = message.channel.guild.get_member(client.getIDFromTag(data[0]))
+        except:
+            print("I'm not sure who to send the message to.")
+        await user.send("Hello! The TeamSpeak server is ts.synixe.com")
