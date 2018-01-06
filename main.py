@@ -98,8 +98,12 @@ class SynixeBot(discord.Client):
         return None
 
     async def on_member_join(self, member):
-        c = self.getChannel(self.getGuild("synixe"), "lobby")
-        await c.send("<@"+str(member.id) + ">! Welcome to Synixe! Here is some basic info about our group: If you check out <#events> you can see our upcoming missions. We play at 7pm PST / 10pm EST. We have some mods you'll need to download from <#info>. If you have any questions while getting those setup we're more than happy to help in <#repohelp>.")
+        g = self.getGuild("synixe")
+        c = self.getChannel(g, "lobby")
+        i = self.getChannel(g, "info")
+        e = self.getChannel(g, "events")
+        r = self.getChannel(g, "repohelp")
+        await c.send("<@"+str(member.id) + ">! Welcome to Synixe! Here is some basic info about our group: If you check out <#"+str(e.id)+"> you can see our upcoming missions. We play at 7pm PST / 10pm EST. We have some mods you'll need to download from <#"+str(i.id)+">. If you have any questions while getting those setup we're more than happy to help in <#"+str(r.id)+">.")
         await member.add_roles(["388515657701916672"])
 
     async def on_member_remove(self, member):
