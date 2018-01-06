@@ -62,6 +62,9 @@ class SynixeBot(discord.Client):
                 await message.channel.send("Unknown Command")
         else:
             #Regular message
+            if "ts.synixe.com" in message.content:
+                await message.channel.send("Please don't post the TeamSpeak Address. Instead an @Active member needs to use !ts [user] to send someone the address.")
+                await message.delete()
             pass
 
     def isManager(self, guild, id):
@@ -119,7 +122,7 @@ class SynixeBot(discord.Client):
         await c.send("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") has been unbanned.")
 
     async def on_message_delete(message):
-        if not self.inRoleList(message.channel.guild,message.author.id,["manager","moderator"]):
+        if not self.inRoleList(message.channel.guild,message.author.id,["manager","moderator","bot"]):
             c = self.getChannel(self.getGuild("synixe"), "botevents")
             c.send("<@"+str(message.author.id) + "> ("+message.author.name+"#"+message.author.discriminator+") Deleted: "+message.content)
 
