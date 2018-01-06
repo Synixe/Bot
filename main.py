@@ -98,8 +98,25 @@ class SynixeBot(discord.Client):
         return None
 
     async def on_member_remove(self, member):
+        c = self.getChannel(self.getGuild("synixe"), "lobby")
+        await c.send("<@"+str(member.id) + ">! Welcome to Synixe! Here is some basic info about our group: If you check out <#events> you can see our upcoming missions. We play at 7pm PST / 10pm EST. We have some mods you'll need to download from <#info>. If you have any questions while getting those setup we're more than happy to help in <#repohelp>.")
+
+    async def on_member_remove(self, member):
         c = self.getChannel(self.getGuild("synixe"), "botevents")
         await c.send("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") is no longer in the server.")
+
+    async def on_member_ban(g, member):
+        c = self.getChannel(g, "botevents")
+        await c.send("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") has been banned.")
+
+    async def on_member_unban(g, member):
+        c = self.getChannel(g, "botevents")
+        await c.send("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") has been unbanned.")
+
+    async def on_message_delete(message):
+        if not self.inRoleList(message.channel.guild,message.author.id,["Manager","Moderator"]):
+            c = self.getChannel(self.getGuild("synixe"), "botevents")
+            c.send("<@"+str(message.author.id) + "> ("+message.author.name+"#"+message.author.discriminator+") Deleted: "+message.content)
 
     async def on_member_update(self, before, after):
         if before.nick == None:
