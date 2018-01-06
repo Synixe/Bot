@@ -106,7 +106,7 @@ class SynixeBot(discord.Client):
         e = self.getChannel(g, "events")
         r = self.getChannel(g, "repohelp")
         await c.send("<@"+str(member.id) + ">! Welcome to Synixe! Here is some basic info about our group: If you check out <#"+str(e.id)+"> you can see our upcoming missions. We play at 7pm PST / 10pm EST. We have some mods you'll need to download from <#"+str(i.id)+">. If you have any questions while getting those setup we're more than happy to help in <#"+str(r.id)+">.")
-        await member.add_roles([discord.utils.get(g.roles, name="New")])
+        await member.add_roles(discord.utils.get(g.roles, name="New"))
 
     async def on_member_remove(self, member):
         c = self.getChannel(self.getGuild("synixe"), "botevents")
