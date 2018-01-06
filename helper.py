@@ -18,7 +18,7 @@ class Commands():
             "ts" : {
                 "function" : self.ts,
                 "description" : "Send a user the TS details",
-                "roles" : ["Active"]
+                "roles" : ["active"]
             }
         }
 
