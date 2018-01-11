@@ -144,8 +144,7 @@ class SynixeBot(discord.Client):
             c = self.getChannel(self.getGuild("synixe"), "botevents")
             await c.send(nickbefore + " is now known as " + nickafter)
 
-        print(after.game)
-        if after.game != None:
+        if self.inRoleList(self.getGuild("synixe"), after.id, ["active"]) and after.game != None:
             print(after.game.url)
             if after.game.url != None:
                 if before.game.url == None:
