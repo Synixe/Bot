@@ -93,7 +93,7 @@ class BotClient(discord.Client):
             await message.channel.send("That command doesn't exist...")
 
     async def on_message(self, message):
-        await self.bot.wait_until_ready()
+        await self.wait_until_ready()
         if message.content.startswith(self.prefix):
             await self.execute(message)
         else:
@@ -101,17 +101,17 @@ class BotClient(discord.Client):
                 await h.on_message(message)
 
     async def on_member_join(self, member):
-        await self.bot.wait_until_ready()
+        await self.wait_until_ready()
         for h in self.handlers["on_member_join"]:
             await h.on_member_join(member)
 
     async def on_member_remove(self, member):
-        await self.bot.wait_until_ready()
+        await self.wait_until_ready()
         for h in self.handlers["on_member_remove"]:
             await h.on_member_remove(member)
 
     async def on_member_update(self, before, after):
-        await self.bot.wait_until_ready()
+        await self.wait_until_ready()
         for h in self.handlers["on_member_update"]:
             await h.on_member_update(before, after)
 

@@ -1,5 +1,6 @@
 import argparse
 import random
+import logger
 import discord
 
 class BotExtension:
@@ -28,9 +29,20 @@ class BotExtension:
         parser.add_argument("n", nargs="?", default=20, type=int, help="The number of messages to delete, default: 20")
         parser.add_argument("--pinned",action="store_true",help="Delete pinned messages")
         args = parser.parse_args(args)
-        async for log in message.channel.history(limit=args.n + 1):
+        messages = message.channel.history(limit=args.n + 2)
+        status = await message.channel.send("Clearing {0} messages".format(args.n + 2))
+        x = args.n + 2
+        async for log in messages:
             if args.pinned or not log.pinned:
-                await log.delete()
+                try:
+                    if log.id != status.id:
+                        await log.delete()
+                except:
+                    logger.error("Failed to delete a message during Clear.")
+            x -= 1
+            await status.edit(content="Clearing {0} messages".format(x))
+        await status.delete()
+
 
     async def ext(self, args, message):
         parser = argparse.ArgumentParser(description="Get info about loaded extensions")
