@@ -1,0 +1,67 @@
+{
+  "radio" : {
+    "name" : "Radio Certification",
+    "description" : "A quick quiz on radio communications",
+    "steps" : [
+      {
+        "text" : "Welcome to Radio Certification.\nThis quick quiz will make sure that you have the knowledge to effectively use radios during operations.",
+        "question" : "First Question: What key operates short range radios? \nA: Tab\nB: T\nC: Caps Lock\nD: Y",
+        "answer" : "C"
+      },
+      {
+        "question" : "What key operates long range radios? \nA: Control + Caps Lock\nB: T\nC: Tab\nD: Y",
+        "answer" : "A"
+      },
+      {
+        "question" : "What key opens the interface your short range radio? \nA: Control + Caps Lock\nB: P\nC: Alt + P\nD: Control + P",
+        "answer" : "D"
+      },
+      {
+        "text" : "Pro Tip: If you prefer using the ACE interface to use equipment, you can find short range radios under Self Interaction->Equipment->Radios",
+        "question" : "What key opens the interface your long range radio? \nA: Control + Caps Lock\nB: P\nC: Alt + P\nD: Control + P",
+        "answer" : "C"
+      },
+      {
+        "text" : "For the following questions you are a squad leader for Charlie.",
+        "question" : "If you need to speak to Goliath (Command) how do you initiate contact with them?\nA: Command this is Charlie\nB: Goliath, this is Charlie\nC: Charlie for Command\nD: Goliath",
+        "answer" : "B"
+      },
+      {
+        "text" : "The squad Bravo is out of range of Goliath but you can hear them. They ask you to send their message to Goliath",
+        "question" : "How do you initiate contact with Goliath?\nA: Goliath, this is Charlie\nB: Goliath, this is Bravo\nC: Charlie for Command, Bravo wants to relay\nD: Goliath, Charlie, relay from Bravo",
+        "answer" : "D"
+      }
+    ]
+  },
+  "cqb" : {
+    "name" : "Close Quaters Combat",
+    "description" : "You will fail this at least once",
+    "steps" : [
+      {
+        "text" : "You are approaching a building, what color designation is the wall facing you?",
+        "question" : "A: Yellow\nB: Red\nC: Green\nD: White",
+        "answer" : "D"
+      },
+      {
+        "text" : "What color is the left hand wall?",
+        "question" : "A: Blue\nB: Red\nC: Green\nD: Black",
+        "answer" : "B"
+      },
+      {
+        "text" : "What color is the right hand wall?",
+        "question" : "A: Orange\nB: Blue\nC: Green\nD: Black",
+        "answer": "C"
+      },
+      {
+        "text" : "What color is the roof?",
+        "question" : "A: Orange\nB: Black\nC: Blue\nD: Yellow",
+        "answer" : "C"
+      },
+      {
+        "text" : "What color is the opposite wall (back wall)?",
+        "question" : "A: Yellow\nB: Orange\nC: Black\nD:Red",
+        "answer" : "C"
+      }
+    ]
+  } 
+}
