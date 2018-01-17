@@ -76,6 +76,3 @@ class BotExtension:
         if message.author.id == 307524009854107648:
             if random.random() < 0.05:
                 await message.channel.send("Allegedly...")
-        elif message.author.id == 206663073769979904:
-            if random.random() < 0.05:
-                await message.channel.send("Whatever you say nameless...")
