@@ -74,7 +74,7 @@ class BotClient(discord.Client):
         cmd = raw[0]
         args = raw[1:]
         if cmd in self.commands:
-            if self.inRoleList(message.author, self.commands[cmd]["roles"]):
+            if self.inRoleList(message.author, self.commands[cmd]["roles"]) or (type(message.channel) == discord.DMChannel and "@everyone" in self.commands[cmd]["roles"]):
                 o = io.StringIO()
                 e = io.StringIO()
                 with redirect_stdout(o):
@@ -88,7 +88,10 @@ class BotClient(discord.Client):
                                 out = e.getvalue()
                             await message.channel.send(out.replace("main.py",self.prefix+cmd))
             else:
-                await message.channel.send("Sorry, you are not allowed to use that command.")
+                if type(message.channel) == discord.DMChannel:
+                    await message.channel.send("This command can not be used in a direct message channel.")
+                else:
+                    await message.channel.send("Sorry, you are not allowed to use that command.")
         else:
             await message.channel.send("That command doesn't exist...")
 
@@ -116,6 +119,10 @@ class BotClient(discord.Client):
             await h.on_member_update(before, after)
 
     def inRoleList(self, member, roles):
+        if "@everyone" in roles:
+            return True
+        if type(member) == discord.User:
+            return False
         for r in member.roles:
             if r.name.lower() in roles:
                 return True

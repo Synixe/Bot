@@ -14,13 +14,13 @@ class BotExtension:
         return {
             "clear" : {
                 "function" : self.clear,
-                "description" : "Clears the past n number of messages (Default: 100)",
+                "description" : "Clears the past n number of messages (Default: 20)",
                 "roles" : ["manager"]
             },
             "ext" : {
                 "function" : self.ext,
                 "description" : "Get info about loaded extensions",
-                "roles" : ["moderator"]
+                "roles" : ["@everyone"]
             }
         }
 
@@ -60,15 +60,20 @@ class BotExtension:
         else:
             if args.extension in self.bot.extension_list:
                 embed = discord.Embed(
-                    title = self.bot.extensions[args.extension].name
+                    title = "{0.name} v{0.version}".format(self.bot.extensions[args.extension])
                 )
-                if args.extension in self.bot._ext_commands:
-                    embed.add_field(name="Commands",value=", ".join(self.bot._ext_commands[args.extension]))
                 if args.extension in self.bot._ext_handlers:
                     embed.add_field(name="Handlers",value=", ".join(self.bot._ext_handlers[args.extension]))
                 if args.extension in self.bot._ext_loops:
                     embed.add_field(name="Loops", value=", ".join(self.bot._ext_loops[args.extension]))
-                await message.channel.send(embed=embed)
+                if args.extension in self.bot._ext_commands:
+                    description = ""
+                    for name, c in self.bot._ext_commands[args.extension].items():
+                        description += name+"\n"
+                        description += "    "+c['description']+"\n"
+                    await message.channel.send(embed=embed,content="```\n"+description+"```")
+                else:
+                    await message.channel.send(embed=embed)
             else:
                 await message.channel.send("That extension does not exist.")
 
