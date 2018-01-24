@@ -21,6 +21,16 @@ class BotExtension:
                 "function" : self.ext,
                 "description" : "Get info about loaded extensions",
                 "roles" : ["@everyone"]
+            },
+            "freeze" : {
+                "function" : self.freeze,
+                "description" : "Freeze a user from sending messages",
+                "roles" : ["manager","moderator"]
+            },
+            "unfreeze" : {
+                "function" : self.unfreeze,
+                "description" : "Unfreeze a user from sending messages",
+                "roles" : ["manager","moderator"]
             }
         }
 
@@ -43,6 +53,31 @@ class BotExtension:
             await status.edit(content="Clearing {0} messages".format(x))
         await status.delete()
 
+    async def freeze(self, args, message):
+        parser = argparse.ArgumentParser(description="Freeze a user from sending messages")
+        parser.add_argument("user", help="The user to freeze")
+        args = parser.parse_args(args)
+        user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
+        if user != None:
+            if self.bot.inRoleList(user, ["manager"]):
+                async with message.channel.typing():
+                    await message.channel.send(file=discord.File(fp="/media/sydney/web/gifs/treason.gif"))
+            else:
+                await user.add_roles(self.getRole(message.channel.guild,"Silenced"))
+                await message.channel.send("Froze {0.display_name}".format(user))
+        else:
+            await message.channel.send("Can't find that user.")
+
+    async def unfreeze(self, args, message):
+        parser = argparse.ArgumentParser(description="UnFreeze a user, allowing them to send messages")
+        parser.add_argument("user", help="The user to unfreeze")
+        args = parser.parse_args(args)
+        user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
+        if user != None:
+            await user.remove_roles(self.getRole(message.channel.guild,"Silenced"))
+            await message.channel.send("Unfroze {0.display_name}".format(user))
+        else:
+            await message.channel.send("Can't find that user.")
 
     async def ext(self, args, message):
         parser = argparse.ArgumentParser(description="Get info about loaded extensions")
@@ -53,6 +88,7 @@ class BotExtension:
                 title = self.bot.user.display_name,
                 description = ", ".join(self.bot.extension_list)
             )
+            embed.set_footer(text="Use ?ext [module] to see commands and handlers.")
             embed.add_field(name="Commands",value=self.bot._num_commands)
             embed.add_field(name="Handlers",value=self.bot._num_handlers)
             embed.add_field(name="Loops", value=self.bot._num_loops)
@@ -77,7 +113,13 @@ class BotExtension:
             else:
                 await message.channel.send("That extension does not exist.")
 
-    async def on_message(self, message):
-        if message.author.id == 307524009854107648:
-            if random.random() < 0.05:
-                await message.channel.send("Allegedly...")
+    def getRole(self, guild, name):
+        for r in guild.roles:
+            if name.lower() == r.name.lower():
+                return r
+        return None
+
+    #async def on_message(self, message):
+    #    if message.author.id == 307524009854107648:
+    #        if random.random() < 0.02:
+    #            await message.channel.send("Allegedly...")

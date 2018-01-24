@@ -51,7 +51,7 @@ class BotClient(discord.Client):
                 self._num_loops += len(newloops)
                 for l in newloops:
                     logger.info("\tLoop Registered: {0}".format(l))
-            for h in ["on_message","on_member_join","on_member_remove","on_member_update"]:
+            for h in ["on_message","on_member_join","on_member_remove","on_member_update","on_member_ban","on_member_unban"]:
                 if h not in self.handlers:
                     self.handlers[h] = []
                 if hasattr(loaded, h):
@@ -93,7 +93,7 @@ class BotClient(discord.Client):
                 else:
                     await message.channel.send("Sorry, you are not allowed to use that command.")
         else:
-            await message.channel.send("That command doesn't exist...")
+            await message.channel.send("That command doesn't exist... You can use `?ext` to learn about what I can do")
 
     async def on_message(self, message):
         await self.wait_until_ready()
@@ -113,6 +113,16 @@ class BotClient(discord.Client):
         for h in self.handlers["on_member_remove"]:
             await h.on_member_remove(member)
 
+    async def on_member_ban(self, member):
+        await self.wait_until_ready()
+        for h in self.handlers["on_member_ban"]:
+            await h.on_member_ban(member)
+
+    async def on_member_unban(self, member):
+        await self.wait_until_ready()
+        for h in self.handlers["on_member_unban"]:
+            await h.on_member_unban(member)
+
     async def on_member_update(self, before, after):
         await self.wait_until_ready()
         for h in self.handlers["on_member_update"]:
@@ -130,7 +140,10 @@ class BotClient(discord.Client):
 
     def getIDFromTag(self, text):
         if text.startswith("<@") or text.startswith("<#"):
-            return int(text[2:-1])
+            try:
+                return int(text[2:-1])
+            except:
+                return int(text[3:-1])
         else:
             try:
                 return int(text)

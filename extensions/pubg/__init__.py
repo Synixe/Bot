@@ -14,13 +14,13 @@ class BotExtension:
     def register(self):
         return {
             "pubg" : {
-                "function" : self.r6,
+                "function" : self.pubg,
                 "description" : "Display PLAYER UNKNOWN's Battlegrounds stats",
                 "roles" : ["@everyone"]
             }
         }
 
-    async def r6(self, args, message):
+    async def pubg(self, args, message):
         async with message.channel.typing():
             parser = argparse.ArgumentParser(description="Display PLAYER UNKNOWN's Battlegrounds stats")
             parser.add_argument("user", help="The PUBG username you want to fetch")
@@ -31,7 +31,6 @@ class BotExtension:
             platform = "pc"
             parser.check_next = False
             req = urllib.request.Request(url="https://pubgtracker.com/profile/"+platform+"/"+args.user,headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'})
-            #try:
             with urllib.request.urlopen(req) as response:
                 parser.feed(response.read().decode("UTF-8"))
             try:
@@ -53,5 +52,3 @@ class BotExtension:
                 embed.description = "This player has not played "+args.mode
             embed.set_thumbnail(url=parser.data["Avatar"])
             await message.channel.send(embed=embed)
-            #except Exception as e:
-            #    await message.channel.send("I wasn't able to find that player!")
