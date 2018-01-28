@@ -5,6 +5,8 @@ import importlib
 import os
 import traceback
 import io
+import random
+from textblob import TextBlob
 from contextlib import redirect_stdout, redirect_stderr
 
 class Capturing(list):
@@ -20,6 +22,7 @@ class Capturing(list):
 sys.path.insert(0, './extensions/')
 
 class BotClient(discord.Client):
+    supported_languages = ["af","sq","ar","az","eu","bn","be","bg","ca","zh-CN","zh-TW","hr","cs","da","nl","en","eo","et","tl","fi","fr","gl","ka","de","el","gu","ht","iw","hi","hu","is","id","ga","it","ja","kn","ko","la","lv","lt","mk","ms","mt","no","fa","pl","pt","ro","ru","sr","sk","sl","es","sw","sv","ta","te","th","tr","uk","vi","vy","yi"]
     async def on_ready(self):
         self.extension_list = [x[0].split('/')[1] for x in os.walk('extensions') if x[0].count('/') == 1]
         self.extensions = {}
@@ -36,6 +39,9 @@ class BotClient(discord.Client):
         for exten in self.extension_list:
             loaded = importlib.import_module(exten).BotExtension(self)
             self.extensions[exten] = loaded
+            if hasattr(loaded,"active"):
+                if not loaded.active:
+                    continue
             logger.info("Loading {0.name} {0.version} by {0.author}".format(loaded))
             if hasattr(loaded, "register"):
                 newcmds = loaded.register()
@@ -72,7 +78,9 @@ class BotClient(discord.Client):
             return #Do not allow responding to it's own commands
         raw = message.content[len(self.prefix):].split()
         cmd = raw[0]
-        args = raw[1:]
+        args = " ".join(raw[1:])
+        import re
+        args = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''').split(args)[1::2]
         if cmd in self.commands:
             if self.inRoleList(message.author, self.commands[cmd]["roles"]) or (type(message.channel) == discord.DMChannel and "@everyone" in self.commands[cmd]["roles"]):
                 o = io.StringIO()
@@ -89,19 +97,20 @@ class BotClient(discord.Client):
                             await message.channel.send(out.replace("main.py",self.prefix+cmd))
             else:
                 if type(message.channel) == discord.DMChannel:
-                    await message.channel.send("This command can not be used in a direct message channel.")
+                    await message.channel.send(self.processOutput("This command can not be used in a direct message channel.", message))
                 else:
-                    await message.channel.send("Sorry, you are not allowed to use that command.")
+                    await message.channel.send(self.processOutput("Sorry, you are not allowed to use that command.", message))
         else:
-            await message.channel.send("That command doesn't exist... You can use `?ext` to learn about what I can do")
+            await message.channel.send(self.processOutput("That command doesn't exist... You can use `?ext` to learn about what I can do", message))
 
     async def on_message(self, message):
         await self.wait_until_ready()
-        if message.content.startswith(self.prefix):
-            await self.execute(message)
-        else:
-            for h in self.handlers["on_message"]:
-                await h.on_message(message)
+        if message.author.id != self.user.id:
+            if message.content.startswith(self.prefix) and message.content.replace(self.prefix,"").strip() != "":
+                await self.execute(message)
+            else:
+                for h in self.handlers["on_message"]:
+                    await h.on_message(message)
 
     async def on_member_join(self, member):
         await self.wait_until_ready()
@@ -149,3 +158,9 @@ class BotClient(discord.Client):
                 return int(text)
             except:
                 return text
+
+    def processOutput(self, response, message):
+        if message.author.id == 206663073769979904:
+            en_blob = TextBlob(response)
+            return str(en_blob.translate(to=random.choice(self.supported_languages)))
+        return response

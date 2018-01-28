@@ -22,9 +22,9 @@ class BotExtension:
 
     async def pubg(self, args, message):
         async with message.channel.typing():
-            parser = argparse.ArgumentParser(description="Display PLAYER UNKNOWN's Battlegrounds stats")
-            parser.add_argument("user", help="The PUBG username you want to fetch")
-            parser.add_argument("-m", dest="mode", help="Game Mode",choices=["lifetime","solo","duo","squad","solo-fpp","duo-fpp","squad-fpp"],default="Lifetime")
+            parser = argparse.ArgumentParser(description=self.bot.processOutput("Display PLAYER UNKNOWN's Battlegrounds stats", message))
+            parser.add_argument("user", help=self.bot.processOutput("The PUBG username you want to fetch", message))
+            parser.add_argument("-m", dest="mode", help=self.bot.processOutput("Game Mode", message),choices=["lifetime","solo","duo","squad","solo-fpp","duo-fpp","squad-fpp"],default="Lifetime")
             args = parser.parse_args(args)
             args.user = args.user.lower()
             parser = pubgparser.PUBGParser()
@@ -36,7 +36,7 @@ class BotExtension:
             try:
                 parser.process()
             except:
-                await message.channel.send("I wasn't able to find that player!")
+                await message.channel.send(self.bot.processOutput("I wasn't able to find that player!", message))
                 return
             embed = discord.Embed(
                 title = parser.data['PlayerName'],
@@ -44,11 +44,11 @@ class BotExtension:
             )
             mode = args.mode.lower()
             if len(parser.data[mode]) != 0:
-                embed.add_field(name="Kills",value=parser.data[mode]["Kills"],inline=True)
-                embed.add_field(name="Matches Played",value=parser.data[mode]["Rounds Played"],inline=True)
-                embed.add_field(name="Wins",value=parser.data[mode]["Wins"],inline=True)
-                embed.add_field(name="Top 10s",value=parser.data[mode]["Top 10s"],inline=True)
+                embed.add_field(name=self.bot.processOutput("Kills", message),value=parser.data[mode]["Kills"],inline=True)
+                embed.add_field(name=self.bot.processOutput("Matches Played", message),value=parser.data[mode]["Rounds Played"],inline=True)
+                embed.add_field(name=self.bot.processOutput("Wins", message),value=parser.data[mode]["Wins"],inline=True)
+                embed.add_field(name=self.bot.processOutput("Top 10s", message),value=parser.data[mode]["Top 10s"],inline=True)
             else:
-                embed.description = "This player has not played "+args.mode
+                embed.description = self.bot.processOutput("This player has not played "+args.mode, message)
             embed.set_thumbnail(url=parser.data["Avatar"])
             await message.channel.send(embed=embed)

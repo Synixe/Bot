@@ -22,10 +22,10 @@ class BotExtension:
 
     async def r6(self, args, message):
         async with message.channel.typing():
-            parser = argparse.ArgumentParser(description="Display Rainbow 6 Siege stats")
-            parser.add_argument("user", help="The Rainbow 6 Siege username you want to fetch")
-            parser.add_argument("--psn", help="Search for a PSN account",action="store_true")
-            parser.add_argument("--xbox", help="Search for a Xbox account",action="store_true")
+            parser = argparse.ArgumentParser(description=self.bot.processOutput("Display Rainbow 6 Siege stats", message))
+            parser.add_argument("user", help=self.bot.processOutput("The Rainbow 6 Siege username you want to fetch", message))
+            parser.add_argument("--psn", help=self.bot.processOutput("Search for a PSN account", message),action="store_true")
+            parser.add_argument("--xbox", help=self.bot.processOutput("Search for a Xbox account", message),action="store_true")
             args = parser.parse_args(args)
             parser = r6parser.R6Parser()
             platform = "pc"
@@ -47,12 +47,12 @@ class BotExtension:
                     title = parser.name,
                     url = "http://r6.tracker.network/profile/"+platform+"/"+parser.name.strip()
                 )
-                embed.add_field(name="Kills",value=parser.kills,inline=True)
-                embed.add_field(name="Deaths",value=parser.deaths,inline=True)
-                embed.add_field(name="W/L",value=parser.wlr,inline=True)
-                embed.add_field(name="Accuracy",value=parser.accuracy,inline=True)
+                embed.add_field(name=self.bot.processOutput("Kills", message),value=parser.kills,inline=True)
+                embed.add_field(name=self.bot.processOutput("Deaths", message),value=parser.deaths,inline=True)
+                embed.add_field(name=self.bot.processOutput("W/L", message),value=parser.wlr,inline=True)
+                embed.add_field(name=self.bot.processOutput("Accuracy", message),value=parser.accuracy,inline=True)
                 if (parser.profile != None):
                     embed.set_thumbnail(url=parser.profile)
                 await message.channel.send(embed=embed)
             except Exception as e:
-                await message.channel.send("I wasn't able to find that player!")
+                await message.channel.send(self.bot.processOutput("I wasn't able to find that player!", message))

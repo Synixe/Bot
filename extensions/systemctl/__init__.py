@@ -6,7 +6,7 @@ import asyncio
 
 class BotExtension:
     def __init__(self, bot):
-        self.name = "Cards"
+        self.name = "System Control"
         self.author = "Brett"
         self.version = "1.0"
         self.bot = bot
@@ -28,9 +28,9 @@ class BotExtension:
         }
 
     async def status(self, args, message):
-        parser = argparse.ArgumentParser(description="Get the status of a system service")
-        parser.add_argument("service", help="The systemctl service")
-        parser.add_argument("--full",action="store_true",help="Display the full status")
+        parser = argparse.ArgumentParser(description=self.bot.processOutput("Get the status of a system service", message))
+        parser.add_argument("service", help=self.bot.processOutput("The systemctl service", message))
+        parser.add_argument("--full",action="store_true",help=self.bot.processOutput("Display the full status", message))
         args = parser.parse_args(args)
         if args.service in self.services:
             if args.full:
@@ -50,15 +50,15 @@ class BotExtension:
                 embed = discord.Embed(
                     title = self.services[args.service]["name"],
                     color = color,
-                    description = description
+                    description = self.bot.processOutput(description, message)
                 )
                 await message.channel.send(embed=embed)
         else:
             await message.channel.send("Unknown Service")
 
     async def start(self, args, message):
-        parser = argparse.ArgumentParser(description="Start a service")
-        parser.add_argument("service",help="The systemctl service")
+        parser = argparse.ArgumentParser(description=self.bot.processOutput("Start a service", message))
+        parser.add_argument("service",help=self.bot.processOutput("The systemctl service", message))
         args = parser.parse_args(args)
         if args.service in self.services:
             r = subprocess.run(["systemctl","is-active",self.services[args.service]["unit"]], stdout=subprocess.PIPE)
@@ -66,14 +66,14 @@ class BotExtension:
                 embed = discord.Embed(
                     title = self.services[args.service]["name"],
                     color = discord.Colour.from_rgb(r=0,g=255,b=0),
-                    description = "Already Active"
+                    description = self.bot.processOutput("Already Active", message)
                 )
                 await message.channel.send(embed=embed)
             else:
                 embed = discord.Embed(
                     title = self.services[args.service]["name"],
                     color = discord.Color.from_rgb(r=255,g=255,b=0),
-                    description = "Starting..."
+                    description = self.bot.processOutput("Starting...", message)
                 )
                 holder = await message.channel.send(embed=embed)
                 os.system("sudo systemctl start "+self.services[args.service]["unit"])
@@ -83,13 +83,13 @@ class BotExtension:
                     embed = discord.Embed(
                         title = self.services[args.service]["name"],
                         color = discord.Colour.from_rgb(r=0,g=255,b=0),
-                        description = "Active"
+                        description = self.bot.processOutput("Active", message)
                     )
                 else:
                     embed = discord.Embed(
                         title = self.services[args.service]["name"],
                         color = discord.Colour.from_rgb(r=255,g=0,b=0),
-                        description = "Inactive"
+                        description = self.bot.processOutput("Inactive", message)
                     )
                 await holder.edit(embed=embed)
         else:

@@ -18,8 +18,8 @@ class BotExtension:
         }
 
     async def card(self, args, message):
-        parser = argparse.ArgumentParser(description="Display a pretty card with information about a member")
-        parser.add_argument("user", nargs="?", default=str(message.author.id), help="The subject of the card. Defaults to the message's author.")
+        parser = argparse.ArgumentParser(description=self.bot.processOutput("Display a pretty card with information about a member", message))
+        parser.add_argument("user", nargs="?", default=str(message.author.id), help=self.bot.processOutput("The subject of the card. Defaults to the message's author.", message))
         args = parser.parse_args(args)
         user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
         if user != None:
@@ -27,8 +27,8 @@ class BotExtension:
                 title = user.name,
                 color = user.colour
             )
-            embed.add_field(name="Joined on",value=user.joined_at.strftime("%B %d, %Y"))
+            embed.add_field(name=self.bot.processOutput("Joined on", message),value=user.joined_at.strftime("%B %d, %Y"))
             embed.set_thumbnail(url=user.avatar_url)
             await message.channel.send(embed=embed)
         else:
-            await message.channel.send("Unable to find that user. Try using @ to mention them or use their Discord ID.")
+            await message.channel.send(self.bot.processOutput("Unable to find that user. Try using @ to mention them or use their Discord ID.", message))
