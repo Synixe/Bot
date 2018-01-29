@@ -36,16 +36,16 @@ class BotExtension:
                     for m in mods:
                         if m["url"] == "N":
                             continue
-                        service,id = m['url'].split("@")
+                        service,mid = m['url'].split("@")
                         if service == "A": #Armaholic
-                            latest = armaholic.latest(id)
+                            latest = armaholic.latest(mid)
                             if latest != m['notified']:
                                 for guild in self.bot.guilds:
                                     channel = discord.utils.find(lambda c: c.name == "botevents", guild.channels)
                                     if channel is not None:
                                         embed = discord.Embed(
                                             title = m['name'],
-                                            url = "http://www.armaholic.com/page.php?id="+id
+                                            url = "http://www.armaholic.com/page.php?id="+mid
                                         )
                                         embed.add_field(name="Current", value=m['version'])
                                         embed.add_field(name="Available", value=latest)

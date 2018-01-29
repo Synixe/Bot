@@ -139,7 +139,8 @@ class BotExtension:
             frame = getframeinfo(currentframe())
             logger.throw("Unable to find #{0.name}\n\t{1.filename} line {0.lineno - 4}".format(args.channel, frame))
 
-    def getRole(self, guild, name):
+    @classmethod
+    def getRole(cls, guild, name):
         for r in guild.roles:
             if name.lower() == r.name.lower():
                 return r

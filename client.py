@@ -126,7 +126,8 @@ class BotClient(discord.Client):
         for h in self.handlers["on_member_update"]:
             await h.on_member_update(before, after)
 
-    def inRoleList(self, member, roles):
+    @classmethod
+    def inRoleList(cls, member, roles):
         if "@everyone" in roles:
             return True
         if isinstance(member, discord.User):
@@ -136,7 +137,8 @@ class BotClient(discord.Client):
                 return True
         return False
 
-    def getIDFromTag(self, text):
+    @classmethod
+    def getIDFromTag(cls, text):
         if text.startswith("<@") or text.startswith("<#"):
             try:
                 return int(text[2:-1])

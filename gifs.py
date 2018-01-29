@@ -12,5 +12,5 @@ def process(value):
 def getRandom(category):
     try:
         return process(category+"/"+random.choice(getattr(GifDirectories, category)))
-    except:
+    except AttributeError:
         return process(category+"/"+random.choice(GifDirectories.spelling))

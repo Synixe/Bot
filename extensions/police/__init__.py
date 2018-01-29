@@ -39,7 +39,7 @@ class BotExtension:
                     await message.channel.send(self.bot.processOutput("They look like a negative person...",message))
                 else:
                     await message.channel.send(self.bot.processOutput("Please don't make me read their history again :cry:",message))
-            except:
+            except NameError:
                 await message.channel.send(self.bot.processOutput("I can't figure it out yet, but I'm getting smarter",message))
         else:
             await message.channel.send(self.bot.processOutput("Unable to find that user. Try using @ to mention them or use their Discord ID.",message))
@@ -57,5 +57,5 @@ class BotExtension:
             await message.channel.send(self.bot.processOutput("There is no need to talk with such negativity.",message))
         try:
             self.history[message.author.id] += text.sentiment.polarity
-        except:
+        except NameError:
             self.history[message.author.id] = text.sentiment.polarity
