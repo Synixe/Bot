@@ -1,5 +1,4 @@
 from html.parser import HTMLParser
-import logger
 
 class R6Parser(HTMLParser):
     def handle_starttag(self, tag, attrs):

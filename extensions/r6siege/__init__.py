@@ -54,5 +54,5 @@ class BotExtension:
                 if (parser.profile != None):
                     embed.set_thumbnail(url=parser.profile)
                 await message.channel.send(embed=embed)
-            except Exception as e:
+            except:
                 await message.channel.send(self.bot.processOutput("I wasn't able to find that player!", message))

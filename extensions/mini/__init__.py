@@ -22,8 +22,8 @@ class BotExtension:
         }
 
     async def dice(self, args, message):
-        parser = argparse.ArgumentParser(description="Roll a dice")
-        parser.add_argument("n",nargs="?",type=int,default=6,help="Number of sides")
+        parser = argparse.ArgumentParser(description=self.bot.processOutput("Roll a dice", message))
+        parser.add_argument("n",nargs="?",type=int,default=6,help=self.bot.processOutput("Number of sides", message))
         args = parser.parse_args(args)
         value = random.randint(1,args.n)
         messages = ["The value is {0}","You rolled a {0}","It lands on {0}"]

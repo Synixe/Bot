@@ -1,5 +1,4 @@
 from html.parser import HTMLParser
-import logger
 import json
 
 class PUBGParser(HTMLParser):

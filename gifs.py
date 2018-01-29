@@ -1,5 +1,4 @@
 import random
-import inspect
 
 path = "/media/sydney/web/gifs/"
 

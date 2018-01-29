@@ -16,7 +16,7 @@ class BotExtension:
             logger.throw("Unable to find #botevents\n\t{0.filename} line {0.lineno - 4}".format(frame))
 
     async def on_member_join(self, member):
-        await self.post_to_bot_events(member, "New Member: {0.display_name}#{0.discriminator} <@{0.id}> ({0.id})".format(member))
+        #await self.post_to_bot_events(member, "New Member: {0.display_name}#{0.discriminator} <@{0.id}> ({0.id})".format(member))
         g = member.guild
         for c in g.channels:
             if c.name == "lobby":
@@ -38,11 +38,10 @@ class BotExtension:
             await self.post_to_bot_events(after, "<@{0.id}> {0.display_name} is now known as {1.display_name}".format(before, after))
 
     async def on_member_ban(self, g, member):
-        await self.post_to_bot_events("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") has been banned.")
+        await self.post_to_bot_events(member, "<@{0.id}> ({0.name}#{0.discriminator}) has been banned.".format(member))
 
     async def on_member_unban(self, g, member):
-        await self.post_to_bot_events("<@"+str(member.id) + "> ("+member.name+"#"+member.discriminator+") has been unbanned.")
-
+        await self.post_to_bot_events(member, "<@{0.id}> ({0.name}#{0.discriminator}) has been unbanned.".format(member))
 
     def getRole(self, guild, name):
         for r in guild.roles:

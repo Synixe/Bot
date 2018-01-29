@@ -132,5 +132,5 @@ class BotExtension:
         args = parser.parse_args(args)
         channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
         if channel is not None:
-            id = await channel.send("Loading Data")
-            await embeds.displayEvent(self, id, args.event, message)
+            mid = await channel.send("Loading Data")
+            await embeds.displayEvent(self, mid, args.event, message)

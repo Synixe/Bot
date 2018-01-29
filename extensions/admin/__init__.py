@@ -53,7 +53,7 @@ class BotExtension:
                 try:
                     if log.id != status.id:
                         await log.delete()
-                except:
+                except: #TODO specify error
                     logger.error(self.bot.processOutput("Failed to delete a message during Clear.", message))
             x -= 1
             await status.edit(content=self.bot.processOutput("Clearing {0} messages".format(x), message))

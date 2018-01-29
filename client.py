@@ -3,21 +3,10 @@ import logger
 import sys
 import importlib
 import os
-import traceback
 import io
 import random
 from textblob import TextBlob
 from contextlib import redirect_stdout, redirect_stderr
-
-class Capturing(list):
-    def __enter__(self):
-        self._stdout = sys.stdout
-        sys.stdout = self._stringio = StringIO()
-        return self
-    def __exit__(self, *args):
-        self.extend(self._stringio.getvalue().splitlines())
-        del self._stringio    # free up some memory
-        sys.stdout = self._stdout
 
 sys.path.insert(0, './extensions/')
 
@@ -82,7 +71,7 @@ class BotClient(discord.Client):
         import re
         args = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''').split(args)[1::2]
         if cmd in self.commands:
-            if self.inRoleList(message.author, self.commands[cmd]["roles"]) or (type(message.channel) == discord.DMChannel and "@everyone" in self.commands[cmd]["roles"]):
+            if self.inRoleList(message.author, self.commands[cmd]["roles"]) or (isinstance(message.channel, discord.DMChannel) and "@everyone" in self.commands[cmd]["roles"]):
                 o = io.StringIO()
                 e = io.StringIO()
                 with redirect_stdout(o):
@@ -96,7 +85,7 @@ class BotClient(discord.Client):
                                 out = e.getvalue()
                             await message.channel.send(out.replace("main.py",self.prefix+cmd))
             else:
-                if type(message.channel) == discord.DMChannel:
+                if isinstance(message.channel, discord.DMChannel):
                     await message.channel.send(self.processOutput("This command can not be used in a direct message channel.", message))
                 else:
                     await message.channel.send(self.processOutput("Sorry, you are not allowed to use that command.", message))
@@ -140,7 +129,7 @@ class BotClient(discord.Client):
     def inRoleList(self, member, roles):
         if "@everyone" in roles:
             return True
-        if type(member) == discord.User:
+        if isinstance(member, discord.User):
             return False
         for r in member.roles:
             if r.name.lower() in roles:
@@ -151,12 +140,12 @@ class BotClient(discord.Client):
         if text.startswith("<@") or text.startswith("<#"):
             try:
                 return int(text[2:-1])
-            except:
+            except ValueError:
                 return int(text[3:-1])
         else:
             try:
                 return int(text)
-            except:
+            except ValueError:
                 return text
 
     def processOutput(self, response, message):
