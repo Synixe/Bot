@@ -6,4 +6,4 @@ logger.clear()
 
 bot = client.BotClient()
 bot.prefix = "?"
-bot.run(tokens.DISCORD)
+bot.run(tokens.DISCORD, bot=False)

@@ -37,6 +37,11 @@ class BotExtension:
                 "function" : self.speak,
                 "description" : "Makes the bot say something funny",
                 "roles" : ["manager"]
+            },
+            "anon" : {
+                "function" : self.anon,
+                "description" : "Send a message to the Moderators anonymously",
+                "roles" : ["@everyone"]
             }
         }
 
@@ -76,14 +81,14 @@ class BotExtension:
 
     async def unfreeze(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("UnFreeze a user, allowing them to send messages", message))
-        parser.add_argument("user", help=self.bot.processOutput("The user to unfreeze", messages))
+        parser.add_argument("user", help=self.bot.processOutput("The user to unfreeze", message))
         args = parser.parse_args(args)
         user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
         if user != None:
             await user.remove_roles(self.getRole(message.channel.guild,"Silenced"))
-            await message.channel.send(self.bot.processOutput("Unfroze {0.display_name}".format(user), messages))
+            await message.channel.send(self.bot.processOutput("Unfroze {0.display_name}".format(user), message))
         else:
-            await message.channel.send(self.bot.processOutput("Can't find that user.", messages))
+            await message.channel.send(self.bot.processOutput("Can't find that user.", message))
 
     async def ext(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Get info about loaded extensions", message))
@@ -139,6 +144,16 @@ class BotExtension:
             frame = getframeinfo(currentframe())
             logger.throw("Unable to find #{0.name}\n\t{1.filename} line {0.lineno - 4}".format(args.channel, frame))
 
+    async def anon(self, args, message):
+        if not isinstance(message.channel, discord.DMChannel):
+            await message.delete()
+            await message.channel.send("Only use this command in a direct message.")
+        else:
+            channel = discord.utils.find(lambda c: c.name == "inbox", discord.utils.find(lambda g: g.name == "Synixe", self.bot.guilds).channels)
+            if channel is not None:
+                await channel.send(" ".join(args))
+            await message.channel.send("Message sent!")
+
     @classmethod
     def getRole(cls, guild, name):
         for r in guild.roles:
@@ -146,7 +161,7 @@ class BotExtension:
                 return r
         return None
 
-    #async def on_message(self, message):
-    #    if message.author.id == 307524009854107648:
-    #        if random.random() < 0.02:
-    #            await message.channel.send("Allegedly...")
+    async def on_message(self, message):
+        if message.author.id == 307524009854107648:
+            if random.random() < 0.01:
+                await message.channel.send("Allegedly...")

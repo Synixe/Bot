@@ -1,8 +1,5 @@
 import argparse
 import discord
-import random
-#import gifs
-#from textblob import TextBlob
 
 class BotExtension:
     def __init__(self, bot):
@@ -29,7 +26,7 @@ class BotExtension:
             user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
             user.send("The TeamSpeak address is ts.synixe.com")
         except:
-            user.send("I'm not sure who that is...")
+            message.channel.send("I'm not sure who that is...")
 
     async def on_message(self, message):
         if message.author.id != self.bot.user.id:

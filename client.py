@@ -78,12 +78,16 @@ class BotClient(discord.Client):
                     with redirect_stderr(e):
                         try:
                             await self.commands[cmd]["function"](args, message)
+                            out = e.getvalue()
+                            if out != "":
+                                logger.error(out)
                         except SystemExit:
                             if str(sys.exc_info()[1]) == '0':
                                 out = o.getvalue()
                             else:
                                 out = e.getvalue()
                             await message.channel.send(out.replace("main.py",self.prefix+cmd))
+
             else:
                 if isinstance(message.channel, discord.DMChannel):
                     await message.channel.send(self.processOutput("This command can not be used in a direct message channel.", message))
