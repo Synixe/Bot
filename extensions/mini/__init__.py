@@ -17,6 +17,11 @@ class BotExtension:
                 "description" : "Roll a dice",
                 "roles" : ["@everyone"]
             },
+            "flip" : {
+                "function" : self.flip
+                "description" : "flip a coin"
+                "roles" : ["@everyone"]
+            },
             "card" : {
                 "function" : self.card,
                 "description" : "Display a pretty card with information about a member",
@@ -41,6 +46,17 @@ class BotExtension:
         value = random.randint(1,args.n)
         messages = ["The value is {0}","You rolled a {0}","It lands on {0}"]
         await message.channel.send(self.bot.processOutput(random.choice(messages).format(value),message))
+
+    async def flip(self, args, messsage):
+        parser = argparse.ArgumentParser(description=self.bot.processOutput("Flip a coin", message))
+        args = parser.parse_args(args)
+        side = random.randint(0,1)
+        if side == 0:
+            ouput = "It lands on heads"
+        else:
+            output = "It lands on tails"
+        await message.channel.send(self.bot.processOutput(output, message))
+
 
     async def card(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Display a pretty card with information about a member", message))
