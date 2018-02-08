@@ -19,7 +19,7 @@ class BotExtension:
             },
             "flip" : {
                 "function" : self.flip,
-                "description" : "flip a coin"
+                "description" : "flip a coin",
                 "roles" : ["@everyone"]
             },
             "card" : {
