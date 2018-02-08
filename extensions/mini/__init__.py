@@ -18,7 +18,7 @@ class BotExtension:
                 "roles" : ["@everyone"]
             },
             "flip" : {
-                "function" : self.flip
+                "function" : self.flip,
                 "description" : "flip a coin"
                 "roles" : ["@everyone"]
             },
@@ -56,7 +56,6 @@ class BotExtension:
         else:
             output = "It lands on tails"
         await message.channel.send(self.bot.processOutput(output, message))
-
 
     async def card(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Display a pretty card with information about a member", message))
