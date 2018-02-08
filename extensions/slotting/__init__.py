@@ -47,10 +47,9 @@ class BotExtension:
         parser.add_argument("-m","--mission",nargs="*",help=self.bot.processOutput("Mission to slot into", message))
         args = parser.parse_args(args)
         args.slot = " ".join(args.slot)
-        if args.mission != None:
-            if ";" in args.slot or ";" in args.mission:
-                await message.channel.send(":laughing:")
-                return
+        if ";" in args.slot or ";" in args.mission:
+            await message.channel.send(":laughing:")
+            return
         if args.mission != None:
             args.mission = " ".join(args.mission)
         channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
