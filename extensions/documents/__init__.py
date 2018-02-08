@@ -67,6 +67,9 @@ class BotExtension:
         #    await message.channel.send("There was an error finding that rule, it most likely doesn't exist.")
 
     async def rules(self, args, message):
+        if not len(args) == 0:
+            await message.channel.send("Use ?rule")
+            return
         await message.channel.send("The latest rules can be found at https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf")
 
     async def const(self, args, message):
