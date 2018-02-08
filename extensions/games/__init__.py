@@ -6,8 +6,8 @@ class BotExtension:
     def __init__(self, bot):
         self.bot = bot
         self.name = "Games"
-        self.author = "nameless"
-        self.version = "1.0"
+        self.author = "nameless :)"
+        self.version = "1.0.2"
 
     def register (self):
         return {
@@ -16,7 +16,6 @@ class BotExtension:
                 "description": "Play Rock Paper Scissors against the bot",
                 "roles" : ["@everyone"]
             }
-
         }
 
     async def rps(self, args, message):
