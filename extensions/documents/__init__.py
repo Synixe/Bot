@@ -59,7 +59,8 @@ class BotExtension:
                 desc += "{}. {}\n".format(i, tex.processRef(item))
             embed = discord.Embed(
                 title = args.rule + " " + rule["name"],
-                description = desc
+                description = desc,
+                color = discord.Colour.from_rgb(r=255,g=192,b=60)
             )
             await message.channel.send(embed=embed)
         #except:
@@ -107,7 +108,8 @@ class BotExtension:
                     desc += "{}. {}\n".format(i, tex.processRef(item))
                 embed = discord.Embed(
                     title = args.section + " " + rule["name"],
-                    description = desc
+                    description = desc,
+                    color = discord.Colour.from_rgb(r=255,g=192,b=60)
                 )
                 try:
                     await message.channel.send(embed=embed)
