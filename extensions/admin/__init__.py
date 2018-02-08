@@ -114,7 +114,7 @@ class BotExtension:
                 else:
                     color = discord.Colour.from_rgb(r=0,g=255,b=0)
                 embed = discord.Embed(
-                    title = "{0.name} v{0.version}".format(self.bot.extensions[args.extension]),
+                    title = "{0.name} v{0.version} by {0.author}".format(self.bot.extensions[args.extension]),
                     color = color
                 )
                 if args.extension in self.bot._ext_handlers:
