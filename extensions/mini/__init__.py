@@ -47,7 +47,7 @@ class BotExtension:
         messages = ["The value is {0}","You rolled a {0}","It lands on {0}"]
         await message.channel.send(self.bot.processOutput(random.choice(messages).format(value),message))
 
-    async def flip(self, args, messsage):
+    async def flip(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Flip a coin", message))
         args = parser.parse_args(args)
         side = random.randint(0,1)
