@@ -6,7 +6,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Mini Commands"
         self.author = "Brett + nameless :)"
-        self.version = "1.1"
+        self.version = "1.2"
         self.bot = bot
 
     def register(self):
@@ -30,6 +30,16 @@ class BotExtension:
                 "function" : self.ping,
                 "description" : "Ping the bot for a response",
                 "roles" : ["@everyone"]
+            },
+            "color" : {
+                "function" : self.color,
+                "description" : "Obtain the color of a role on the server",
+                "roles" : ["active","new","inactive"]
+            },
+            "colour" : {
+                "function" : self.color,
+                "description" : "Obtain the color of a role on the server",
+                "roles" : ["active","new","inactive"]
             }
         }
 
@@ -71,3 +81,19 @@ class BotExtension:
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Ping the bot", message))
         args = parser.parse_args(args)
         await message.channel.send("{:0.0f}ms".format(self.bot.latency * 1000))
+
+    async def color(self, args, message):
+        parser = argparse.ArgumentParser(description=self.bot.processOutput("Obtain a colo(u)r from a role on the server", message))
+        parser.add_argument("role", help=self.bot.processOutput("The role to get the color of", message))
+        args = parser.parse_args(args)
+        role = discord.utils.find(lambda m: m.name.lower() == args.role.lower(), message.channel.guild.roles)
+        if role != None:
+            embed = discord.Embed(
+                title = role.name,
+                color = role.colour
+            )
+            embed.add_field(name="RGB",value="{0.r}, {0.g}, {0.b}".format(role.color))
+            embed.add_field(name="Hex",value=str(role.color))
+            await message.channel.send(embed=embed)
+        else:
+            await message.channel.send("Role not found")
