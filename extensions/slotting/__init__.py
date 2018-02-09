@@ -3,14 +3,17 @@ import discord
 import random
 import tokens
 import pymysql.cursors
+import datetime
+import asyncio
+import os, sys
 
 from . import embeds
 
 class BotExtension:
     def __init__(self, bot):
         self.name = "Mini Commands"
-        self.author = "Brett"
-        self.version = "1.0"
+        self.author = "Brett + nameless"
+        self.version = "1.1"
         self.bot = bot
 
     def register(self):
@@ -30,6 +33,11 @@ class BotExtension:
                 "description" : "Post an event to #events",
                 "roles" : ["missionmaker"]
             }
+        }
+
+    def loops(self):
+        return {
+            "schedule-update-check" : self.bot.loop.create_task(self.schedule_task())
         }
 
     def getConnection(self):
@@ -133,3 +141,54 @@ class BotExtension:
         if channel is not None:
             mid = await channel.send("Loading Data")
             await embeds.displayEvent(self, mid, args.event, message)
+
+    async def schedule_task(self):
+        await self.bot.wait_until_ready()
+        while not self.bot.is_closed():
+            channel = discord.utils.find(lambda c: c.name == "events", discord.utils.find(lambda g: g.name == "Synixe", self.bot.guilds).channels)
+            target = None
+            if channel is not None:
+                messages = channel.history(limit=10)
+                async for m in messages:
+                    if len(m.embeds) == 1:
+                        if m.embeds[0].title == "Upcoming Events":
+                            target = m
+            connection = pymysql.connect(
+                host = tokens.MYSQL.HOST,
+                user = tokens.MYSQL.USER,
+                password = tokens.MYSQL.PASS,
+                db = tokens.MYSQL.DATA,
+                cursorclass = pymysql.cursors.DictCursor
+            )
+            try:
+                now = datetime.datetime.now()
+                with connection.cursor() as cursor:
+                    sql = "SELECT * FROM `events`"
+                    cursor.execute(sql)
+                    events = cursor.fetchall()
+
+                    embed = discord.Embed(
+                        title = "Upcoming Events",
+                        color = discord.Colour.from_rgb(r=255,g=192,b=60),
+                        description = "Sunday Missions: 2pm PST / 5pm EST\nAll other Missions: 7pm PST / 10pm EST\nUnless stated otherwise\n\n"
+                    )
+
+                    for event in events:
+                        date = [x.replace(",","") for x in event['date'].strip().split(" ")]
+                        month, day, year = tuple(date)
+                        day = int(day)
+                        year = int(year)
+                        month = datetime.datetime.strptime(month, '%B').month
+                        if month < now.month or (month == now.month and day < now.day):
+                            continue
+                        if month > now.month and now.day < 15:
+                            continue
+                        embed.add_field(name=event["date"],value="{} by <@{}>".format(event["name"], event['host']),inline=False)
+
+                    if target == None:
+                        await channel.send(embed=embed)
+                    else:
+                        await target.edit(embed=embed)
+            finally:
+                connection.close()
+            await asyncio.sleep(60 * 60)
