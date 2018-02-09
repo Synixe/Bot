@@ -38,9 +38,9 @@ class BotExtension:
             tex = parser.Parser(response.read().decode("UTF-8"))
         #try:
         rule = tex.getByID(args.rule)
-        if type(rule) == str:
+        if isinstance(rule, str):
             await message.channel.send(tex.processRef(rule))
-        elif type(rule) == dict:
+        elif isinstance(rule, dict):
             desc = ""
             if "text" in rule:
                 desc = tex.processRef(rule["text"]) + "\n"
@@ -81,9 +81,9 @@ class BotExtension:
             with urllib.request.urlopen(req) as response:
                 tex = parser.Parser(response.read().decode("UTF-8"))
             rule = tex.getByID(args.section)
-            if type(rule) == str:
+            if isinstance(rule, str):
                 await message.channel.send(rule)
-            elif type(rule) == dict:
+            elif isinstance(rule, dict):
                 desc = ""
                 if "text" in rule:
                     desc = tex.processRef(rule["text"]) + "\n"
