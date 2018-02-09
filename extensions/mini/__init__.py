@@ -6,7 +6,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Mini Commands"
         self.author = "Brett + nameless :)"
-        self.version = "1.1"
+        self.version = "1.2"
         self.bot = bot
 
     def register(self):
