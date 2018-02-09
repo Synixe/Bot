@@ -12,8 +12,8 @@ from . import embeds
 class BotExtension:
     def __init__(self, bot):
         self.name = "Mini Commands"
-        self.author = "Brett"
-        self.version = "1.0"
+        self.author = "Brett + nameless"
+        self.version = "1.1"
         self.bot = bot
 
     def register(self):
