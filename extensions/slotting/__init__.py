@@ -47,7 +47,7 @@ class BotExtension:
         parser.add_argument("-m","--mission",nargs="*",help=self.bot.processOutput("Mission to slot into", message))
         args = parser.parse_args(args)
         args.slot = " ".join(args.slot)
-        if ";" in args.slot or ";" in args.mission:
+        if ";" in args.slot or (args.mission != None and ";" in args.mission):
             await message.channel.send(":laughing:")
             return
         if args.mission != None:
