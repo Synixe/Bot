@@ -1,3 +1,5 @@
+import argparse
+
 class BotExtension:
     def __init__(self, bot):
         self.name = "Topics"
@@ -48,3 +50,9 @@ class BotExtension:
                 await message.channel.send(self.bot.processOutput("Unsubscribed!", message))
             else:
                 await message.channel.send(self.bot.processOutput("That topic doesn't exist", message))
+
+    def getRole(self, guild, name):
+        for r in guild.roles:
+            if name.lower() == r.name.lower():
+                return r
+        return None

@@ -5,10 +5,9 @@ import random
 class BotExtension:
     def __init__(self, bot):
         self.name = "Mini Commands"
-        self.author = "Brett"
-        self.version = "1.0"
+        self.author = "Brett + nameless :)"
+        self.version = "1.1"
         self.bot = bot
-        self.topics = {"R6S": "Rainbow 6 Siege", "ED": "Elite: Dangerous", "PUBG": "PUBG"}
 
     def register(self):
         return {
@@ -72,9 +71,3 @@ class BotExtension:
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Ping the bot", message))
         args = parser.parse_args(args)
         await message.channel.send("{:0.0f}ms".format(self.bot.latency * 1000))
-
-    def getRole(self, guild, name):
-        for r in guild.roles:
-            if name.lower() == r.name.lower():
-                return r
-        return None
