@@ -5,7 +5,7 @@ import random
 class BotExtension:
     def __init__(self, bot):
         self.name = "Mini Commands"
-        self.author = "Brett + nameless :)"
+        self.author = "Brett + nameless"
         self.version = "1.3"
         self.bot = bot
 
