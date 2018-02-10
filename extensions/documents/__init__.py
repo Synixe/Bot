@@ -39,7 +39,16 @@ class BotExtension:
         #try:
         rule = tex.getByID(args.rule)
         if isinstance(rule, str):
-            await message.channel.send(tex.processRef(rule))
+            embed = discord.Embed(
+                description = tex.processRef(rule),
+                color = discord.Colour.from_rgb(r=255,g=192,b=60)
+            )
+            embed.set_author(
+                name="Synixe Rules",
+                url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
+                icon_url=self.bot.user.avatar_url
+            )
+            await message.channel.send(embed=embed)
         elif isinstance(rule, dict):
             desc = ""
             if "text" in rule:
