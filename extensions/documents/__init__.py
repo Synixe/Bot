@@ -89,6 +89,9 @@ class BotExtension:
             url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
             icon_url=self.bot.user.avatar_url
         )
+        if not len(args) == 0:
+            await message.channel.send("Use {}rule".format(self.bot.prefix))
+            return
         await message.channel.send(embed=embed)
 
     async def const(self, args, message):
