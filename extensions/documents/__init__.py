@@ -6,8 +6,8 @@ from . import parser
 class BotExtension:
     def __init__(self, bot):
         self.name = "Documents"
-        self.author = "Brett"
-        self.version = "1.0"
+        self.author = "Brett + nameless"
+        self.version = "1.1"
         self.bot = bot
 
     def register(self):
@@ -39,7 +39,16 @@ class BotExtension:
         #try:
         rule = tex.getByID(args.rule)
         if isinstance(rule, str):
-            await message.channel.send(tex.processRef(rule))
+            embed = discord.Embed(
+                description = tex.processRef(rule),
+                color = discord.Colour.from_rgb(r=255,g=192,b=60)
+            )
+            embed.set_author(
+                name="Synixe Rules",
+                url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
+                icon_url=self.bot.user.avatar_url
+            )
+            await message.channel.send(embed=embed)
         elif isinstance(rule, dict):
             desc = ""
             if "text" in rule:
@@ -62,15 +71,28 @@ class BotExtension:
                 description = desc,
                 color = discord.Colour.from_rgb(r=255,g=192,b=60)
             )
+            embed.set_author(
+                name="Synixe Rules",
+                url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
+                icon_url=self.bot.user.avatar_url
+            )
             await message.channel.send(embed=embed)
         #except:
         #    await message.channel.send("There was an error finding that rule, it most likely doesn't exist.")
 
     async def rules(self, args, message):
         if not len(args) == 0:
-            await message.channel.send("Use ?rule")
+            await message.channel.send("Use {}rule".format(self.bot.prefix))
             return
-        await message.channel.send("The latest rules can be found at https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf")
+        embed = discord.Embed(
+            color = discord.Colour.from_rgb(r=255,g=192,b=60)
+        )
+        embed.set_author(
+            name="Synixe Rules",
+            url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
+            icon_url=self.bot.user.avatar_url
+        )
+        await message.channel.send(embed=embed)
 
     async def const(self, args, message):
         parse = argparse.ArgumentParser(description="Display a section of the constitution")
@@ -114,9 +136,22 @@ class BotExtension:
                     description = desc,
                     color = discord.Colour.from_rgb(r=255,g=192,b=60)
                 )
+                embed.set_author(
+                    name="Synixe Constitution",
+                    url="https://github.com/Synixe/Documents/blob/master/SynixeConstitution.pdf",
+                    icon_url=self.bot.user.avatar_url
+                )
                 try:
                     await message.channel.send(embed=embed)
                 except discord.errors.HTTPException:
                     await message.channel.send("That section is too large, you'll need to be more specific")
         else:
-            await message.channel.send("The constitution can be found at https://github.com/Synixe/Documents/blob/master/SynixeConstitution.pdf")
+            embed = discord.Embed(
+                color = discord.Colour.from_rgb(r=255,g=192,b=60)
+            )
+            embed.set_author(
+                name="Synixe Constitution",
+                url="https://github.com/Synixe/Documents/blob/master/SynixeConstitution.pdf",
+                icon_url=self.bot.user.avatar_url
+            )
+            await message.channel.send(embed=embed)
