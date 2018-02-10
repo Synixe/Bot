@@ -89,7 +89,7 @@ class BotExtension:
 
     async def color(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Obtain a colo(u)r from a role on the server", message))
-        parser.add_argument("role", nargs="?", default=str(message.author.id), help=self.bot.processOutput("The role to get the color of", message))
+        parser.add_argument("role", nargs="?", default=str(message.author.roles[1].name), help=self.bot.processOutput("The role to get the color of", message))
         args = parser.parse_args(args)
         role = discord.utils.find(lambda m: m.name.lower() == args.role.lower(), message.channel.guild.roles)
         if role != None:
@@ -107,17 +107,16 @@ class BotExtension:
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Shows an clickable avatar of a user", message))
         parser.add_argument("avatar", nargs="?", default=str(message.author.id), help=self.bot.processOutput("The user of the avatar you want to get", message))
         args = parser.parse_args(args)
-        avatar = message.channel.guild.get_member(self.bot.getIDFromTag(args.avatar))
-        if avatar != None:
+        user = message.channel.guild.get_member(self.bot.getIDFromTag(user.avatar))
+        if user != None:
             embed = discord.Embed(
-                color = discord.Colour.from_rgb(r=255,g=192,b=60)
+                color = user.color
             )
             embed.set_author(
-                name = avatar.name,
-                url = avatar.avatar_url
+                name = user.name,
+                url = user.avatar_url
             )
-            embed.set_image(url=avatar.avatar_url)
-            embed.set_footer(text="Made by nameless, the greatest human being ever created")
+            embed.set_thumbnail(url=user.avatar_url)
             await message.channel.send(embed=embed)
         else:
             await message.channel.send("User not found")
