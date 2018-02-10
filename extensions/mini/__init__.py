@@ -5,8 +5,8 @@ import random
 class BotExtension:
     def __init__(self, bot):
         self.name = "Mini Commands"
-        self.author = "Brett + nameless :)"
-        self.version = "1.2"
+        self.author = "Brett + nameless"
+        self.version = "1.3"
         self.bot = bot
 
     def register(self):
@@ -39,6 +39,11 @@ class BotExtension:
             "colour" : {
                 "function" : self.color,
                 "description" : "Obtain the color of a role on the server",
+                "roles" : ["active","new","inactive"]
+            },
+            "avatar" : {
+                "function" : self.avatar,
+                "description" : "Prints out a users discord avatar",
                 "roles" : ["active","new","inactive"]
             }
         }
@@ -84,7 +89,7 @@ class BotExtension:
 
     async def color(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Obtain a colo(u)r from a role on the server", message))
-        parser.add_argument("role", help=self.bot.processOutput("The role to get the color of", message))
+        parser.add_argument("role", nargs="?", default=str(message.author.roles[1].name), help=self.bot.processOutput("The role to get the color of", message))
         args = parser.parse_args(args)
         role = discord.utils.find(lambda m: m.name.lower() == args.role.lower(), message.channel.guild.roles)
         if role != None:
@@ -97,3 +102,21 @@ class BotExtension:
             await message.channel.send(embed=embed)
         else:
             await message.channel.send("Role not found")
+
+    async def avatar(self, args, message):
+        parser = argparse.ArgumentParser(description=self.bot.processOutput("Shows an clickable avatar of a user", message))
+        parser.add_argument("avatar", nargs="?", default=str(message.author.id), help=self.bot.processOutput("The user of the avatar you want to get", message))
+        args = parser.parse_args(args)
+        user = message.channel.guild.get_member(self.bot.getIDFromTag(user.avatar))
+        if user != None:
+            embed = discord.Embed(
+                color = user.color
+            )
+            embed.set_author(
+                name = user.name,
+                url = user.avatar_url
+            )
+            embed.set_thumbnail(url=user.avatar_url)
+            await message.channel.send(embed=embed)
+        else:
+            await message.channel.send("User not found")
