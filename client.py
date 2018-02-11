@@ -14,7 +14,7 @@ sys.path.insert(0, './extensions/')
 class BotClient(discord.Client):
     supported_languages = ["af","sq","ar","az","eu","bn","be","bg","ca","zh-CN","zh-TW","hr","cs","da","nl","en","eo","et","tl","fi","fr","gl","ka","de","el","gu","ht","iw","hi","hu","is","id","ga","it","ja","kn","ko","la","lv","lt","mk","ms","mt","no","fa","pl","pt","ro","ru","sr","sk","sl","es","sw","sv","ta","te","th","tr","uk","vi","vy","yi"]
     async def on_ready(self):
-        if self.user.id = 403101852771680258:
+        if self.user.id == 403101852771680258:
             self.prefix = "?"
         else:
             self.prefix = ">"
