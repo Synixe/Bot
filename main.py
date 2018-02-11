@@ -5,5 +5,6 @@ import logger
 logger.clear()
 
 bot = client.BotClient()
+print("Starting Bot")
 bot.prefix = "?"
-bot.run(tokens.DISCORD, bot=False)
+bot.run(tokens.DISCORD)

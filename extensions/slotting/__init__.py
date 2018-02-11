@@ -68,9 +68,12 @@ class BotExtension:
             async for m in messages:
                 if len(m.embeds) == 1:
                     if args.mission == None:
-                        if m.embeds[0].footer.text.startswith("Mission ID:"):
-                            event_id = int(m.embeds[0].footer.text.split(": ")[1])
-                            target = m
+                        try:
+                            if m.embeds[0].footer.text.startswith("Mission ID:"):
+                                event_id = int(m.embeds[0].footer.text.split(": ")[1])
+                                target = m
+                        except:
+                            pass
                     else:
                         if m.embeds[0].title.lower() == args.mission.lower():
                             event_id = int(m.embeds[0].footer.text.split(": ")[1])
@@ -114,9 +117,12 @@ class BotExtension:
             async for m in messages:
                 if len(m.embeds) == 1:
                     if args.mission == None:
-                        if m.embeds[0].footer.text.startswith("Mission ID:"):
-                            event_id = int(m.embeds[0].footer.text.split(": ")[1])
-                            target = m
+                        try:
+                            if m.embeds[0].footer.text.startswith("Mission ID:"):
+                                event_id = int(m.embeds[0].footer.text.split(": ")[1])
+                                target = m
+                        except:
+                            pass
                     else:
                         if m.embeds[0].title.lower() == args.mission.lower():
                             event_id = int(m.embeds[0].footer.text.split(": ")[1])

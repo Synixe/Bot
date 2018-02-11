@@ -51,7 +51,7 @@ class BotExtension:
                 embed.add_field(name=self.bot.processOutput("Deaths", message),value=parser.deaths,inline=True)
                 embed.add_field(name=self.bot.processOutput("W/L", message),value=parser.wlr,inline=True)
                 embed.add_field(name=self.bot.processOutput("Accuracy", message),value=parser.accuracy,inline=True)
-                if (parser.profile != None):
+                if parser.profile != None:
                     embed.set_thumbnail(url=parser.profile)
                 await message.channel.send(embed=embed)
             except:
