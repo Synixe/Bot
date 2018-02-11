@@ -16,7 +16,6 @@ class Parser:
             if not self.document:
                 if l == "\\begin{document}":
                     self.document = True
-                    print("Found Start!")
             elif not self.list:
                 if l.startswith("\\section"):
                     self.section += 1

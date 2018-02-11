@@ -14,7 +14,6 @@ sys.path.insert(0, './extensions/')
 class BotClient(discord.Client):
     supported_languages = ["af","sq","ar","az","eu","bn","be","bg","ca","zh-CN","zh-TW","hr","cs","da","nl","en","eo","et","tl","fi","fr","gl","ka","de","el","gu","ht","iw","hi","hu","is","id","ga","it","ja","kn","ko","la","lv","lt","mk","ms","mt","no","fa","pl","pt","ro","ru","sr","sk","sl","es","sw","sv","ta","te","th","tr","uk","vi","vy","yi"]
     async def on_ready(self):
-        print("Connected")
         if platform == "linux" or platform == "linux2":
             self.extension_list = [x[0].split('/')[1] for x in os.walk('extensions') if x[0].count('/') == 1]
         else:
@@ -65,7 +64,7 @@ class BotClient(discord.Client):
         logger.info("Commands: {0}".format(self._num_commands))
         logger.info("Handlers: {0}".format(self._num_handlers))
         logger.info("Loops: {0}".format(self._num_loops))
-        print("Ready!")
+        logger.info("Bot Ready!")
 
     async def execute(self, message):
         if message.author.id == self.user.id:
@@ -166,5 +165,8 @@ class BotClient(discord.Client):
     def processOutput(self, response, message):
         if self.user.id == 403101852771680258 and message.author.id == 206663073769979904:
             en_blob = TextBlob(response)
-            return str(en_blob.translate(to=random.choice(self.supported_languages)))
+            try:
+                return str(en_blob.translate(to=random.choice(self.supported_languages)))
+            except: #Sometime the translation will pick English then fail because the 2 versions are the same
+                return processOutput(response, message)
         return response

@@ -6,10 +6,10 @@ def clear():
         f.write("")
 
 def write(tag, text):
+    text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
+    print(text)
     with open("bot.log",'a') as f:
-        f.write("["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] ")
-        f.write(str(text))
-        f.write("\n")
+        f.write(text+"\n")
 
 def info(text):
     write("INFO", text)
