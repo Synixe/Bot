@@ -160,7 +160,7 @@ class BotClient(discord.Client):
                 return text
 
     def processOutput(self, response, message):
-        if message.author.id == 206663073769979904:
+        if self.user.id == 403101852771680258 and message.author.id == 206663073769979904:
             en_blob = TextBlob(response)
             return str(en_blob.translate(to=random.choice(self.supported_languages)))
         return response
