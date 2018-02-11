@@ -5,6 +5,7 @@ import importlib
 import os
 import io
 import random
+from sys import platform
 from textblob import TextBlob
 from contextlib import redirect_stdout, redirect_stderr
 
@@ -14,7 +15,10 @@ class BotClient(discord.Client):
     supported_languages = ["af","sq","ar","az","eu","bn","be","bg","ca","zh-CN","zh-TW","hr","cs","da","nl","en","eo","et","tl","fi","fr","gl","ka","de","el","gu","ht","iw","hi","hu","is","id","ga","it","ja","kn","ko","la","lv","lt","mk","ms","mt","no","fa","pl","pt","ro","ru","sr","sk","sl","es","sw","sv","ta","te","th","tr","uk","vi","vy","yi"]
     async def on_ready(self):
         print("Connected")
-        self.extension_list = [x[0].split('/')[1] for x in os.walk('extensions') if x[0].count('/') == 1]
+        if platform == "linux" or platform == "linux2":
+            self.extension_list = [x[0].split('/')[1] for x in os.walk('extensions') if x[0].count('/') == 1]
+        else:
+            self.extension_list = [x[0][13:] for x in os.walk('./extensions') if x[0].count('/') == 1 and "__pycache__" not in x[0]][1:]
         self.extensions = {}
         self.commands = {}
         self._ext_commands = {}
