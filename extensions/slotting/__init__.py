@@ -99,6 +99,11 @@ class BotExtension:
                                 await message.channel.send(self.bot.processOutput("That role was not found for {}.".format(target.embeds[0].title), message))
                     finally:
                         connection.close()
+                else:
+                    if args.mission == None:
+                        await message.channel.send(self.bot.processOutput("No mission is posted!", message))
+                    else:
+                        await message.channel.send(self.bot.processOutput("That mission doesn't exist!", message))
 
     async def unslot(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Slot up for a mission", message))
@@ -140,6 +145,11 @@ class BotExtension:
                             await embeds.displayEvent(self, target, event_id, message)
                     finally:
                         connection.close()
+                else:
+                    if args.mission == None:
+                        await message.channel.send(self.bot.processOutput("No mission is posted!", message))
+                    else:
+                        await message.channel.send(self.bot.processOutput("That mission doesn't exist!", message))
 
     async def post(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Post an event to #events", message))
