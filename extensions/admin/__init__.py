@@ -65,11 +65,14 @@ class BotExtension:
                     try:
                         if log.id != status.id:
                             await log.delete()
-                            await log.delete()
                     except discord.errors.NotFound:
                         logger.error("Failed to delete a message during clear.")
                 x -= 1
-                await status.edit(content=self.bot.processOutput("Clearing {0} messages".format(x), message))
+                try:
+                    await status.edit(content=self.bot.processOutput("Clearing {0} messages".format(x), message))
+                except discord.errors.NotFound:
+                    #Chances are 2 clear functions are running, stop this one
+                    return
             await status.delete()
 
     async def freeze(self, args, message):

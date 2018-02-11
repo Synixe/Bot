@@ -21,5 +21,4 @@ logger.set_debug(args.debug)
 
 bot = client.BotClient()
 logger.info("Starting Bot")
-bot.prefix = ">"
 bot.run(tokens.DISCORD)
