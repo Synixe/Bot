@@ -40,31 +40,46 @@ class BotClient(discord.Client):
             if hasattr(loaded,"active"):
                 if not loaded.active:
                     continue
-            logger.debug("Loading {0.name} {0.version} by {0.author}".format(loaded))
+            disable = False
+            if self.user.id != 403101852771680258:
+                if hasattr(loaded, "disable_during_test"):
+                    disable = loaded.disable_during_test
+                    logger.debug("Ignoring {0.name} {0.version} by {0.author}".format(loaded), "red")
+            if not disable:
+                logger.debug("Loading {0.name} {0.version} by {0.author}".format(loaded))
             if hasattr(loaded, "register"):
                 newcmds = loaded.register()
-                self.commands.update(newcmds)
-                self._ext_commands[exten] = newcmds
-                self._num_commands += len(newcmds)
-                for c in newcmds:
-                    logger.debug("\tCommand Registered: {0}".format(c))
+                if not disable:
+                    self.commands.update(newcmds)
+                    self._ext_commands[exten] = newcmds
+                    self._num_commands += len(newcmds)
+                    for c in newcmds:
+                        logger.debug("\tCommand Registered: {0}".format(c))
+                else:
+                    for c in newcmds:
+                        logger.debug("\tCommand Ignored: {0}".format(c), "red")
+                        self.commands[c] = { "function": self.disabled, "roles": ["@everyone"], "description": "Disabled" }
             if hasattr(loaded, "loops"):
-                newloops = loaded.loops()
-                self.loops.update(newloops)
-                self._ext_loops[exten] = newloops
-                self._num_loops += len(newloops)
-                for l in newloops:
-                    logger.debug("\tLoop Registered: {0}".format(l))
+                if not disable:
+                    newloops = loaded.loops()
+                    self.loops.update(newloops)
+                    self._ext_loops[exten] = newloops
+                    self._num_loops += len(newloops)
+                    for l in newloops:
+                        logger.debug("\tLoop Registered: {0}".format(l))
             for h in ["on_message","on_member_join","on_member_remove","on_member_update","on_member_ban","on_member_unban"]:
                 if h not in self.handlers:
                     self.handlers[h] = []
                 if hasattr(loaded, h):
                     if exten not in self._ext_handlers:
                         self._ext_handlers[exten] = []
-                    logger.debug("\tHandler Registered: {0}".format(h))
-                    self._num_handlers += 1
-                    self.handlers[h].append(loaded)
-                    self._ext_handlers[exten].append(h)
+                    if not disable:
+                        logger.debug("\tHandler Registered: {0}".format(h))
+                        self._num_handlers += 1
+                        self.handlers[h].append(loaded)
+                        self._ext_handlers[exten].append(h)
+                    else:
+                        logger.debug("\tHandler Registered: {0}".format(h), "red")
         logger.info("{} Extension Loaded".format(len(self.extension_list)))
         logger.info("Commands: {0}".format(self._num_commands))
         logger.info("Handlers: {0}".format(self._num_handlers))
@@ -127,6 +142,9 @@ class BotClient(discord.Client):
         await self.wait_until_ready()
         for h in self.handlers["on_member_update"]:
             await h.on_member_update(before, after)
+
+    async def disabled(self, args, message):
+        await message.channel.send("That command is disabled during testing")
 
     @classmethod
     def inRoleList(cls, member, roles):

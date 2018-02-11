@@ -13,6 +13,7 @@ class BotExtension:
         self.author = "Brett"
         self.version = "1.0"
         self.bot = bot
+        self.disable_during_test = True
 
     def loops(self):
         return {

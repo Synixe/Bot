@@ -10,6 +10,7 @@ class BotExtension:
         self.author = "Brett"
         self.version = "1.0"
         self.bot = bot
+        self.disable_during_test = True
 
         self.services = {"arma" : {"name": "Arma 3 Dedicated Server", "unit": "arma3-mod"}}
 

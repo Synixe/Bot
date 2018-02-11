@@ -11,10 +11,11 @@ from . import embeds
 
 class BotExtension:
     def __init__(self, bot):
-        self.name = "Mini Commands"
+        self.name = "Slotting"
         self.author = "Brett + nameless"
         self.version = "1.1"
         self.bot = bot
+        self.disable_during_test = True
 
     def register(self):
         return {
