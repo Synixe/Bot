@@ -75,6 +75,10 @@ class BotClient(discord.Client):
         args = " ".join(raw[1:])
         import re
         args = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''').split(args)[1::2]
+        new = []
+        for a in args:
+            new.append(a.strip("\""))
+        args = new
         if cmd in self.commands:
             if self.inRoleList(message.author, self.commands[cmd]["roles"]) or (isinstance(message.channel, discord.DMChannel) and "@everyone" in self.commands[cmd]["roles"]):
                 o = io.StringIO()
