@@ -24,7 +24,7 @@ class BotExtension:
     async def niceness(self, args, message):
         parser = argparse.ArgumentParser(description="How nice a user is.")
         parser.add_argument("user", nargs="?", default=str(message.author.id), help="The user to analyze")
-        args = parser.parse_args(args)
+        args = await self.bot.parseArgs(parser, args, message)
         user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
         if user != None:
             try:

@@ -28,43 +28,44 @@ class BotClient(discord.Client):
         self._num_commands = 0
         self._num_handlers = 0
         self._num_loops = 0
-        logger.info("Connected as {0.name} ({0.id})".format(self.user))
+        logger.info("Connected as {0.name} ({0.id})".format(self.user), "green")
+        logger.info("Loading Extensions")
         for exten in self.extension_list:
             loaded = importlib.import_module(exten).BotExtension(self)
             self.extensions[exten] = loaded
             if hasattr(loaded,"active"):
                 if not loaded.active:
                     continue
-            logger.info("Loading {0.name} {0.version} by {0.author}".format(loaded))
+            logger.debug("Loading {0.name} {0.version} by {0.author}".format(loaded))
             if hasattr(loaded, "register"):
                 newcmds = loaded.register()
                 self.commands.update(newcmds)
                 self._ext_commands[exten] = newcmds
                 self._num_commands += len(newcmds)
                 for c in newcmds:
-                    logger.info("\tCommand Registered: {0}".format(c))
+                    logger.debug("\tCommand Registered: {0}".format(c))
             if hasattr(loaded, "loops"):
                 newloops = loaded.loops()
                 self.loops.update(newloops)
                 self._ext_loops[exten] = newloops
                 self._num_loops += len(newloops)
                 for l in newloops:
-                    logger.info("\tLoop Registered: {0}".format(l))
+                    logger.debug("\tLoop Registered: {0}".format(l))
             for h in ["on_message","on_member_join","on_member_remove","on_member_update","on_member_ban","on_member_unban"]:
                 if h not in self.handlers:
                     self.handlers[h] = []
                 if hasattr(loaded, h):
                     if exten not in self._ext_handlers:
                         self._ext_handlers[exten] = []
-                    logger.info("\tHandler Registered: {0}".format(h))
+                    logger.debug("\tHandler Registered: {0}".format(h))
                     self._num_handlers += 1
                     self.handlers[h].append(loaded)
                     self._ext_handlers[exten].append(h)
-        logger.info("Initialized")
+        logger.info("{} Extension Loaded".format(len(self.extension_list)))
         logger.info("Commands: {0}".format(self._num_commands))
         logger.info("Handlers: {0}".format(self._num_handlers))
         logger.info("Loops: {0}".format(self._num_loops))
-        logger.info("Bot Ready!")
+        logger.info("Bot Ready!","green")
 
     async def execute(self, message):
         if message.author.id == self.user.id:
@@ -80,22 +81,7 @@ class BotClient(discord.Client):
         args = new
         if cmd in self.commands:
             if self.inRoleList(message.author, self.commands[cmd]["roles"]) or (isinstance(message.channel, discord.DMChannel) and "@everyone" in self.commands[cmd]["roles"]):
-                o = io.StringIO()
-                e = io.StringIO()
-                with redirect_stdout(o):
-                    with redirect_stderr(e):
-                        try:
-                            await self.commands[cmd]["function"](args, message)
-                            out = e.getvalue()
-                            if out != "":
-                                logger.error(out)
-                        except SystemExit:
-                            if str(sys.exc_info()[1]) == '0':
-                                out = o.getvalue()
-                            else:
-                                out = e.getvalue()
-                            await message.channel.send(out.replace("main.py",self.prefix+cmd))
-
+                await self.commands[cmd]["function"](args, message)
             else:
                 if isinstance(message.channel, discord.DMChannel):
                     await message.channel.send(self.processOutput("This command can not be used in a direct message channel.", message))
@@ -162,11 +148,26 @@ class BotClient(discord.Client):
             except ValueError:
                 return text
 
+    async def parseArgs(self, parser, args, message):
+        o = io.StringIO()
+        e = io.StringIO()
+        with redirect_stdout(o):
+            with redirect_stderr(e):
+                try:
+                    return parser.parse_args(args)
+                except SystemExit:
+                    if str(sys.exc_info()[1]) == '0':
+                        out = o.getvalue()
+                    else:
+                        out = e.getvalue()
+                    await message.channel.send(out.replace("main.py",self.prefix+message.content[len(self.prefix):].split()[0]))
+        return False
+
     def processOutput(self, response, message):
         if self.user.id == 403101852771680258 and message.author.id == 206663073769979904:
             en_blob = TextBlob(response)
             try:
                 return str(en_blob.translate(to=random.choice(self.supported_languages)))
-            except: #Sometime the translation will pick English then fail because the 2 versions are the same
+            except textblob.exceptions.NotTranslated: #Sometime the translation will pick English then fail because the 2 versions are the same
                 return processOutput(response, message)
         return response

@@ -68,12 +68,12 @@ class Parser:
         elif len(sections) == 2:
             try:
                 return self.sections[int(sections[0]) - 1]["subsections"][int(sections[1]) - 1]
-            except:
+            except IndexError:
                 return self.sections[int(sections[0]) - 1]["items"][int(sections[1]) - 1]
         elif len(sections) == 3:
             try:
                 return self.sections[int(sections[0]) - 1]["subsections"][int(sections[1]) - 1]["items"][int(sections[2]) - 1]
-            except:
+            except IndexError:
                 return self.sections[int(sections[0]) - 1]["subsections"][int(sections[1]) - 1]["subsubsections"][int(sections[2]) - 1]
         elif len(sections) == 4:
             return self.sections[int(sections[0]) - 1]["subsections"][int(sections[1]) - 1]["subsubsections"][int(sections[2]) - 1]["items"][int(sections[3]) - 1]

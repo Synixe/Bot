@@ -21,12 +21,13 @@ class BotExtension:
     async def ts(self, args, message):
         parser = argparse.ArgumentParser(description=self.bot.processOutput("Send the TeamSpeak Address to a user", message))
         parser.add_argument("user",help=self.bot.processOutput("The user to send the address to", message))
-        args = parser.parse_args(args)
-        try:
-            user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
-            await user.send("The TeamSpeak address is ts.synixe.com")
-        except:
-            await message.channel.send("I'm not sure who that is...")
+        args = await self.bot.parseArgs(parser, args, message)
+        if args != False:
+            try:
+                user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
+                await user.send("The TeamSpeak address is ts.synixe.com")
+            except AttributeError:
+                await message.channel.send("I'm not sure who that is...")
 
     async def on_message(self, message):
         if message.author.id != self.bot.user.id:

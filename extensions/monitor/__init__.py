@@ -6,6 +6,7 @@ class BotExtension:
         self.name = "Server Monitor"
         self.author = "Brett"
         self.version = "1.0"
+        self.bot = bot
 
     async def post_to_bot_events(self, member, text):
         channel = discord.utils.find(lambda c: c.name == "botevents", member.guild.channels)
