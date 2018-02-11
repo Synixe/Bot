@@ -5,6 +5,7 @@ import logger
 import asyncio
 
 from . import armaholic
+from . import github
 
 class BotExtension:
     def __init__(self, bot):
@@ -57,6 +58,26 @@ class BotExtension:
                                     else:
                                         frame = getframeinfo(currentframe())
                                         logger.throw("Unable to find #botevents\n\t{0.filename} line {0.lineno - 4}".format(frame))
+                            elif service == "G": #GitHub
+                                latest = github.latest(mid)
+                                if latest != m['notified']:
+                                    for guild in self.bot.guilds:
+                                        channel = discord.utils.find(lambda c: c.name == "botevents", guild.channels)
+                                        if channel is not None:
+                                            emded = discord.Embed(
+                                                title = m['name'],
+                                                url = "http://github.com/"+mid
+                                            )
+                                            embed.add_field(name="Current", value=m['version'])
+                                            embed.add_field(name="Available", value=latest)
+                                            await channel.send(embed=embed)
+                                            sql = "UPDATE `mods` SET `notified` = %s WHERE `id` = %s"
+                                            cursor.execute(sql, (latest, m['id']))
+                                            connect.commit()
+                                            logger.info("Published update for "+m['name'])
+                                        else:
+                                            frame = getframeinfo(currentframe())
+                                            logger.throw("Unable to find #botevents\n\t{0.filename} line {0.lineno - 4}".format(frame))
             finally:
                 connection.close()
             await asyncio.sleep(60 * 60)
