@@ -6,8 +6,8 @@ class BotExtension:
     def __init__(self, bot):
         self.bot = bot
         self.name = "Games"
-        self.author = "nameless :)"
-        self.version = "1.0.2"
+        self.author = "nameless"
+        self.version = "1.0.3"
 
     def register (self):
         return {
