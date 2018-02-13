@@ -1,7 +1,8 @@
+"""Steam Server API"""
 import argparse
+import asyncio
 import discord
 import valve.source.a2s
-import asyncio
 import logger
 
 class BotExtension:

@@ -1,3 +1,4 @@
+"""Creating Polls for Discord"""
 import discord
 import argparse
 

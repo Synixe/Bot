@@ -1,6 +1,8 @@
-import discord
+"""Games for Discord"""
 import argparse
 import random
+import discord
+
 
 class BotExtension:
     """Adds games to the bot"""
@@ -53,7 +55,7 @@ class BotExtension:
         parser.add_argument("n", nargs="?", type=int, default=6, help=self.bot.processOutput("Number of sides", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
-            value = random.randint(1,args.n)
+            value = random.randint(1, args.n)
             messages = ["The value is {0}", "You rolled a {0}", "It lands on {0}"]
             await message.channel.send(self.bot.processOutput(random.choice(messages).format(value),message))
 
