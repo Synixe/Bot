@@ -1,7 +1,9 @@
+"""TeamSpeak Utilities"""
 import argparse
 import discord
 
 class BotExtension:
+    """TeamSpeak Utilities"""
     def __init__(self, bot):
         self.name = "Mini Commands"
         self.author = "Brett"
@@ -12,15 +14,15 @@ class BotExtension:
     def register(self):
         return {
             "ts" : {
-                "function" : self.ts,
+                "function" : self.teamspeak,
                 "roles" : ["active"]
             }
         }
 
-    async def ts(self, args, message):
+    async def teamspeak(self, args, message):
         """"Send the TeamSpeak Address to a user"""
-        parser = argparse.ArgumentParser(description=self.ts.__doc__)
-        parser.add_argument("user",help=self.bot.processOutput("The user to send the address to", message))
+        parser = argparse.ArgumentParser(description=self.teamspeak.__doc__)
+        parser.add_argument("user", help="The user to send the address to")
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
             try:

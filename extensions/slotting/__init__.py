@@ -97,7 +97,7 @@ class BotExtension:
                                 sql = "UPDATE `slots` SET `playerid` = '"+str(message.author.id)+"' WHERE `id` = '"+str(slot['id'])+"'"
                                 cursor.execute(sql)
                                 connection.commit()
-                                await embeds.displayEvent(self, target, event_id, message)
+                                await embeds.display_event(self, target, event_id, message)
                                 await message.channel.send(self.bot.processOutput("Slotted into {0} for {1}!".format(slot['name'],target.embeds[0].title), message))
                             else:
                                 await message.channel.send(self.bot.processOutput("That role was not found for {}.".format(target.embeds[0].title), message))
@@ -147,7 +147,7 @@ class BotExtension:
                             cursor.execute(sql)
                             connection.commit()
                             await message.channel.send(self.bot.processOutput("Unslotted", message))
-                            await embeds.displayEvent(self, target, event_id, message)
+                            await embeds.display_event(self, target, event_id, message)
                     finally:
                         connection.close()
                 else:
@@ -165,7 +165,7 @@ class BotExtension:
             channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
             if channel is not None:
                 mid = await channel.send("Loading Data")
-                await embeds.displayEvent(self, mid, args.event, message)
+                await embeds.display_event(self, mid, args.event, message)
 
     async def schedule_task(self):
         """Checks for changes to the schedule and posts them in #events"""

@@ -1,17 +1,20 @@
-import discord
+"""Git Information from Discord"""
 import argparse
 import subprocess
+import discord
 
 from . import blame
 
 class BotExtension:
+    """Git Information from Discord"""
     def __init__(self, bot):
         self.bot = bot
         self.name = "Git"
         self.author = "Brett"
         self.version = "1"
 
-    def register (self):
+    def register(self):
+        """Register the commands"""
         return {
             "current" : {
                 "function": self.current,
@@ -26,18 +29,18 @@ class BotExtension:
     async def current(self, args, message):
         """Find out which commit the bot is on"""
         embed = discord.Embed(
-            title = subprocess.getoutput("git log --pretty=format:'%h' -n 1"),
-            url = "https://github.com/Synixe/Bot/commit/" + subprocess.getoutput("git log --pretty=format:'%H' -n 1"),
-            color = discord.Colour.from_rgb(r=255,g=192,b=60)
+            title=subprocess.getoutput("git log --pretty=format:'%h' -n 1"),
+            url="https://github.com/Synixe/Bot/commit/" + subprocess.getoutput("git log --pretty=format:'%H' -n 1"),
+            color=discord.Colour.from_rgb(r=255, g=192, b=60)
         )
-        embed.add_field(name="Last Change",value=subprocess.getoutput("git log -1 --pretty=format:'%an'"))
-        embed.add_field(name="Title",value=subprocess.getoutput("git log -1 --pretty=%B"), inline=False)
+        embed.add_field(name="Last Change", value=subprocess.getoutput("git log -1 --pretty=format:'%an'"))
+        embed.add_field(name="Title", value=subprocess.getoutput("git log -1 --pretty=%B"), inline=False)
         await message.channel.send(embed=embed)
 
     async def blame(self, args, message):
         """Find out who wrote a command"""
         parser = argparse.ArgumentParser(blame.__doc__)
-        parser.add_argument("command",help="The command to blame")
+        parser.add_argument("command", help="The command to blame")
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
             for ext in self.bot.extensions:
@@ -47,14 +50,16 @@ class BotExtension:
                         await message.channel.send(authors)
                         return
                     total = 0
-                    for a in authors:
-                        total += authors[a]
+                    for author in authors:
+                        total += authors[author]
                     embed = discord.Embed(
-                        title = self.bot.prefix+args.command,
-                        url = "https://github.com/Synixe/Bot/blob/rewrite/extensions/"+ext+"/__init__.py#L"+str(start)+"L"+str(end),
-                        color = discord.Colour.from_rgb(r=255,g=192,b=60)
+                        title=self.bot.prefix+args.command,
+                        url="https://github.com/Synixe/Bot/blob/rewrite/extensions/"+ext+"/__init__.py#L"+str(start)+"L"+str(end),
+                        color=discord.Colour.from_rgb(r=255, g=192, b=60)
                     )
-                    embed.add_field(name="Lines",value="{}".format(total), inline=False)
-                    for a in authors:
-                        embed.add_field(name=a,value="{} Lines ({}%)".format(authors[a], round(authors[a] / total * 100, 0)))
+                    embed.add_field(name="Lines", value="{}".format(total), inline=False)
+                    for author in authors:
+                        embed.add_field(name=author, value="{} Lines ({}%)".format(
+                            authors[author], round(authors[author] / total * 100, 0))
+                        )
                     await message.channel.send(embed=embed)

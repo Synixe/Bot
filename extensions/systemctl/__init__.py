@@ -38,12 +38,12 @@ class BotExtension:
         if args != False:
             if args.service in self.services:
                 if args.full:
-                    r = subprocess.run(
+                    status = subprocess.run(
                         ["systemctl", "status", self.services[args.service]["unit"]],
                         stdout=subprocess.PIPE
                     )
-                    with open("status.log","w") as log:
-                        log.write(r.stdout.decode("UTF-8"))
+                    with open("status.log", "w") as log:
+                        log.write(status.stdout.decode("UTF-8"))
                     await message.channel.send("```\n"+"\n".join(r.stdout.decode("UTF-8").split("\n")[0:11])+"\n```")
                     await message.channel.send("```\n"+"\n".join(r.stdout.decode("UTF-8").split("\n")[12:])+"\n```")
                 else:
@@ -107,10 +107,12 @@ class BotExtension:
 
     @classmethod
     def unit_embed(cls, title, text, color):
+        """Wrapper for creating embed, can probably be removed"""
         return discord.Embed(title=title, color=color, description=text)
 
     @classmethod
     def is_active(cls, unit):
+        """Checks if a unit is active"""
         subprocess.run(
             ["systemctl","is-active",self.services[args.service]["unit"]],
             stdout=subprocess.PIPE

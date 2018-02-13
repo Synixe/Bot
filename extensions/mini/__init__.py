@@ -13,7 +13,7 @@ class BotExtension:
         return {
             "card" : {
                 "function" : self.card,
-                "roles" : ["active","new","inactive"]
+                "roles" : ["active", "new", "inactive"]
             },
             "ping" : {
                 "function" : self.ping,
@@ -21,32 +21,32 @@ class BotExtension:
             },
             "color" : {
                 "function" : self.color,
-                "roles" : ["active","new","inactive"],
+                "roles" : ["active", "new", "inactive"],
                 "alias": ["colour"]
             },
             "avatar" : {
                 "function" : self.avatar,
-                "roles" : ["active","new","inactive"]
+                "roles" : ["active", "new", "inactive"]
             }
         }
 
     async def card(self, args, message):
         """Display a pretty card with information about a member"""
         parser = argparse.ArgumentParser(self.card.__doc__)
-        parser.add_argument("user", nargs="?", default=str(message.author.id), help=self.bot.processOutput("The subject of the card. Defaults to the message's author.", message))
+        parser.add_argument("user", nargs="?", default=str(message.author.id), help="The subject of the card. Defaults to the message's author.")
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
             user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
             if user != None:
                 embed = discord.Embed(
-                    title = user.name,
-                    color = user.colour
+                    title=user.name,
+                    color=user.colour
                 )
-                embed.add_field(name=self.bot.processOutput("Joined on", message),value=user.joined_at.strftime("%B %d, %Y"))
+                embed.add_field(name=self.bot.processOutput("Joined on", message), value=user.joined_at.strftime("%B %d, %Y"))
                 embed.set_thumbnail(url=user.avatar_url)
                 await message.channel.send(embed=embed)
             else:
-                await message.channel.send(self.bot.processOutput("Unable to find that user. Try using @ to mention them or use their Discord ID.", message))
+                await message.channel.send("Unable to find that user. Try using @ to mention them or use their Discord ID.")
 
     async def ping(self, args, message):
         """Ping the bot for a response"""
@@ -64,11 +64,11 @@ class BotExtension:
             role = discord.utils.find(lambda m: m.name.lower() == args.role.lower(), message.channel.guild.roles)
             if role != None:
                 embed = discord.Embed(
-                    title = role.name,
-                    color = role.colour
+                    title=role.name,
+                    color=role.colour
                 )
-                embed.add_field(name="RGB",value="{0.r}, {0.g}, {0.b}".format(role.color))
-                embed.add_field(name="Hex",value=str(role.color))
+                embed.add_field(name="RGB", value="{0.r}, {0.g}, {0.b}".format(role.color))
+                embed.add_field(name="Hex", value=str(role.color))
                 await message.channel.send(embed=embed)
             else:
                 await message.channel.send("Role not found")
@@ -76,17 +76,17 @@ class BotExtension:
     async def avatar(self, args, message):
         """Prints out a users discord avatar"""
         parser = argparse.ArgumentParser(description=self.avatar.__doc__)
-        parser.add_argument("avatar", nargs="?", default=str(message.author.id), help=self.bot.processOutput("The user of the avatar you want to get", message))
+        parser.add_argument("avatar", nargs="?", default=str(message.author.id), help="The user of the avatar you want to get")
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
             user = message.channel.guild.get_member(self.bot.getIDFromTag(args.avatar))
             if user != None:
                 embed = discord.Embed(
-                    color = user.color
+                    color=user.color
                 )
                 embed.set_author(
-                    name = user.name,
-                    url = user.avatar_url
+                    name=user.name,
+                    url=user.avatar_url
                 )
                 embed.set_image(url=user.avatar_url)
                 await message.channel.send(embed=embed)
