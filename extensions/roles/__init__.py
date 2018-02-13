@@ -14,8 +14,8 @@ class BotExtension:
             "count" : {
                 "function" : self.count,
                 "roles" : ["active","new","inactive"]
-                }
             }
+        }
 
     async def count(self, args, message):
         """Displays a counter of how many members are on Active, New and Inactive"""
