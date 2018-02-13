@@ -15,7 +15,6 @@ class BotExtension:
         self.bot = bot
 
     def __register__(self):
-        """Register the commands"""
         return {
             "pubg" : {
                 "function" : self.pubg,

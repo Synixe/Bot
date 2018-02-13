@@ -3,7 +3,7 @@ import discord
 import argparse
 
 class BotExtension:
-    """Adds polls to the bot"""
+    """Creating Polls for Discord"""
     def __init__(self, bot):
         self.bot = bot
         self.name = "Poll"
@@ -11,7 +11,6 @@ class BotExtension:
         self.version = "1.0"
 
     def __register__(self):
-        """Register with the main bot"""
         return {
             "poll" : {
                 "function": self.poll,

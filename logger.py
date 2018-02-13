@@ -15,7 +15,7 @@ if sys.platform == "win32":
             ("Y", c_short)
         ]
 
-    class SMALL_RECT(Structure):
+    class RECT(Structure):
         """struct in wincon.h."""
         _fields_ = [
             ("Left", c_short),
@@ -24,13 +24,13 @@ if sys.platform == "win32":
             ("Bottom", c_short)
         ]
 
-    class BUFFER_INFO(Structure):
+    class BUFFER(Structure):
         """struct in wincon.h."""
         _fields_ = [
             ("dwSize", COORD),
             ("dwCursorPosition", COORD),
             ("wAttributes", c_ushort),
-            ("srWindow", SMALL_RECT),
+            ("srWindow", RECT),
             ("dwMaximumWindowSize", COORD)
         ]
 
@@ -46,7 +46,7 @@ if sys.platform == "win32":
     FOREGROUND_INTENSITY = 0x0008
 
     def get_text_attr():
-        csbi = BUFFER_INFO()
+        csbi = BUFFER()
         windll.kernel32.GetConsoleScreenBufferInfo(HANDLE, byref(csbi))
         return csbi.wAttributes
 

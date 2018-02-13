@@ -2,9 +2,8 @@
 import argparse
 import random
 import logger
-import discord
-import gifs
 import sys
+import discord
 
 class BotExtension:
     """Admin Utilites"""
@@ -78,14 +77,15 @@ class BotExtension:
     async def freeze(self, args, message):
         """Freeze a user from sending messages"""
         parser = argparse.ArgumentParser(description=self.freeze.__doc__)
-        parser.add_argument("user", help="The user to freeze", message)
+        parser.add_argument("user", help="The user to freeze")
         args = await self.bot.parse_args(parser, args, message)
         if args != False:
             user = message.channel.guild.get_member(self.bot.get_from_tag(args.user))
             if user != None:
                 if self.bot.in_role_list(user, ["manager"]):
-                    async with message.channel.typing():
-                        await message.channel.send(file=discord.File(fp=gifs.getRandom("treason")))
+                    #async with message.channel.typing():
+                    #    await message.channel.send(file=discord.File(fp=gifs.getRandom("treason")))
+                    await message.channel.send(":laughing:")
                 else:
                     await user.add_roles(self.getRole(message.channel.guild,"Silenced"))
                     await message.channel.send("Froze {0.display_name}".format(user))
@@ -119,7 +119,7 @@ class BotExtension:
                 embed.set_footer(text="Use ?ext [module] to see commands and handlers.")
                 embed.add_field(name="Commands", value=self.bot._num_commands)
                 embed.add_field(name="Handlers", value=self.bot._num_handlers)
-                embed.add_field(name("Loops",  value=self.bot._num_loops)
+                embed.add_field(name="Loops",  value=self.bot._num_loops)
                 await message.channel.send(embed=embed)
             else:
                 if args.extension in self.bot.extension_list:
@@ -136,7 +136,7 @@ class BotExtension:
                     )
                     if args.extension in self.bot._ext_handlers:
                         embed.add_field(
-                            name="Handlers", message,
+                            name="Handlers",
                             value=", ".join(self.bot._ext_handlers[args.extension])
                         )
                     if args.extension in self.bot._ext_loops:

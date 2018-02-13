@@ -1,13 +1,13 @@
+"""Control Systemd Units from Discord"""
 import argparse
-import discord
 import subprocess
 import os
 import asyncio
+import discord
 
 class BotExtension:
     """Control Systemd Units from Discord"""
     def __init__(self, bot):
-        """Initilize the extension"""
         self.name = "System Control"
         self.author = "Brett"
         self.version = "1.0"
@@ -17,7 +17,6 @@ class BotExtension:
         self.services = {"arma" : {"name": "Arma 3 Dedicated Server", "unit": "arma3-mod"}}
 
     def __register__(self):
-        """Register the commands"""
         return {
             "status" : {
                 "function" : self.status,
@@ -44,8 +43,8 @@ class BotExtension:
                     )
                     with open("status.log", "w") as log:
                         log.write(status.stdout.decode("UTF-8"))
-                    await message.channel.send("```\n"+"\n".join(r.stdout.decode("UTF-8").split("\n")[0:11])+"\n```")
-                    await message.channel.send("```\n"+"\n".join(r.stdout.decode("UTF-8").split("\n")[12:])+"\n```")
+                    await message.channel.send("```\n"+"\n".join(status.stdout.decode("UTF-8").split("\n")[0:11])+"\n```")
+                    await message.channel.send("```\n"+"\n".join(status.stdout.decode("UTF-8").split("\n")[12:])+"\n```")
                 else:
                     r = subprocess.run(
                         ["systemctl", "is-active", self.services[args.service]["unit"]],

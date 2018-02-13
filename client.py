@@ -49,7 +49,7 @@ class BotClient(discord.Client):
                     logger.debug("Ignoring {0.name} {0.version} by {0.author}".format(loaded), "red")
             if not disable:
                 logger.debug("Loading {0.name} {0.version} by {0.author}".format(loaded))
-            if hasattr(loaded, "register"):
+            if hasattr(loaded, "__register__"):
                 newcmds = loaded.__register__()
                 if not disable:
                     self.commands.update(newcmds)
@@ -69,7 +69,7 @@ class BotClient(discord.Client):
                     for command in newcmds:
                         logger.debug("\tCommand Ignored: {0}".format(command), "red")
                         self.commands[command] = {"function": self.disabled, "roles": ["@everyone"]}
-            if hasattr(loaded, "loops"):
+            if hasattr(loaded, "__loops__"):
                 if not disable:
                     newloops = loaded.__loops__()
                     self.loops.update(newloops)
@@ -87,9 +87,9 @@ class BotClient(discord.Client):
                         logger.debug("\tHandler Registered: {0}".format(handler))
                         self._num_handlers += 1
                         self.handlers[handler].append(loaded)
-                        self._ext_handlers[exten].append(h)
+                        self._ext_handlers[exten].append(handler)
                     else:
-                        logger.debug("\tHandler Registered: {0}".format(h), "red")
+                        logger.debug("\tHandler Registered: {0}".format(handler), "red")
         logger.info("{} Extension Loaded".format(len(self.extension_list)))
         logger.debug("Commands: {}".format(self._num_commands))
         logger.debug("Handlers: {}".format(self._num_handlers))

@@ -1,9 +1,10 @@
+"""Topic System for games other than Arma"""
+
 import argparse
 
 class BotExtension:
     """Topic System for games other than Arma"""
     def __init__(self, bot):
-        """Initilize the extension"""
         self.name = "Topics"
         self.author = "Brett"
         self.version = "1.0"
@@ -11,7 +12,6 @@ class BotExtension:
         self.topics = {"R6S": "Rainbow 6 Siege", "ED": "Elite: Dangerous", "PUBG": "PUBG"}
 
     def __register__(self):
-        """Register the commands"""
         return {
             "sub" : {
                 "function" : self.sub,

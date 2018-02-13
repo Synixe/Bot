@@ -8,7 +8,6 @@ import logger
 class BotExtension:
     """This handles steam API for the bot"""
     def __init__(self, bot):
-        """Initilize the extension"""
         self.name = "Steam Server Monitor"
         self.author = "nameless + Brett"
         self.version = "1.0"
@@ -16,7 +15,6 @@ class BotExtension:
         self.disable_during_test = True
 
     def __loops__(self):
-        """Register the loops"""
         return {
             "server-update" : self.bot.loop.create_task(self.server_task())
         }

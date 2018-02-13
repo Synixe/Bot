@@ -5,16 +5,14 @@ import discord
 
 
 class BotExtension:
-    """Adds games to the bot"""
+    """Games for Discord"""
     def __init__(self, bot):
-        """Init with the bot object"""
         self.bot = bot
         self.name = "Games"
         self.author = "nameless"
         self.version = "1.1"
 
     def __register__(self):
-        """Register with the main bot"""
         return {
             "rps" : {
                 "function": self.rps,

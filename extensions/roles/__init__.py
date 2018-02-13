@@ -4,16 +4,14 @@ import discord
 import logger
 
 class BotExtension:
-    """Adds a Role Counter to the bot"""
+    """Role Counter"""
     def __init__(self, bot):
-        """Init with the bot object"""
         self.name = "Roles Command"
         self.author = "nameless + Brett"
         self.version = "1.0"
         self.bot = bot
 
     def __register__(self):
-        """Register with the main bot"""
         return {
             "count" : {
                 "function" : self.count,

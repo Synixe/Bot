@@ -14,7 +14,6 @@ class BotExtension:
         self.version = "1"
 
     def __register__(self):
-        """Register the commands"""
         return {
             "current" : {
                 "function": self.current,

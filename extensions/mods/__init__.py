@@ -18,7 +18,6 @@ class BotExtension:
         self.disable_during_test = True
 
     def __loops__(self):
-        """Resister loops"""
         return {
             "mod-update-check" : self.bot.loop.create_task(self.mod_task())
         }

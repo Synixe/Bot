@@ -1,8 +1,10 @@
+"""Pack of small commands"""
 import argparse
-import discord
 import random
+import discord
 
 class BotExtension:
+    """Pack of small commands"""
     def __init__(self, bot):
         self.name = "Mini Commands"
         self.author = "Brett + nameless"

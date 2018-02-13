@@ -69,9 +69,11 @@ class Parser:
                     self.list = False
 
     def process_ref(self, text):
+        """Turn references in section numbers"""
         return re.sub(r'\\ref{(.+?)}', lambda match: self.references[match.group(1)], text)
 
     def get_from_id(self, tag):
+        """Get a section by it's tag"""
         sections = tag.split(".")
         if len(sections) == 1:
             return self.sections[int(tag) - 1]
