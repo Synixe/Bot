@@ -32,7 +32,7 @@ class BotExtension:
                 choices=["lifetime", "solo", "duo", "squad", "solo-fpp", "duo-fpp", "squad-fpp"],
                 default="Lifetime"
             )
-            args = await self.bot.parser_args(parser, args, message)
+            args = await self.bot.parse_args(parser, args, message)
             if args != False:
                 args.user = args.user.lower()
                 parser = pubgparser.PUBGParser()

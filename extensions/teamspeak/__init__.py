@@ -23,7 +23,7 @@ class BotExtension:
         """"Send the TeamSpeak Address to a user"""
         parser = argparse.ArgumentParser(description=self.teamspeak.__doc__)
         parser.add_argument("user", help="The user to send the address to")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             try:
                 user = message.channel.guild.get_member(self.bot.get_from_tag(args.user))

@@ -204,5 +204,5 @@ class BotClient(discord.Client):
                         resp = out.getvalue()
                     else:
                         resp = err.getvalue()
-                    await message.channel.send(resp.replace("main.py",self.prefix+message.content[len(self.prefix):].split()[0]))
+                    await message.channel.send(resp.replace("main.py", self.prefix+message.content[len(self.prefix):].split()[0]))
         return False

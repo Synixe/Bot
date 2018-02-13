@@ -26,7 +26,7 @@ class BotExtension:
             "-t", "--title", default=None, help="Title of the poll"
         )
         parser.add_argument("text", nargs="+", help="Text of the poll")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             if args.title == None:
                 msg = await message.channel.send(" ".join(args.text))

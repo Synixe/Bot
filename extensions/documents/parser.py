@@ -1,6 +1,8 @@
+"""Parse tex files"""
 import re
 
 class Parser:
+    """TeX Parser"""
     def __init__(self, data):
         self.data = data
         self.document = False
@@ -11,35 +13,43 @@ class Parser:
         self.item = -1
         self.sections = []
         self.references = {}
-        for l in self.data.split("\n"):
-            l = l.replace("\t", "").replace("\\&", "&")
+        for line in self.data.split("\n"):
+            line = line.replace("\t", "").replace("\\&", "&")
             if not self.document:
-                if l == "\\begin{document}":
+                if line == "\\begin{document}":
                     self.document = True
             elif not self.list:
-                if l.startswith("\\section"):
+                if line.startswith("\\section"):
                     self.section += 1
                     self.subsection = -1
-                    self.sections.append({"name": l.split("{", 1)[1].split("}")[0], "subsections": [], "text": "", "items": []})
-                elif l.startswith("\\subsection"):
+                    self.sections.append({
+                        "name": line.split("{", 1)[1].split("}")[0],
+                        "subsections": [], "text": "", "items": []
+                    })
+                elif line.startswith("\\subsection"):
                     self.subsection += 1
                     self.subsubsection = -1
-                    self.sections[self.section]["subsections"].append({"name": l.split("{", 1)[1].split("}")[0], "subsubsections": [], "text": "", "items": []})
-                elif l.startswith("\\subsubsection"):
+                    self.sections[self.section]["subsections"].append({
+                        "name": line.split("{", 1)[1].split("}")[0],
+                        "subsubsections": [], "text": "", "items": []
+                    })
+                elif line.startswith("\\subsubsection"):
                     self.subsubsection += 1
-                    self.sections[self.section]["subsections"][self.subsection]["subsubsections"].append({"name": l.split("{", 1)[1].split("}")[0], "text": "", "items": []})
-                elif l.startswith("\\begin{enumerate}"):
+                    self.sections[self.section]["subsections"][self.subsection]["subsubsections"].append({
+                        "name": line.split("{", 1)[1].split("}")[0], "text": "", "items": []
+                    })
+                elif line.startswith("\\begin{enumerate}"):
                     self.list = True
                     self.item = -1
-                elif not l.startswith("\\") and self.section != -1:
+                elif not line.startswith("\\") and self.section != -1:
                     if self.subsection == -1:
-                        self.sections[self.section]["text"] += l + "\n"
+                        self.sections[self.section]["text"] += line + "\n"
                     elif self.subsubsection == -1:
-                        self.sections[self.section]["subsections"][self.subsection]["text"] += l + "\n\n"
+                        self.sections[self.section]["subsections"][self.subsection]["text"] += line + "\n\n"
                     else:
-                        self.sections[self.section]["subsections"][self.subsection]["subsubsections"][self.subsubsection]["text"] += l + "\n\n"
-                if "\\label" in l:
-                    ref = l.split("\\label{")[1].split("}")[0]
+                        self.sections[self.section]["subsections"][self.subsection]["subsubsections"][self.subsubsection]["text"] += line + "\n\n"
+                if "\\label" in line:
+                    ref = line.split("\\label{")[1].split("}")[0]
                     if self.subsubsection != -1:
                         self.references[ref] = "{}.{}.{}".format(self.section + 1, self.subsection + 1, self.subsubsection + 1)
                     elif self.subsection != -1:
@@ -47,21 +57,21 @@ class Parser:
                     else:
                         self.references[ref] = "{}".format(self.section + 1)
             elif self.list:
-                if l.startswith("\\item"):
+                if line.startswith("\\item"):
                     self.item += 1
                     if self.subsection == -1:
-                        self.sections[self.section]["items"].append(l.replace("\\item ", ""))
+                        self.sections[self.section]["items"].append(line.replace("\\item ", ""))
                     elif self.subsubsection == -1:
-                        self.sections[self.section]["subsections"][self.subsection]["items"].append(l.replace("\\item ", ""))
+                        self.sections[self.section]["subsections"][self.subsection]["items"].append(line.replace("\\item ", ""))
                     else:
-                        self.sections[self.section]["subsections"][self.subsection]["subsubsections"][self.subsubsection]["items"].append(l.replace("\\item ", ""))
-                elif l.startswith("\\end"):
+                        self.sections[self.section]["subsections"][self.subsection]["subsubsections"][self.subsubsection]["items"].append(line.replace("\\item ", ""))
+                elif line.startswith("\\end"):
                     self.list = False
 
-    def processRef(self, text):
+    def process_ref(self, text):
         return re.sub(r'\\ref{(.+?)}', lambda match: self.references[match.group(1)], text)
 
-    def getByID(self, tag):
+    def get_from_id(self, tag):
         sections = tag.split(".")
         if len(sections) == 1:
             return self.sections[int(tag) - 1]

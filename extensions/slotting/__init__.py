@@ -40,7 +40,8 @@ class BotExtension:
             "schedule-update-check" : self.bot.loop.create_task(self.schedule_task())
         }
 
-    def get_connection(self):
+    @classmethod
+    def get_connection(cls):
         """Gets a connection to the database"""
         return pymysql.connect(
             host=tokens.MYSQL.HOST,
@@ -55,7 +56,7 @@ class BotExtension:
         parser = argparse.ArgumentParser(description=self.slot.__doc__)
         parser.add_argument("slot", nargs="*", help="Slot to take")
         parser.add_argument("-m", "--mission", nargs="*", help="Mission to slot into")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             args.slot = " ".join(args.slot)
             if ";" in args.slot or (args.mission != None and ";" in args.mission):
@@ -111,7 +112,7 @@ class BotExtension:
         """Unslot from a mission"""
         parser = argparse.ArgumentParser(description=self.unslot.__doc__)
         parser.add_argument("-m", "--mission", nargs="*", help="Mission to slot into")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             if args.mission != None:
                 if ";" in args.mission:
@@ -158,7 +159,7 @@ class BotExtension:
         """Post an event to #events"""
         parser = argparse.ArgumentParser(description=self.post.__doc__)
         parser.add_argument("event", type=int, help="ID of the mission to post")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
             if channel is not None:

@@ -27,7 +27,7 @@ class BotExtension:
         """Subscribe to a topic"""
         parser = argparse.ArgumentParser(description=self.sub.__doc__)
         parser.add_argument("topic", nargs="?", help="Topic to subscribe to.")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             if args.topic == None:
                 text = "Topics:\n"
@@ -48,7 +48,7 @@ class BotExtension:
         """Unsubscribe from a topic"""
         parser = argparse.ArgumentParser(description=self.unsub.__doc__)
         parser.add_argument("topic", nargs="?", help="Topic to unsubscribe from")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             if args.topic == None:
                 await message.channel.send("No topic specified!")

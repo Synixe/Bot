@@ -76,6 +76,7 @@ class BotExtension:
 
     @classmethod
     def get_role(cls, guild, name):
+        """Get role by name"""
         for role in guild.roles:
             if name.lower() == role.name.lower():
                 return role

@@ -8,7 +8,8 @@ import sys
 
 class Bot:
     """Shell of the Synixe Bot"""
-    def run(self):
+    @classmethod
+    def run(cls):
         """Run the bot"""
         parser = argparse.ArgumentParser(description="The Synixe Discord Bot")
         parser.add_argument("--debug", action="store_true", help="Enable Debugging")

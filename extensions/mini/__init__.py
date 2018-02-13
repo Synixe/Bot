@@ -34,7 +34,7 @@ class BotExtension:
         """Display a pretty card with information about a member"""
         parser = argparse.ArgumentParser(self.card.__doc__)
         parser.add_argument("user", nargs="?", default=str(message.author.id), help="The subject of the card. Defaults to the message's author.")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             user = message.channel.guild.get_member(self.bot.get_from_tag(args.user))
             if user != None:
@@ -51,7 +51,7 @@ class BotExtension:
     async def ping(self, args, message):
         """Ping the bot for a response"""
         parser = argparse.ArgumentParser(description=self.ping.__doc__)
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             await message.channel.send("{:0.0f}ms".format(self.bot.latency * 1000))
 
@@ -59,7 +59,7 @@ class BotExtension:
         """Obtain the color of a role on the server"""
         parser = argparse.ArgumentParser(description=self.color.__doc__)
         parser.add_argument("role", nargs="?", default=str(message.author.roles[-1].name), help="The role to get the color of")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             role = discord.utils.find(lambda m: m.name.lower() == args.role.lower(), message.channel.guild.roles)
             if role != None:
@@ -77,7 +77,7 @@ class BotExtension:
         """Prints out a users discord avatar"""
         parser = argparse.ArgumentParser(description=self.avatar.__doc__)
         parser.add_argument("avatar", nargs="?", default=str(message.author.id), help="The user of the avatar you want to get")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             user = message.channel.guild.get_member(self.bot.get_from_tag(args.avatar))
             if user != None:

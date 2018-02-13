@@ -1,3 +1,4 @@
+"""Logs to a file and outputs to the console with colors"""
 import datetime
 import time
 import sys
@@ -7,14 +8,14 @@ DEBUG = False
 if sys.platform == "win32":
     from ctypes import windll, Structure, c_short, c_ushort, byref
 
-    class coord(Structure):
+    class COORD(Structure):
         """struct in wincon.h."""
         _fields_ = [
             ("X", c_short),
             ("Y", c_short)
         ]
 
-    class small_rect(Structure):
+    class SMALL_RECT(Structure):
         """struct in wincon.h."""
         _fields_ = [
             ("Left", c_short),
@@ -23,14 +24,14 @@ if sys.platform == "win32":
             ("Bottom", c_short)
         ]
 
-    class buffer_info(Structure):
+    class BUFFER_INFO(Structure):
         """struct in wincon.h."""
         _fields_ = [
-            ("dwSize", coord),
-            ("dwCursorPosition", coord),
+            ("dwSize", COORD),
+            ("dwCursorPosition", COORD),
             ("wAttributes", c_ushort),
-            ("srWindow", small_rect),
-            ("dwMaximumWindowSize", coord)
+            ("srWindow", SMALL_RECT),
+            ("dwMaximumWindowSize", COORD)
         ]
 
     STD_INPUT_HANDLE = -10
@@ -45,7 +46,7 @@ if sys.platform == "win32":
     FOREGROUND_INTENSITY = 0x0008
 
     def get_text_attr():
-        csbi = buffer_info()
+        csbi = BUFFER_INFO()
         windll.kernel32.GetConsoleScreenBufferInfo(HANDLE, byref(csbi))
         return csbi.wAttributes
 

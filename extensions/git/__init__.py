@@ -41,7 +41,7 @@ class BotExtension:
         """Find out who wrote a command"""
         parser = argparse.ArgumentParser(blame.__doc__)
         parser.add_argument("command", help="The command to blame")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             for ext in self.bot.extensions:
                 if hasattr(self.bot.extensions[ext], args.command):

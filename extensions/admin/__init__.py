@@ -55,7 +55,7 @@ class BotExtension:
             help="The number of messages to delete, default: 20"
         )
         parser.add_argument("--pinned", action="store_true", help="Delete pinned messages")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             messages = message.channel.history(limit=args.n + 2)
             status = await message.channel.send("Clearing {0} messages".format(args.n + 2))
@@ -79,7 +79,7 @@ class BotExtension:
         """Freeze a user from sending messages"""
         parser = argparse.ArgumentParser(description=self.freeze.__doc__)
         parser.add_argument("user", help="The user to freeze", message)
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             user = message.channel.guild.get_member(self.bot.get_from_tag(args.user))
             if user != None:
@@ -96,7 +96,7 @@ class BotExtension:
         """"Unfreeze a user from sending messages"""
         parser = argparse.ArgumentParser(description=self.unfreeze.__doc__)
         parser.add_argument("user", help="The user to unfreeze")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             user = message.channel.guild.get_member(self.bot.get_from_tag(args.user))
             if user != None:
@@ -109,7 +109,7 @@ class BotExtension:
         """Get info about loaded extensions"""
         parser = argparse.ArgumentParser(description=self.ext.__doct__)
         parser.add_argument("extension", nargs="?", type=str, help="The extension to get info about")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             if args.extension == None:
                 embed = discord.Embed(
@@ -163,7 +163,7 @@ class BotExtension:
         parser = argparse.ArgumentParser(description=self.speak.__doc__)
         parser.add_argument("channel", help="The channel")
         parser.add_argument("words", nargs="+", type=str)
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             channel = discord.utils.find(lambda c: c.name == args.channel, message.channel.guild.channels)
             if channel is not None:

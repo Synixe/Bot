@@ -12,7 +12,7 @@ def blame(ext, command):
         count = 0
         for raw_line in data:
             count += 1
-            raw_author = raw_l.split(")", 1)
+            raw_author = raw_line.split(")", 1)
             author = raw_author[0].split("(")[1].split(" 20")[0].split(" ")[0]
             line = raw_author[1].strip()
             if reading and line.startswith("async def"):

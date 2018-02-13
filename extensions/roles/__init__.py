@@ -30,7 +30,7 @@ class BotExtension:
             action="store_true",
             help="Get total number of active and new members"
         )
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             active = self.getMembersWithRole(message.channel.guild, "active")
             new    = self.getMembersWithRole(message.channel.guild, "new")

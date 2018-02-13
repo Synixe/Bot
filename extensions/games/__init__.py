@@ -35,7 +35,7 @@ class BotExtension:
         valid = ["paper", "rock", "scissors"]
         parser = argparse.ArgumentParser(description=self.rps.__doc__)
         parser.add_argument("choice", help="Your choice")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             if not args.choice.lower() in valid:
                 await message.channel.send("That is not a valid choice")
@@ -53,7 +53,7 @@ class BotExtension:
         """Roll a dice"""
         parser = argparse.ArgumentParser(description=self.dice.__doc__)
         parser.add_argument("n", nargs="?", type=int, default=6, help="Number of sides")
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             value = random.randint(1, args.n)
             messages = ["The value is {0}", "You rolled a {0}", "It lands on {0}"]
@@ -62,7 +62,7 @@ class BotExtension:
     async def flip(self, args, message):
         """Flip a coin"""
         parser = argparse.ArgumentParser(self.flip.__doc__)
-        args = await self.bot.parser_args(parser, args, message)
+        args = await self.bot.parse_args(parser, args, message)
         if args != False:
             side = random.randint(0, 1)
             if side == 0:

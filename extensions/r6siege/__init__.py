@@ -27,7 +27,7 @@ class BotExtension:
             parser.add_argument("user", help="The Rainbow 6 Siege username you want to fetch")
             parser.add_argument("--psn", help="Search for a PSN account", action="store_true")
             parser.add_argument("--xbox", help="Search for a Xbox account", action="store_true")
-            args = await self.bot.parser_args(parser, args, message)
+            args = await self.bot.parse_args(parser, args, message)
             if args != False:
                 parser = r6parser.R6Parser()
                 platform = "pc"
