@@ -32,8 +32,8 @@ class BotExtension:
         )
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
-            active      = self.getMembersWithRole(message.channel.guild, "active")
-            new         = self.getMembersWithRole(message.channel.guild, "new")
+            active = self.getMembersWithRole(message.channel.guild, "active")
+            new    = self.getMembersWithRole(message.channel.guild, "new")
             if not args.total:
                 inactive = self.getMembersWithRole(message.channel.guild, "inactive")
                 embed = discord.Embed(
