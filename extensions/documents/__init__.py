@@ -32,7 +32,7 @@ class BotExtension:
     async def rule(self, args, message):
         parse = argparse.ArgumentParser(description="Display a rule")
         parse.add_argument("rule",help="Rule to display")
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parseArgs(parse, args, message)
         if args != False:
             req = urllib.request.Request(url="https://raw.githubusercontent.com/Synixe/Documents/master/SynixeRules.tex",headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'})
             with urllib.request.urlopen(req) as response:
@@ -98,7 +98,7 @@ class BotExtension:
     async def const(self, args, message):
         parse = argparse.ArgumentParser(description="Display a section of the constitution")
         parse.add_argument("section",nargs="?",help="Section to display")
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parseArgs(parse, args, message)
         if args != False:
             if args.section != None:
                 req = urllib.request.Request(url="https://raw.githubusercontent.com/Synixe/Documents/master/SynixeConstitution.tex",headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'})
