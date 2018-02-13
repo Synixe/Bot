@@ -47,7 +47,7 @@ class BotExtension:
             else:
                 embed = discord.Embed(
                     title = "Active + New Members",
-                    color = discord.Colour.from_rgb(r=255,g=192,b=60)
+                    color = discord.Colour.from_rgb(r=255,g=192 , b=60)
                 )
                 embed.add_field(name="Total",   value="{}".format(active+new))
                 embed.add_field(name="Active",  value="{}".format(active))
