@@ -55,6 +55,15 @@ class BotClient(discord.Client):
                     self._num_commands += len(newcmds)
                     for c in newcmds:
                         logger.debug("\tCommand Registered: {0}".format(c))
+                        if "alias" in newcmds[c]:
+                            for alias in newcmds[c]["alias"]:
+                                logger.debug("\t\tAlias: {}".format(alias))
+                                alias_f = {alias : {
+                                    "function": newcmds[c]["function"],
+                                    "description": newcmds[c]["description"],
+                                    "roles": newcmds[c]["roles"]
+                                }}
+                                self.commands.update(alias_f)
                 else:
                     for c in newcmds:
                         logger.debug("\tCommand Ignored: {0}".format(c), "red")

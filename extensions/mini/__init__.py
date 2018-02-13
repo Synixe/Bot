@@ -24,12 +24,8 @@ class BotExtension:
             "color" : {
                 "function" : self.color,
                 "description" : "Obtain the color of a role on the server",
-                "roles" : ["active","new","inactive"]
-            },
-            "colour" : {
-                "function" : self.color,
-                "description" : "Obtain the color of a role on the server",
-                "roles" : ["active","new","inactive"]
+                "roles" : ["active","new","inactive"],
+                "alias": ["colour"]
             },
             "avatar" : {
                 "function" : self.avatar,
