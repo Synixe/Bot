@@ -5,7 +5,9 @@ import asyncio
 import logger
 
 class BotExtension:
+    """This handles steam API for the bot"""
     def __init__(self, bot):
+        """Initilize the extension"""
         self.name = "Steam Server Monitor"
         self.author = "nameless + Brett"
         self.version = "1.0"
@@ -13,11 +15,13 @@ class BotExtension:
         self.disable_during_test = True
 
     def loops(self):
+        """Register the loops"""
         return {
             "server-update" : self.bot.loop.create_task(self.server_task())
         }
 
     async def server_task(self):
+        """Post player count to topic of #lookingtoplay"""
         await self.bot.wait_until_ready()
         channel = discord.utils.find(lambda c: c.name == "lookingtoplay", discord.utils.find(lambda g: g.name == "Synixe", self.bot.guilds).channels)
         while not self.bot.is_closed():

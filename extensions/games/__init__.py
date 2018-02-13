@@ -3,13 +3,16 @@ import argparse
 import random
 
 class BotExtension:
+    """Adds games to the bot"""
     def __init__(self, bot):
+        """Init with the bot object"""
         self.bot = bot
         self.name = "Games"
         self.author = "nameless"
         self.version = "1.1"
 
-    def register (self):
+    def register(self):
+        """Register with the main bot"""
         return {
             "rps" : {
                 "function": self.rps,
@@ -29,13 +32,13 @@ class BotExtension:
         """Play Rock Paper Scissors against the bot"""
         valid = ["paper", "rock", "scissors"]
         parser = argparse.ArgumentParser(description=self.rps.__doc__)
-        parser.add_argument("choice",help=self.bot.processOutput("Your choice", message))
+        parser.add_argument("choice", help=self.bot.processOutput("Your choice", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
             if not args.choice.lower() in valid:
                 await message.channel.send("That is not a valid choice")
                 return
-            hand = random.randint(0,2)
+            hand = random.randint(0, 2)
             if hand == 0:
                 output = "Rock"
             if hand == 1:
@@ -47,19 +50,19 @@ class BotExtension:
     async def dice(self, args, message):
         """Roll a dice"""
         parser = argparse.ArgumentParser(description=self.dice.__doc__)
-        parser.add_argument("n",nargs="?",type=int,default=6,help=self.bot.processOutput("Number of sides", message))
+        parser.add_argument("n", nargs="?", type=int, default=6, help=self.bot.processOutput("Number of sides", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
             value = random.randint(1,args.n)
-            messages = ["The value is {0}","You rolled a {0}","It lands on {0}"]
+            messages = ["The value is {0}", "You rolled a {0}", "It lands on {0}"]
             await message.channel.send(self.bot.processOutput(random.choice(messages).format(value),message))
 
     async def flip(self, args, message):
         """Flip a coin"""
-        parser = argparse.ArgumentParser(flip.__doc__)
+        parser = argparse.ArgumentParser(self.flip.__doc__)
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
-            side = random.randint(0,1)
+            side = random.randint(0, 1)
             if side == 0:
                 output = "It lands on heads"
             else:
