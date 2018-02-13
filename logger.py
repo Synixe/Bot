@@ -5,7 +5,6 @@ import sys
 DEBUG = False
 
 if sys.platform == "win32":
-    import winreg
     from ctypes import windll, Structure, c_short, c_ushort, byref
 
     SHORT = c_short

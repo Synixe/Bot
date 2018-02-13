@@ -10,7 +10,9 @@ import os, sys
 from . import embeds
 
 class BotExtension:
+    """Slotting For Mission Sheets"""
     def __init__(self, bot):
+        """Initilize the extension"""
         self.name = "Slotting"
         self.author = "Brett + nameless"
         self.version = "1.1"
@@ -18,6 +20,7 @@ class BotExtension:
         self.disable_during_test = True
 
     def register(self):
+        """Register the commands"""
         return {
             "slot" : {
                 "function" : self.slot,
@@ -34,11 +37,13 @@ class BotExtension:
         }
 
     def loops(self):
+        """Register the loops"""
         return {
             "schedule-update-check" : self.bot.loop.create_task(self.schedule_task())
         }
 
     def getConnection(self):
+        """Gets a connection to the database"""
         return pymysql.connect(
             host = tokens.MYSQL.HOST,
             user = tokens.MYSQL.USER,
@@ -154,7 +159,7 @@ class BotExtension:
     async def post(self, args, message):
         """Post an event to #events"""
         parser = argparse.ArgumentParser(description=self.post.__doc__)
-        parser.add_argument("event",type=int,help=self.bot.processOutput("ID of the mission to post", message))
+        parser.add_argument("event", type=int, help=self.bot.processOutput("ID of the mission to post", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
             channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
@@ -163,6 +168,7 @@ class BotExtension:
                 await embeds.displayEvent(self, mid, args.event, message)
 
     async def schedule_task(self):
+        """Checks for changes to the schedule and posts them in #events"""
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             channel = discord.utils.find(lambda c: c.name == "events", discord.utils.find(lambda g: g.name == "Synixe", self.bot.guilds).channels)
@@ -188,9 +194,9 @@ class BotExtension:
                     events = cursor.fetchall()
 
                     embed = discord.Embed(
-                        title = "Upcoming Events",
-                        color = discord.Colour.from_rgb(r=255,g=192,b=60),
-                        description = "Sunday Missions: 2pm PST / 5pm EST\nAll other Missions: 7pm PST / 10pm EST\nUnless stated otherwise\n\n"
+                        title="Upcoming Events",
+                        color=discord.Colour.from_rgb(r=255, g=192, b=60),
+                        description="Sunday Missions: 2pm PST / 5pm EST\nAll other Missions: 7pm PST / 10pm EST\nUnless stated otherwise\n\n"
                     )
 
                     for event in events:
@@ -203,7 +209,7 @@ class BotExtension:
                             continue
                         if month > now.month and now.day < 15:
                             continue
-                        embed.add_field(name=event["date"],value="{} by <@{}>".format(event["name"], event['host']),inline=False)
+                        embed.add_field(name=event["date"],value="{} by <@{}>".format(event["name"], event['host']), inline=False)
 
                     if target == None:
                         await channel.send(embed=embed)

@@ -1,6 +1,8 @@
+"""Reads HTML to extract Rainbow 6 Siege Data"""
 from html.parser import HTMLParser
 
 class R6Parser(HTMLParser):
+    """Rainbow 6 Siege HTML Parser"""
     def handle_starttag(self, tag, attrs):
         if tag == "div":
             attrs = dict(attrs)
