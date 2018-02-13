@@ -5,6 +5,7 @@ import importlib
 import os
 import io
 import random
+import socket
 from sys import platform
 from textblob import TextBlob
 from contextlib import redirect_stdout, redirect_stderr
@@ -16,6 +17,8 @@ class BotClient(discord.Client):
     async def on_ready(self):
         if self.user.id == 403101852771680258:
             self.prefix = "?"
+        elif socket.gethostname() in ["yehuda"]:
+            self.prefix = "."
         else:
             self.prefix = ">"
         if platform == "linux" or platform == "linux2":
@@ -33,7 +36,7 @@ class BotClient(discord.Client):
         self._num_handlers = 0
         self._num_loops = 0
         logger.info("Connected as {0.name} ({0.id})".format(self.user), "green")
-        logger.info("Loading Extensions")
+        logger.debug("Loading Extensions")
         for exten in self.extension_list:
             loaded = importlib.import_module(exten).BotExtension(self)
             self.extensions[exten] = loaded
@@ -60,14 +63,13 @@ class BotClient(discord.Client):
                                 logger.debug("\t\tAlias: {}".format(alias))
                                 alias_f = {alias : {
                                     "function": newcmds[c]["function"],
-                                    "description": newcmds[c]["description"],
                                     "roles": newcmds[c]["roles"]
                                 }}
                                 self.commands.update(alias_f)
                 else:
                     for c in newcmds:
                         logger.debug("\tCommand Ignored: {0}".format(c), "red")
-                        self.commands[c] = { "function": self.disabled, "roles": ["@everyone"], "description": "Disabled" }
+                        self.commands[c] = { "function": self.disabled, "roles": ["@everyone"] }
             if hasattr(loaded, "loops"):
                 if not disable:
                     newloops = loaded.loops()
@@ -90,9 +92,10 @@ class BotClient(discord.Client):
                     else:
                         logger.debug("\tHandler Registered: {0}".format(h), "red")
         logger.info("{} Extension Loaded".format(len(self.extension_list)))
-        logger.info("Commands: {0}".format(self._num_commands))
-        logger.info("Handlers: {0}".format(self._num_handlers))
-        logger.info("Loops: {0}".format(self._num_loops))
+        logger.debug("Commands: {}".format(self._num_commands))
+        logger.debug("Handlers: {}".format(self._num_handlers))
+        logger.debug("Loops: {}".format(self._num_loops))
+        logger.info("Prefix: {}".format(self.prefix))
         logger.info("Bot Ready!","green")
 
     async def execute(self, message):
@@ -153,6 +156,7 @@ class BotClient(discord.Client):
             await h.on_member_update(before, after)
 
     async def disabled(self, args, message):
+        """This function is not allowed during testing"""
         await message.channel.send("That command is disabled during testing")
 
     @classmethod

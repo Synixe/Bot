@@ -13,29 +13,26 @@ class BotExtension:
         return {
             "card" : {
                 "function" : self.card,
-                "description" : "Display a pretty card with information about a member",
                 "roles" : ["active","new","inactive"]
             },
             "ping" : {
                 "function" : self.ping,
-                "description" : "Ping the bot for a response",
                 "roles" : ["@everyone"]
             },
             "color" : {
                 "function" : self.color,
-                "description" : "Obtain the color of a role on the server",
                 "roles" : ["active","new","inactive"],
                 "alias": ["colour"]
             },
             "avatar" : {
                 "function" : self.avatar,
-                "description" : "Prints out a users discord avatar",
                 "roles" : ["active","new","inactive"]
             }
         }
 
     async def card(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Display a pretty card with information about a member", message))
+        """Display a pretty card with information about a member"""
+        parser = argparse.ArgumentParser(self.card.__doc__)
         parser.add_argument("user", nargs="?", default=str(message.author.id), help=self.bot.processOutput("The subject of the card. Defaults to the message's author.", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
@@ -52,13 +49,15 @@ class BotExtension:
                 await message.channel.send(self.bot.processOutput("Unable to find that user. Try using @ to mention them or use their Discord ID.", message))
 
     async def ping(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Ping the bot", message))
+        """Ping the bot for a response"""
+        parser = argparse.ArgumentParser(description=self.ping.__doc__)
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
             await message.channel.send("{:0.0f}ms".format(self.bot.latency * 1000))
 
     async def color(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Obtain a colo(u)r from a role on the server", message))
+        """Obtain the color of a role on the server"""
+        parser = argparse.ArgumentParser(description=self.color.__doc__)
         parser.add_argument("role", nargs="?", default=str(message.author.roles[-1].name), help=self.bot.processOutput("The role to get the color of", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
@@ -75,7 +74,8 @@ class BotExtension:
                 await message.channel.send("Role not found")
 
     async def avatar(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Shows an clickable avatar of a user", message))
+        """Prints out a users discord avatar"""
+        parser = argparse.ArgumentParser(description=self.avatar.__doc__)
         parser.add_argument("avatar", nargs="?", default=str(message.author.id), help=self.bot.processOutput("The user of the avatar you want to get", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:

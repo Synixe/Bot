@@ -16,43 +16,37 @@ class BotExtension:
         return {
             "clear" : {
                 "function" : self.clear,
-                "description" : "Clears the past n number of messages (Default: 20)",
                 "roles" : ["manager"]
             },
             "ext" : {
                 "function" : self.ext,
-                "description" : "Get info about loaded extensions",
                 "roles" : ["@everyone"]
             },
             "freeze" : {
                 "function" : self.freeze,
-                "description" : "Freeze a user from sending messages",
                 "roles" : ["manager","moderator"]
             },
             "unfreeze" : {
                 "function" : self.unfreeze,
-                "description" : "Unfreeze a user from sending messages",
                 "roles" : ["manager","moderator"]
             },
             "speak" : {
                 "function" : self.speak,
-                "description" : "Makes the bot say something funny",
                 "roles" : ["manager"]
             },
             "anon" : {
                 "function" : self.anon,
-                "description" : "Send a message to the Moderators anonymously",
                 "roles" : ["@everyone"]
             },
             "stop" : {
                 "function" : self.stop,
-                "description" : "Stop the bot",
                 "roles" : ["code contributer"]
             }
         }
 
     async def clear(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Clears the past *n* number of messages", message))
+        """Clears the past n number of messages (Default: 20)"""
+        parser = argparse.ArgumentParser(description=self.clear.__doc__)
         parser.add_argument("n", nargs="?", default=20, type=int, help=self.bot.processOutput("The number of messages to delete, default: 20", message))
         parser.add_argument("--pinned",action="store_true",help=self.bot.processOutput("Delete pinned messages", message))
         args = await self.bot.parseArgs(parser, args, message)
@@ -76,7 +70,8 @@ class BotExtension:
             await status.delete()
 
     async def freeze(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Freeze a user from sending messages", message))
+        """Freeze a user from sending messages"""
+        parser = argparse.ArgumentParser(description=self.freeze.__doc__)
         parser.add_argument("user", help=self.bot.processOutput("The user to freeze", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
@@ -92,7 +87,8 @@ class BotExtension:
                 await message.channel.send(self.bot.processOutput("Can't find that user.", message))
 
     async def unfreeze(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("UnFreeze a user, allowing them to send messages", message))
+        """"Unfreeze a user from sending messages"""
+        parser = argparse.ArgumentParser(description=self.unfreeze.__doc__)
         parser.add_argument("user", help=self.bot.processOutput("The user to unfreeze", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
@@ -104,7 +100,8 @@ class BotExtension:
                 await message.channel.send(self.bot.processOutput("Can't find that user.", message))
 
     async def ext(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Get info about loaded extensions", message))
+        """Get info about loaded extensions"""
+        parser = argparse.ArgumentParser(description=self.ext.__doct__)
         parser.add_argument("extension", nargs="?", type=str, help=self.bot.processOutput("The extension to get info about", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
@@ -147,7 +144,8 @@ class BotExtension:
                     await message.channel.send(self.bot.processOutput("That extension does not exist.", message))
 
     async def speak(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Make the bot speak", message))
+        """"Makes the bot say something funny"""
+        parser = argparse.ArgumentParser(description=self.speak.__doc__)
         parser.add_argument("channel", help=self.bot.processOutput("The channel", message))
         parser.add_argument("words",nargs="+",type=str)
         args = await self.bot.parseArgs(parser, args, message)
@@ -160,6 +158,7 @@ class BotExtension:
                 logger.throw("Unable to find #{0.name}\n\t{1.filename} line {0.lineno - 4}".format(args.channel, frame))
 
     async def anon(self, args, message):
+        """Send a message to the Moderators anonymously"""
         if not isinstance(message.channel, discord.DMChannel):
             await message.delete()
             await message.channel.send("Only use this command in a direct message.")
@@ -170,7 +169,7 @@ class BotExtension:
             await message.channel.send("Message sent!")
 
     async def stop(self, args, message):
-        #TODO add a restart command or something
+        """Stop the bot"""
         sys.exit(0)
 
     @classmethod

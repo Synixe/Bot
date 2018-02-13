@@ -6,13 +6,14 @@ import signal
 import sys
 
 parser = argparse.ArgumentParser(description="The Synixe Discord Bot")
-parser.add_argument("--debug",action="store_true",help="Enable Debugging")
+parser.add_argument("--debug", action="store_true", help="Enable Debugging")
 args = parser.parse_args()
 
 def handler(signal, frame):
     bot.close()
     logger.info("Bot Stopped")
     sys.exit(0)
+
 
 signal.signal(signal.SIGINT, handler)
 

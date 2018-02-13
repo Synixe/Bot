@@ -13,13 +13,13 @@ class BotExtension:
         return {
             "ts" : {
                 "function" : self.ts,
-                "description" : "Send the TeamSpeak Address to a user",
                 "roles" : ["active"]
             }
         }
 
     async def ts(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Send the TeamSpeak Address to a user", message))
+        """"Send the TeamSpeak Address to a user"""
+        parser = argparse.ArgumentParser(description=self.ts.__doc__)
         parser.add_argument("user",help=self.bot.processOutput("The user to send the address to", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:

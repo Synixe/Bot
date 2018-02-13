@@ -14,23 +14,21 @@ class BotExtension:
         return {
             "rule": {
                 "function": self.rule,
-                "description": "Display a rule",
                 "roles": ["@everyone"]
             },
             "rules": {
                 "function": self.rules,
-                "description": "Display the link to the rules",
                 "roles": ["@everyone"]
             },
             "const": {
                 "function": self.const,
-                "description": "Display a section of the constitution",
                 "roles": ["@everyone"]
             }
         }
 
     async def rule(self, args, message):
-        parse = argparse.ArgumentParser(description="Display a rule")
+        """Display a rule"""
+        parse = argparse.ArgumentParser(description=self.rule.__doc__)
         parse.add_argument("rule",help="Rule to display")
         args = await self.bot.parseArgs(parse, args, message)
         if args != False:
@@ -82,6 +80,7 @@ class BotExtension:
                 await message.channel.send("That rule does not exist.")
 
     async def rules(self, args, message):
+        """Display the link to the rules"""
         if not len(args) == 0:
             await message.channel.send("Use {}rule".format(self.bot.prefix))
             return
@@ -96,7 +95,8 @@ class BotExtension:
         await message.channel.send(embed=embed)
 
     async def const(self, args, message):
-        parse = argparse.ArgumentParser(description="Display a section of the constitution")
+        """Display a section of the constitution"""
+        parse = argparse.ArgumentParser(description=self.const.__doc__)
         parse.add_argument("section",nargs="?",help="Section to display")
         args = await self.bot.parseArgs(parse, args, message)
         if args != False:

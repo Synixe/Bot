@@ -12,18 +12,17 @@ class BotExtension:
         return {
             "sub" : {
                 "function" : self.sub,
-                "description" : "Subscribe to a topic",
                 "roles" : ["active","new"]
             },
             "unsub" : {
                 "function" : self.unsub,
-                "description" : "Unsubscribe from a topic",
                 "roles" : ["active","new"]
             }
         }
 
     async def sub(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Subscribe to a topic", message))
+        """Subscribe to a topic"""
+        parser = argparse.ArgumentParser(description=self.sub.__doc__)
         parser.add_argument("topic", nargs="?",help=self.bot.processOutput("Topic to subscribe to.", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
@@ -40,7 +39,8 @@ class BotExtension:
                     await message.channel.send(self.bot.processOutput("That topic doesn't exist", message))
 
     async def unsub(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Unsubscribe from a topic", message))
+        """Unsubscribe from a topic"""
+        parser = argparse.ArgumentParser(description=self.unsub.__doc__)
         parser.add_argument("topic", nargs="?",help=self.bot.processOutput("Topic to unsubscribe from", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:

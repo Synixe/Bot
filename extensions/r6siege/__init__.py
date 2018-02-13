@@ -15,14 +15,14 @@ class BotExtension:
         return {
             "r6" : {
                 "function" : self.r6,
-                "description" : "Display Rainbow 6 Siege stats",
                 "roles" : ["@everyone"]
             }
         }
 
     async def r6(self, args, message):
+        """Display Rainbow 6 Siege stats"""
         async with message.channel.typing():
-            parser = argparse.ArgumentParser(description=self.bot.processOutput("Display Rainbow 6 Siege stats", message))
+            parser = argparse.ArgumentParser(description=self.r6.__doc__)
             parser.add_argument("user", help=self.bot.processOutput("The Rainbow 6 Siege username you want to fetch", message))
             parser.add_argument("--psn", help=self.bot.processOutput("Search for a PSN account", message),action="store_true")
             parser.add_argument("--xbox", help=self.bot.processOutput("Search for a Xbox account", message),action="store_true")

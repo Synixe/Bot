@@ -21,17 +21,14 @@ class BotExtension:
         return {
             "slot" : {
                 "function" : self.slot,
-                "description" : "Slot up for a mission",
                 "roles" : ["@everyone"]
             },
             "unslot" : {
                 "function" : self.unslot,
-                "description" : "Unslot from a mission",
                 "roles" : ["@everyone"]
             },
             "post" : {
                 "function" : self.post,
-                "description" : "Post an event to #events",
                 "roles" : ["missionmaker"]
             }
         }
@@ -51,7 +48,8 @@ class BotExtension:
         )
 
     async def slot(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Slot up for a mission", message))
+        """Slot up for a mission"""
+        parser = argparse.ArgumentParser(description=self.slot.__doc__)
         parser.add_argument("slot",nargs="*",help=self.bot.processOutput("Slot to take", message))
         parser.add_argument("-m","--mission",nargs="*",help=self.bot.processOutput("Mission to slot into", message))
         args = await self.bot.parseArgs(parser, args, message)
@@ -107,7 +105,8 @@ class BotExtension:
                         await message.channel.send(self.bot.processOutput("That mission doesn't exist!", message))
 
     async def unslot(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Slot up for a mission", message))
+        """Unslot from a mission"""
+        parser = argparse.ArgumentParser(description=self.unslot.__doc__)
         parser.add_argument("-m","--mission",nargs="*",help=self.bot.processOutput("Mission to slot into", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
@@ -153,7 +152,8 @@ class BotExtension:
                         await message.channel.send(self.bot.processOutput("That mission doesn't exist!", message))
 
     async def post(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Post an event to #events", message))
+        """Post an event to #events"""
+        parser = argparse.ArgumentParser(description=self.post.__doc__)
         parser.add_argument("event",type=int,help=self.bot.processOutput("ID of the mission to post", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:

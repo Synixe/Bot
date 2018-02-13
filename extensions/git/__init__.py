@@ -15,17 +15,16 @@ class BotExtension:
         return {
             "current" : {
                 "function": self.current,
-                "description": "Find out which commit the bot is on",
                 "roles" : ["@everyone"]
             },
             "blame" : {
                 "function": self.blame,
-                "description": "Find out who wrote a command",
                 "roles" : ["@everyone"]
             }
         }
 
     async def current(self, args, message):
+        """Find out which commit the bot is on"""
         embed = discord.Embed(
             title = subprocess.getoutput("git log --pretty=format:'%h' -n 1"),
             url = "https://github.com/Synixe/Bot/commit/" + subprocess.getoutput("git log --pretty=format:'%H' -n 1"),
@@ -36,7 +35,8 @@ class BotExtension:
         await message.channel.send(embed=embed)
 
     async def blame(self, args, message):
-        parser = argparse.ArgumentParser(description="Find out who wrote a command")
+        """Find out who wrote a command"""
+        parser = argparse.ArgumentParser(blame.__doc__)
         parser.add_argument("command",help="The command to blame")
         args = await self.bot.parseArgs(parser, args, message)
         for ext in self.bot.extensions:

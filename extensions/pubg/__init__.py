@@ -15,14 +15,14 @@ class BotExtension:
         return {
             "pubg" : {
                 "function" : self.pubg,
-                "description" : "Display PLAYER UNKNOWN's Battlegrounds stats",
                 "roles" : ["@everyone"]
             }
         }
 
     async def pubg(self, args, message):
+        """Display PLAYER UNKNOWN's Battlegrounds stats"""
         async with message.channel.typing():
-            parser = argparse.ArgumentParser(description=self.bot.processOutput("Display PLAYER UNKNOWN's Battlegrounds stats", message))
+            parser = argparse.ArgumentParser(description=self.pubg.__doc__)
             parser.add_argument("user", help=self.bot.processOutput("The PUBG username you want to fetch", message))
             parser.add_argument("-m", dest="mode", help=self.bot.processOutput("Game Mode", message),choices=["lifetime","solo","duo","squad","solo-fpp","duo-fpp","squad-fpp"],default="Lifetime")
             args = await self.bot.parseArgs(parser, args, message)

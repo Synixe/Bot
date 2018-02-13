@@ -18,18 +18,17 @@ class BotExtension:
         return {
             "status" : {
                 "function" : self.status,
-                "description" : "Get the status of a system service",
                 "roles" : ["moderator","manager"]
             },
             "start" : {
                 "function" : self.start,
-                "description" : "Start a service",
                 "roles" : ["moderator","manager"]
             }
         }
 
     async def status(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Get the status of a system service", message))
+        """Get the status of a system service"""
+        parser = argparse.ArgumentParser(description=self.status.__doc__)
         parser.add_argument("service", help=self.bot.processOutput("The systemctl service", message))
         parser.add_argument("--full",action="store_true",help=self.bot.processOutput("Display the full status", message))
         args = await self.bot.parseArgs(parser, args, message)
@@ -59,7 +58,8 @@ class BotExtension:
                 await message.channel.send("Unknown Service")
 
     async def start(self, args, message):
-        parser = argparse.ArgumentParser(description=self.bot.processOutput("Start a service", message))
+        """Start a service"""
+        parser = argparse.ArgumentParser(description=self.start.__doc__)
         parser.add_argument("service",help=self.bot.processOutput("The systemctl service", message))
         args = await self.bot.parseArgs(parser, args, message)
         if args != False:
