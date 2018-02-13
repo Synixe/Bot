@@ -20,18 +20,30 @@ class BotExtension:
     async def count(self, args, message):
         """Displays a counter of how many members are on Active, New and Inactive"""
         parser = argparse.ArgumentParser(self.count.__doc__)
+        parser.add_argument("--total", action="store_true", help="Get total number of active and new members")
         args = await self.bot.parseArgs(parser, args, message)
-        active      = self.getMembersWithRole(message.channel.guild, "active")
-        new         = self.getMembersWithRole(message.channel.guild, "new")
-        inactive    = self.getMembersWithRole(message.channel.guild, "inactive")
-        embed = discord.Embed(
-            title = "Members with Activity Roles",
-            color = discord.Colour.from_rgb(r=255,g=192,b=60)
-        )
-        embed.add_field(name="Active",   value="{}".format(active))
-        embed.add_field(name="New",      value="{}".format(new))
-        embed.add_field(name="Inactive", value="{}".format(inactive))
-        await message.channel.send(embed=embed)
+        if args != False:
+            active      = self.getMembersWithRole(message.channel.guild, "active")
+            new         = self.getMembersWithRole(message.channel.guild, "new")
+            if not args.total:
+                inactive = self.getMembersWithRole(message.channel.guild, "inactive")
+                embed = discord.Embed(
+                    title = "Members with Activity Roles",
+                    color = discord.Colour.from_rgb(r=255,g=192,b=60)
+                )
+                embed.add_field(name="Active",   value="{}".format(active))
+                embed.add_field(name="New",      value="{}".format(new))
+                embed.add_field(name="Inactive", value="{}".format(inactive))
+                await message.channel.send(embed=embed)
+            else:
+                embed = discord.Embed(
+                    title = "Active + New Members",
+                    color = discord.Colour.from_rgb(r=255,g=192,b=60)
+                )
+                embed.add_field(name="Total",   value="{}".format(active+new))
+                embed.add_field(name="Active",  value="{}".format(active))
+                embed.add_field(name="New",     value="{}".format(new))
+                await message.channel.send(embed=embed)
 
     @classmethod
     def getMembersWithRole(cls, guild, role):
