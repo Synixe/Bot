@@ -30,10 +30,10 @@ class BotExtension:
         )
         args = await self.bot.parse_args(parser, args, message)
         if args != False:
-            active = self.getMembersWithRole(message.channel.guild, "active")
-            new    = self.getMembersWithRole(message.channel.guild, "new")
+            active = self.get_members_with_role(message.channel.guild, "active")
+            new    = self.get_members_with_role(message.channel.guild, "new")
             if not args.total:
-                inactive = self.getMembersWithRole(message.channel.guild, "inactive")
+                inactive = self.get_members_with_role(message.channel.guild, "inactive")
                 embed = discord.Embed(
                     title="Members with Activity Roles",
                     color=discord.Colour.from_rgb(r=255, g=192, b=60)
@@ -53,7 +53,8 @@ class BotExtension:
                 await message.channel.send(embed=embed)
 
     @classmethod
-    def getMembersWithRole(cls, guild, role):
+    def get_members_with_role(cls, guild, role):
+        """Get the number of members with a certain role"""
         role = discord.utils.find(lambda r: r.name.lower() == role.lower(), guild.roles)
         members = [m for m in guild.members if role in m.roles]
         return len(members)

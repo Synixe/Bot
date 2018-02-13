@@ -1,10 +1,10 @@
+"""Bot Core Component"""
 import discord
 import logger
 import sys
 import importlib
 import os
 import io
-import random
 import socket
 from sys import platform
 from contextlib import redirect_stdout, redirect_stderr
@@ -14,6 +14,7 @@ sys.path.insert(0, './extensions/')
 class BotClient(discord.Client):
     """Bot Core Component"""
     async def on_ready(self):
+        """Load the extensions for the bot"""
         if self.user.id == 403101852771680258:
             self.prefix = "?"
         elif socket.gethostname() in ["yehuda"]:

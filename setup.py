@@ -1,3 +1,4 @@
+"""Setups discord.py from the latest commit on rewrite"""
 import sys
 if sys.platform == "win32":
     import zipfile, os

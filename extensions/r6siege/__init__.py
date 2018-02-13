@@ -1,3 +1,4 @@
+"""Rainbow 6 Siege stats in Discord"""
 import argparse
 import urllib.request
 import discord

@@ -46,42 +46,51 @@ if sys.platform == "win32":
     FOREGROUND_INTENSITY = 0x0008
 
     def get_text_attr():
+        """Get text attritubes"""
         csbi = BUFFER()
         windll.kernel32.GetConsoleScreenBufferInfo(HANDLE, byref(csbi))
         return csbi.wAttributes
 
     def set_text_attr(color):
+        """Set text color on windows"""
         windll.kernel32.SetConsoleTextAttribute(HANDLE, color)
 
 def clear():
+    """Empty the log file"""
     with open("bot.log", 'w') as f:
         f.write("")
 
 def write(tag, text):
+    """Write to the log file"""
     text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
     print(text)
     with open("bot.log", 'a') as f:
         f.write(text+"\n")
 
 def info(text, c="grey"):
+    """Info, Always Displayed"""
     color(c)
     write("INFO", text)
     color("reset")
 def error(text, c="red"):
+    """Error, Always Displayed"""
     color(c)
     write("ERRO", text)
     color("reset")
 def debug(text, c="blue"):
+    """Debug Information"""
     if DEBUG:
         color(c)
         write("DBUG", text)
         color("reset")
 
 def set_debug(debug):
+    """Set the debug setting"""
     global DEBUG
     DEBUG = debug
 
 def color(color):
+    """Set the text color"""
     if sys.platform == "win32":
         if color == "green":
             set_text_attr(FOREGROUND_GREEN | get_text_attr() & 0x0070 | FOREGROUND_INTENSITY)

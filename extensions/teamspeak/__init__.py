@@ -32,6 +32,7 @@ class BotExtension:
                 await message.channel.send("I'm not sure who that is...")
 
     async def on_message(self, message):
+        """Don't let the TS address be posted in Discord"""
         if message.author.id != self.bot.user.id:
             if "ts.synixe.com" in message.content:
                 await message.channel.send("Please don't post the TeamSpeak Address. Instead an @Active member needs to use `?ts [user]` to send someone the address.")
