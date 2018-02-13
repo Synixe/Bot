@@ -1,7 +1,9 @@
+"""Parses HTML for PUBG Stats"""
 from html.parser import HTMLParser
 import json
 
 class PUBGParser(HTMLParser):
+    """PUBG Stat HTML Parser"""
     def handle_starttag(self, tag, attrs):
         if tag == "script":
             self.check_next = True
@@ -16,6 +18,7 @@ class PUBGParser(HTMLParser):
                 self.data = json.loads(data[17:-1])
 
     def process(self):
+        """Prepare the data for Discord embeds"""
         self.data['lifetime'] = {}
         self.data['solo'] = {}
         self.data['duo'] = {}
