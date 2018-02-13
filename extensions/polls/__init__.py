@@ -5,7 +5,7 @@ class BotExtension:
     def __init__(self, bot):
         self.bot = bot
         self.name = "Poll"
-        self.author = "nameless"
+        self.author = "nameless + Brett"
         self.version = "1.0"
 
     def register (self):
@@ -28,7 +28,7 @@ class BotExtension:
             else:
                 embed = discord.Embed(
                     title = args.title,
-                    color = discord.Colour.from_rgb(r=255,g=192,b=60),
+                    color = discord.Colour.from_rgb(r=255, g=192, b=60),
                     description = " ".join(args.text)
                 )
                 msg = await message.channel.send(embed=embed)
