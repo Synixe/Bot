@@ -7,14 +7,12 @@ from . import parser
 class BotExtension:
     """Synixe Rules and Constitution"""
     def __init__(self, bot):
-        """Initilize the extension"""
         self.name = "Documents"
         self.author = "Brett + nameless"
         self.version = "1.1"
         self.bot = bot
 
-    def register(self):
-        """Register the commands"""
+    def __register__(self):
         return {
             "rule": {
                 "function": self.rule,
@@ -34,7 +32,7 @@ class BotExtension:
         """Display a rule"""
         parse = argparse.ArgumentParser(description=self.rule.__doc__)
         parse.add_argument("rule", help="Rule to display")
-        args = await self.bot.parseArgs(parse, args, message)
+        args = await self.bot.parser_args(parse, args, message)
         if args != False:
             try:
                 embed = self.get_from_latex(
@@ -64,7 +62,7 @@ class BotExtension:
             await message.channel.send("Use {}rule".format(self.bot.prefix))
             return
         embed = discord.Embed(
-            color=discord.Colour.from_rgb(r=255,g=192,b=60)
+            color=discord.Colour.from_rgb(r=255, g=192, b=60)
         )
         embed.set_author(
             name="Synixe Rules",
@@ -76,8 +74,8 @@ class BotExtension:
     async def const(self, args, message):
         """Display a section of the constitution"""
         parse = argparse.ArgumentParser(description=self.const.__doc__)
-        parse.add_argument("section",nargs="?",help="Section to display")
-        args = await self.bot.parseArgs(parse, args, message)
+        parse.add_argument("section", nargs="?", help="Section to display")
+        args = await self.bot.parser_args(parse, args, message)
         if args != False:
             if args.section != None:
                 embed = self.get_from_latex(
@@ -144,8 +142,8 @@ class BotExtension:
                 i += 1
                 desc += "{}. {}\n".format(i, tex.processRef(item))
             embed = discord.Embed(
-                title = args.section + " " + rule["name"],
-                description = desc,
-                color = discord.Colour.from_rgb(r=255,g=192,b=60)
+                title=args.section + " " + rule["name"],
+                description=desc,
+                color=discord.Colour.from_rgb(r=255,g=192,b=60)
             )
             return embed

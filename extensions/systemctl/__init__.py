@@ -16,7 +16,7 @@ class BotExtension:
 
         self.services = {"arma" : {"name": "Arma 3 Dedicated Server", "unit": "arma3-mod"}}
 
-    def register(self):
+    def __register__(self):
         """Register the commands"""
         return {
             "status" : {
@@ -34,7 +34,7 @@ class BotExtension:
         parser = argparse.ArgumentParser(description=self.status.__doc__)
         parser.add_argument("service", help="The systemctl service")
         parser.add_argument("--full", action="store_true", help="Display the full status")
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
             if args.service in self.services:
                 if args.full:
@@ -60,7 +60,7 @@ class BotExtension:
                     embed = discord.Embed(
                         title=self.services[args.service]["name"],
                         color=color,
-                        description=self.bot.processOutput(description, message)
+                        description=description
                     )
                     await message.channel.send(embed=embed)
             else:
@@ -70,7 +70,7 @@ class BotExtension:
         """Start a service"""
         parser = argparse.ArgumentParser(description=self.start.__doc__)
         parser.add_argument("service", help="The systemctl service")
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
             if args.service in self.services:
                 if self.is_active(self.services[args.service]["unit"]):

@@ -15,7 +15,7 @@ class BotExtension:
         self.bot = bot
         self.disable_during_test = True
 
-    def loops(self):
+    def __loops__(self):
         """Register the loops"""
         return {
             "server-update" : self.bot.loop.create_task(self.server_task())

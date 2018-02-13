@@ -7,39 +7,35 @@ DEBUG = False
 if sys.platform == "win32":
     from ctypes import windll, Structure, c_short, c_ushort, byref
 
-    SHORT = c_short
-    WORD = c_ushort
+    class coord(Structure):
+        """struct in wincon.h."""
+        _fields_ = [
+            ("X", c_short),
+            ("Y", c_short)
+        ]
 
-    class COORD(Structure):
-      """struct in wincon.h."""
-      _fields_ = [
-        ("X", SHORT),
-        ("Y", SHORT)]
+    class small_rect(Structure):
+        """struct in wincon.h."""
+        _fields_ = [
+            ("Left", c_short),
+            ("Top", c_short),
+            ("Right", c_short),
+            ("Bottom", c_short)
+        ]
 
-    class SMALL_RECT(Structure):
-      """struct in wincon.h."""
-      _fields_ = [
-        ("Left", SHORT),
-        ("Top", SHORT),
-        ("Right", SHORT),
-        ("Bottom", SHORT)]
-
-    class CONSOLE_SCREEN_BUFFER_INFO(Structure):
-      """struct in wincon.h."""
-      _fields_ = [
-        ("dwSize", COORD),
-        ("dwCursorPosition", COORD),
-        ("wAttributes", WORD),
-        ("srWindow", SMALL_RECT),
-        ("dwMaximumWindowSize", COORD)]
+    class buffer_info(Structure):
+        """struct in wincon.h."""
+        _fields_ = [
+            ("dwSize", coord),
+            ("dwCursorPosition", coord),
+            ("wAttributes", c_ushort),
+            ("srWindow", small_rect),
+            ("dwMaximumWindowSize", coord)
+        ]
 
     STD_INPUT_HANDLE = -10
     STD_OUTPUT_HANDLE = -11
     STD_ERROR_HANDLE = -12
-
-    stdout_handle = windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
-    SetConsoleTextAttribute = windll.kernel32.SetConsoleTextAttribute
-    GetConsoleScreenBufferInfo = windll.kernel32.GetConsoleScreenBufferInfo
 
     FOREGROUND_BLUE      = 0x0001
     FOREGROUND_GREEN     = 0x0002
@@ -49,21 +45,21 @@ if sys.platform == "win32":
     FOREGROUND_INTENSITY = 0x0008
 
     def get_text_attr():
-      csbi = CONSOLE_SCREEN_BUFFER_INFO()
-      GetConsoleScreenBufferInfo(stdout_handle, byref(csbi))
-      return csbi.wAttributes
+        csbi = buffer_info()
+        windll.kernel32.GetConsoleScreenBufferInfo(HANDLE, byref(csbi))
+        return csbi.wAttributes
 
     def set_text_attr(color):
-      SetConsoleTextAttribute(stdout_handle, color)
+        windll.kernel32.SetConsoleTextAttribute(HANDLE, color)
 
 def clear():
-    with open("bot.log",'w') as f:
+    with open("bot.log", 'w') as f:
         f.write("")
 
 def write(tag, text):
     text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
     print(text)
-    with open("bot.log",'a') as f:
+    with open("bot.log", 'a') as f:
         f.write(text+"\n")
 
 def info(text, c="grey"):
@@ -98,7 +94,7 @@ def color(color):
             set_text_attr(FOREGROUND_GREY | get_text_attr() & 0x0070)
         elif color == "grey":
             set_text_attr(FOREGROUND_GREY | get_text_attr() & 0x0070)
-    else :
+    else:
         if color == "green":
             sys.stdout.write('\033[92m')
         elif color == "red":

@@ -13,7 +13,7 @@ class BotExtension:
         self.author = "nameless"
         self.version = "1.1"
 
-    def register(self):
+    def __register__(self):
         """Register with the main bot"""
         return {
             "rps" : {
@@ -34,8 +34,8 @@ class BotExtension:
         """Play Rock Paper Scissors against the bot"""
         valid = ["paper", "rock", "scissors"]
         parser = argparse.ArgumentParser(description=self.rps.__doc__)
-        parser.add_argument("choice", help=self.bot.processOutput("Your choice", message))
-        args = await self.bot.parseArgs(parser, args, message)
+        parser.add_argument("choice", help="Your choice")
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
             if not args.choice.lower() in valid:
                 await message.channel.send("That is not a valid choice")
@@ -52,21 +52,21 @@ class BotExtension:
     async def dice(self, args, message):
         """Roll a dice"""
         parser = argparse.ArgumentParser(description=self.dice.__doc__)
-        parser.add_argument("n", nargs="?", type=int, default=6, help=self.bot.processOutput("Number of sides", message))
-        args = await self.bot.parseArgs(parser, args, message)
+        parser.add_argument("n", nargs="?", type=int, default=6, help="Number of sides")
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
             value = random.randint(1, args.n)
             messages = ["The value is {0}", "You rolled a {0}", "It lands on {0}"]
-            await message.channel.send(self.bot.processOutput(random.choice(messages).format(value),message))
+            await message.channel.send(random.choice(messages).format(value))
 
     async def flip(self, args, message):
         """Flip a coin"""
         parser = argparse.ArgumentParser(self.flip.__doc__)
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
             side = random.randint(0, 1)
             if side == 0:
                 output = "It lands on heads"
             else:
                 output = "It lands on tails"
-            await message.channel.send(self.bot.processOutput(output, message))
+            await message.channel.send(output)

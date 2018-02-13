@@ -7,13 +7,12 @@ import io
 import random
 import socket
 from sys import platform
-from textblob import TextBlob
 from contextlib import redirect_stdout, redirect_stderr
 
 sys.path.insert(0, './extensions/')
 
 class BotClient(discord.Client):
-    supported_languages = ["af","sq","ar","az","eu","bn","be","bg","ca","zh-CN","zh-TW","hr","cs","da","nl","en","eo","et","tl","fi","fr","gl","ka","de","el","gu","ht","iw","hi","hu","is","id","ga","it","ja","kn","ko","la","lv","lt","mk","ms","mt","no","fa","pl","pt","ro","ru","sr","sk","sl","es","sw","sv","ta","te","th","tr","uk","vi","vy","yi"]
+    """Bot Core Component"""
     async def on_ready(self):
         if self.user.id == 403101852771680258:
             self.prefix = "?"
@@ -40,7 +39,7 @@ class BotClient(discord.Client):
         for exten in self.extension_list:
             loaded = importlib.import_module(exten).BotExtension(self)
             self.extensions[exten] = loaded
-            if hasattr(loaded,"active"):
+            if hasattr(loaded, "active"):
                 if not loaded.active:
                     continue
             disable = False
@@ -51,43 +50,43 @@ class BotClient(discord.Client):
             if not disable:
                 logger.debug("Loading {0.name} {0.version} by {0.author}".format(loaded))
             if hasattr(loaded, "register"):
-                newcmds = loaded.register()
+                newcmds = loaded.__register__()
                 if not disable:
                     self.commands.update(newcmds)
                     self._ext_commands[exten] = newcmds
                     self._num_commands += len(newcmds)
-                    for c in newcmds:
-                        logger.debug("\tCommand Registered: {0}".format(c))
-                        if "alias" in newcmds[c]:
-                            for alias in newcmds[c]["alias"]:
+                    for command in newcmds:
+                        logger.debug("\tCommand Registered: {0}".format(command))
+                        if "alias" in newcmds[command]:
+                            for alias in newcmds[command]["alias"]:
                                 logger.debug("\t\tAlias: {}".format(alias))
                                 alias_f = {alias : {
-                                    "function": newcmds[c]["function"],
-                                    "roles": newcmds[c]["roles"]
+                                    "function": newcmds[command]["function"],
+                                    "roles": newcmds[command]["roles"]
                                 }}
                                 self.commands.update(alias_f)
                 else:
-                    for c in newcmds:
-                        logger.debug("\tCommand Ignored: {0}".format(c), "red")
-                        self.commands[c] = { "function": self.disabled, "roles": ["@everyone"] }
+                    for command in newcmds:
+                        logger.debug("\tCommand Ignored: {0}".format(command), "red")
+                        self.commands[command] = {"function": self.disabled, "roles": ["@everyone"]}
             if hasattr(loaded, "loops"):
                 if not disable:
-                    newloops = loaded.loops()
+                    newloops = loaded.__loops__()
                     self.loops.update(newloops)
                     self._ext_loops[exten] = newloops
                     self._num_loops += len(newloops)
-                    for l in newloops:
-                        logger.debug("\tLoop Registered: {0}".format(l))
-            for h in ["on_message","on_member_join","on_member_remove","on_member_update","on_member_ban","on_member_unban"]:
-                if h not in self.handlers:
-                    self.handlers[h] = []
-                if hasattr(loaded, h):
+                    for loop in newloops:
+                        logger.debug("\tLoop Registered: {0}".format(loop))
+            for handler in ["on_message", "on_member_join", "on_member_remove", "on_member_update", "on_member_ban", "on_member_unban"]:
+                if handler not in self.handlers:
+                    self.handlers[handler] = []
+                if hasattr(loaded, handler):
                     if exten not in self._ext_handlers:
                         self._ext_handlers[exten] = []
                     if not disable:
-                        logger.debug("\tHandler Registered: {0}".format(h))
+                        logger.debug("\tHandler Registered: {0}".format(handler))
                         self._num_handlers += 1
-                        self.handlers[h].append(loaded)
+                        self.handlers[handler].append(loaded)
                         self._ext_handlers[exten].append(h)
                     else:
                         logger.debug("\tHandler Registered: {0}".format(h), "red")
@@ -99,6 +98,7 @@ class BotClient(discord.Client):
         logger.info("Bot Ready!","green")
 
     async def execute(self, message):
+        """Execute a command"""
         if message.author.id == self.user.id:
             return #Do not allow responding to it's own commands
         raw = message.content[len(self.prefix):].split()
@@ -107,71 +107,79 @@ class BotClient(discord.Client):
         import re
         args = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''').split(args)[1::2]
         new = []
-        for a in args:
-            new.append(a.strip("\""))
+        for arg in args:
+            new.append(arg.strip("\""))
         args = new
         if cmd in self.commands:
-            if self.inRoleList(message.author, self.commands[cmd]["roles"]) or (isinstance(message.channel, discord.DMChannel) and "@everyone" in self.commands[cmd]["roles"]):
+            if self.in_role_list(message.author, self.commands[cmd]["roles"]) or (isinstance(message.channel, discord.DMChannel) and "@everyone" in self.commands[cmd]["roles"]):
                 await self.commands[cmd]["function"](args, message)
             else:
                 if isinstance(message.channel, discord.DMChannel):
-                    await message.channel.send(self.processOutput("This command can not be used in a direct message channel.", message))
+                    await message.channel.send("This command can not be used in a direct message channel.")
                 else:
-                    await message.channel.send(self.processOutput("Sorry, you are not allowed to use that command.", message))
+                    await message.channel.send("Sorry, you are not allowed to use that command.")
         else:
-            await message.channel.send(self.processOutput("That command doesn't exist... You can use `?ext` to learn about what I can do", message))
+            await message.channel.send("That command doesn't exist... You can use `?ext` to learn about what I can do")
 
     async def on_message(self, message):
+        """Execute commands, if the message is not a command pass it on to extensions"""
         await self.wait_until_ready()
         if message.author.id != self.user.id:
             if message.content.startswith(self.prefix) and message.content.replace(self.prefix,"").strip() != "":
                 await self.execute(message)
             else:
-                for h in self.handlers["on_message"]:
-                    await h.on_message(message)
+                for handler in self.handlers["on_message"]:
+                    await handler.on_message(message)
 
     async def on_member_join(self, member):
+        """Call on_member_join inside extensions"""
         await self.wait_until_ready()
-        for h in self.handlers["on_member_join"]:
-            await h.on_member_join(member)
+        for handler in self.handlers["on_member_join"]:
+            await handler.on_member_join(member)
 
     async def on_member_remove(self, member):
+        """Call on_member_remove inside extensions"""
         await self.wait_until_ready()
-        for h in self.handlers["on_member_remove"]:
-            await h.on_member_remove(member)
+        for handler in self.handlers["on_member_remove"]:
+            await handler.on_member_remove(member)
 
     async def on_member_ban(self, member):
+        """Call on_member_ban inside extensions"""
         await self.wait_until_ready()
-        for h in self.handlers["on_member_ban"]:
-            await h.on_member_ban(member)
+        for handler in self.handlers["on_member_ban"]:
+            await handler.on_member_ban(member)
 
     async def on_member_unban(self, member):
+        """Call on_member_unban inside extensions"""
         await self.wait_until_ready()
-        for h in self.handlers["on_member_unban"]:
-            await h.on_member_unban(member)
+        for handler in self.handlers["on_member_unban"]:
+            await handler.on_member_unban(member)
 
     async def on_member_update(self, before, after):
+        """Call on_member_update inside extensions"""
         await self.wait_until_ready()
-        for h in self.handlers["on_member_update"]:
-            await h.on_member_update(before, after)
+        for handler in self.handlers["on_member_update"]:
+            await handler.on_member_update(before, after)
 
     async def disabled(self, args, message):
         """This function is not allowed during testing"""
         await message.channel.send("That command is disabled during testing")
 
     @classmethod
-    def inRoleList(cls, member, roles):
+    def in_role_list(cls, member, roles):
+        """Check if a member is in a list of roles"""
         if "@everyone" in roles:
             return True
         if isinstance(member, discord.User):
             return False
-        for r in member.roles:
-            if r.name.lower() in roles:
+        for role in member.roles:
+            if role.name.lower() in roles:
                 return True
         return False
 
     @classmethod
-    def getIDFromTag(cls, text):
+    def get_from_tag(cls, text):
+        """Get a user or channel's id from a mention"""
         if text.startswith("<@") or text.startswith("<#"):
             try:
                 return int(text[2:-1])
@@ -183,26 +191,18 @@ class BotClient(discord.Client):
             except ValueError:
                 return text
 
-    async def parseArgs(self, parser, args, message):
-        o = io.StringIO()
-        e = io.StringIO()
-        with redirect_stdout(o):
-            with redirect_stderr(e):
+    async def parse_args(self, parser, args, message):
+        """Parse args and display errors"""
+        out = io.StringIO()
+        err = io.StringIO()
+        with redirect_stdout(out):
+            with redirect_stderr(err):
                 try:
                     return parser.parse_args(args)
                 except SystemExit:
                     if str(sys.exc_info()[1]) == '0':
-                        out = o.getvalue()
+                        resp = out.getvalue()
                     else:
-                        out = e.getvalue()
-                    await message.channel.send(out.replace("main.py",self.prefix+message.content[len(self.prefix):].split()[0]))
+                        resp = err.getvalue()
+                    await message.channel.send(resp.replace("main.py",self.prefix+message.content[len(self.prefix):].split()[0]))
         return False
-
-    def processOutput(self, response, message):
-        if self.user.id == 403101852771680258 and message.author.id == 206663073769979904:
-            en_blob = TextBlob(response)
-            try:
-                return str(en_blob.translate(to=random.choice(self.supported_languages)))
-            except textblob.exceptions.NotTranslated: #Sometime the translation will pick English then fail because the 2 versions are the same
-                return processOutput(response, message)
-        return response

@@ -1,7 +1,9 @@
+"""Monitor the server for changes"""
 import discord
 import logger
 
 class BotExtension:
+    """Monitor the server for changes"""
     def __init__(self, bot):
         self.name = "Server Monitor"
         self.author = "Brett + nameless"
@@ -10,6 +12,7 @@ class BotExtension:
         self.disable_during_test = True
 
     async def post_to_bot_events(self, member, text):
+        """Post a message to #botevents"""
         channel = discord.utils.find(lambda c: c.name == "botevents", member.guild.channels)
         if channel is not None:
             await channel.send(text)
@@ -27,15 +30,15 @@ class BotExtension:
             elif channel.name == "repohelp":
                 repohelp = channel
         await lobby.send(
-            "<@{}>! Welcome to Synixe!"+
+            ("<@{}>! Welcome to Synixe!"+
             "Here is some basic info about our group: "+
             "If you check out <#{}> you can see our upcoming missions. "+
             "We play at 7pm PST / 10pm EST. "+
-            "We have some mods you'll need to download from <#{}}>. "+
+            "We have some mods you'll need to download from <#{}>. "+
             "If you have any questions while getting those setup we're more than "+
-            "happy to help in <#{}>.".format(member, events, info, repohelp)
+            "happy to help in <#{}>.").format(member, events, info, repohelp)
         )
-        await member.add_roles(self.getRole(g, "new"))
+        await member.add_roles(self.get_role(g, "new"))
 
     async def on_member_remove(self, member):
         """Post a message in #botevents when someone leaves the server"""
@@ -57,14 +60,14 @@ class BotExtension:
                 embed.add_field(name="New Name", value=after.display_name)
                 await channel.send(embed=embed)
 
-    async def on_member_ban(self, g, member):
+    async def on_member_ban(self, _, member):
         """Post a message in #botevents when someone is banned"""
         await self.post_to_bot_events(
             member,
             "<@{0.id}> ({0.name}#{0.discriminator}) has been banned.".format(member)
         )
 
-    async def on_member_unban(self, g, member):
+    async def on_member_unban(self, _, member):
         """Post a message in #botevents when someone is unbanned"""
         await self.post_to_bot_events(
             member,
@@ -72,7 +75,7 @@ class BotExtension:
         )
 
     @classmethod
-    def getRole(cls, guild, name):
+    def get_role(cls, guild, name):
         for role in guild.roles:
             if name.lower() == role.name.lower():
                 return role

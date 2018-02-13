@@ -1,24 +1,26 @@
+"""Github Blame Command"""
 import subprocess
 
 def blame(ext, command):
+    """Find a function and get the number of lines created by each author"""
     try:
         data = subprocess.getoutput("git blame extensions/"+ext+"/__init__.py").split("\n")
         authors = {}
         reading = False
         start_line = 0
         end_line = 0
-        x = 0
-        for l in data:
-            x += 1
-            a = l.split(")", 1)
-            author = a[0].split("(")[1].split(" 20")[0].split(" ")[0]
-            line = a[1].strip()
+        count = 0
+        for raw_line in data:
+            count += 1
+            raw_author = raw_l.split(")", 1)
+            author = raw_author[0].split("(")[1].split(" 20")[0].split(" ")[0]
+            line = raw_author[1].strip()
             if reading and line.startswith("async def"):
                 reading = False
-                end_line = x - 2
+                end_line = count - 2
             if line.startswith("async def "+command):
                 reading = True
-                start_line = x
+                start_line = count
             elif reading:
                 if author not in authors:
                     authors[author] = 1

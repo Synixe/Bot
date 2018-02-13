@@ -9,7 +9,7 @@ class BotExtension:
         self.version = "1.3"
         self.bot = bot
 
-    def register(self):
+    def __register__(self):
         return {
             "card" : {
                 "function" : self.card,
@@ -34,15 +34,15 @@ class BotExtension:
         """Display a pretty card with information about a member"""
         parser = argparse.ArgumentParser(self.card.__doc__)
         parser.add_argument("user", nargs="?", default=str(message.author.id), help="The subject of the card. Defaults to the message's author.")
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
-            user = message.channel.guild.get_member(self.bot.getIDFromTag(args.user))
+            user = message.channel.guild.get_member(self.bot.get_from_tag(args.user))
             if user != None:
                 embed = discord.Embed(
                     title=user.name,
                     color=user.colour
                 )
-                embed.add_field(name=self.bot.processOutput("Joined on", message), value=user.joined_at.strftime("%B %d, %Y"))
+                embed.add_field(name="Joined on", value=user.joined_at.strftime("%B %d, %Y"))
                 embed.set_thumbnail(url=user.avatar_url)
                 await message.channel.send(embed=embed)
             else:
@@ -51,15 +51,15 @@ class BotExtension:
     async def ping(self, args, message):
         """Ping the bot for a response"""
         parser = argparse.ArgumentParser(description=self.ping.__doc__)
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
             await message.channel.send("{:0.0f}ms".format(self.bot.latency * 1000))
 
     async def color(self, args, message):
         """Obtain the color of a role on the server"""
         parser = argparse.ArgumentParser(description=self.color.__doc__)
-        parser.add_argument("role", nargs="?", default=str(message.author.roles[-1].name), help=self.bot.processOutput("The role to get the color of", message))
-        args = await self.bot.parseArgs(parser, args, message)
+        parser.add_argument("role", nargs="?", default=str(message.author.roles[-1].name), help="The role to get the color of")
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
             role = discord.utils.find(lambda m: m.name.lower() == args.role.lower(), message.channel.guild.roles)
             if role != None:
@@ -77,9 +77,9 @@ class BotExtension:
         """Prints out a users discord avatar"""
         parser = argparse.ArgumentParser(description=self.avatar.__doc__)
         parser.add_argument("avatar", nargs="?", default=str(message.author.id), help="The user of the avatar you want to get")
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
-            user = message.channel.guild.get_member(self.bot.getIDFromTag(args.avatar))
+            user = message.channel.guild.get_member(self.bot.get_from_tag(args.avatar))
             if user != None:
                 embed = discord.Embed(
                     color=user.color

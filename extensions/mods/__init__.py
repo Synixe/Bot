@@ -17,7 +17,7 @@ class BotExtension:
         self.bot = bot
         self.disable_during_test = True
 
-    def loops(self):
+    def __loops__(self):
         """Resister loops"""
         return {
             "mod-update-check" : self.bot.loop.create_task(self.mod_task())
@@ -57,7 +57,7 @@ class BotExtension:
                             elif service == "G": #GitHub
                                 latest = github.latest(mid)
                                 url = "http://github.com/"+mid
-                                
+
                             if latest != mod['notified']:
                                 embed = discord.Embed(
                                     title=mod['name'],

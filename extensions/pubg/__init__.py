@@ -14,7 +14,7 @@ class BotExtension:
         self.version = "1.0"
         self.bot = bot
 
-    def register(self):
+    def __register__(self):
         """Register the commands"""
         return {
             "pubg" : {
@@ -32,7 +32,7 @@ class BotExtension:
                 choices=["lifetime", "solo", "duo", "squad", "solo-fpp", "duo-fpp", "squad-fpp"],
                 default="Lifetime"
             )
-            args = await self.bot.parseArgs(parser, args, message)
+            args = await self.bot.parser_args(parser, args, message)
             if args != False:
                 args.user = args.user.lower()
                 parser = pubgparser.PUBGParser()

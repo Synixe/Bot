@@ -13,7 +13,7 @@ async def display_event(extension, target, event, message):
                 description=data['description'].replace("\\n","\n"),
                 color=discord.Colour.from_rgb(r=255, g=192, b=60)
             )
-            user = message.channel.guild.get_member(extension.bot.getIDFromTag(str(data['host'])))
+            user = message.channel.guild.get_member(extension.bot.get_from_tag(str(data['host'])))
             embed.set_author(name=user.display_name, icon_url=user.avatar_url)
             if "image" in data and data['image'] != "":
                 embed.set_image(url=data['image'])

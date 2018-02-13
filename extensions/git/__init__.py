@@ -13,7 +13,7 @@ class BotExtension:
         self.author = "Brett"
         self.version = "1"
 
-    def register(self):
+    def __register__(self):
         """Register the commands"""
         return {
             "current" : {
@@ -41,7 +41,7 @@ class BotExtension:
         """Find out who wrote a command"""
         parser = argparse.ArgumentParser(blame.__doc__)
         parser.add_argument("command", help="The command to blame")
-        args = await self.bot.parseArgs(parser, args, message)
+        args = await self.bot.parser_args(parser, args, message)
         if args != False:
             for ext in self.bot.extensions:
                 if hasattr(self.bot.extensions[ext], args.command):
