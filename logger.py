@@ -37,6 +37,7 @@ if sys.platform == "win32":
     STD_INPUT_HANDLE = -10
     STD_OUTPUT_HANDLE = -11
     STD_ERROR_HANDLE = -12
+    HANDLE = windll.kernel32.GetStdHandle(STD_OUTPUT_HANDLE)
 
     FOREGROUND_BLUE      = 0x0001
     FOREGROUND_GREEN     = 0x0002
