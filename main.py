@@ -6,6 +6,13 @@ import argparse
 import signal
 import sys
 
+try:
+    from os import environ
+    environ['SHELL']
+except KeyError:
+    logger.error("The Windows CMD is not supported. Please use a shell like Git Bash.")
+    sys.exit(1)
+
 class Bot:
     """Shell of the Synixe Bot"""
     @classmethod

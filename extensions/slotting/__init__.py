@@ -1,7 +1,23 @@
 """Slotting For Mission Sheets"""
 import argparse
 import random
-import pymysql.cursors
+import logger
+try:
+    import pymysql.cursors
+    PYMYSQL = True
+except ImportError:
+    import dep
+    if dep.ask("pymysql"):
+        try:
+            import pymysql.cursors
+            PYMYSQL = True
+            logger.info("pymysql Installed!", "green")
+        except ImportError:
+            logger.error("Failed to install pymysql")
+    else:
+        logger.error("Slotting will be inactive as it requires pymysql")
+        PYMYSQL = False
+
 import datetime
 import asyncio
 import os, sys
@@ -17,6 +33,7 @@ class BotExtension:
         self.author = "Brett + nameless"
         self.version = "1.1"
         self.bot = bot
+        self.active = PYMYSQL
         self.disable_during_test = True
 
     def __register__(self):

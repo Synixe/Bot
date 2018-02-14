@@ -1,8 +1,23 @@
 """Monitor the server for changes"""
-import pymysql
+import logger
+try:
+    import pymysql.cursors
+    PYMYSQL = True
+except ImportError:
+    import dep
+    if dep.ask("pymysql"):
+        try:
+            import pymysql.cursors
+            PYMYSQL = True
+            logger.info("pymysql Installed!", "green")
+        except ImportError:
+            logger.error("Failed to install pymysql")
+    else:
+        logger.error("Monitor will be inactive as it requires pymysql")
+        PYMYSQL = False
+
 import discord
 import tokens
-import logger
 
 class BotExtension:
     """Monitor the server for changes"""
@@ -11,7 +26,7 @@ class BotExtension:
         self.author = "Brett + nameless"
         self.version = "1.1"
         self.bot = bot
-        self.disable_during_test = False
+        self.disable_during_test = True
 
     async def post_to_bot_events(self, member, text):
         """Post a message to #botevents"""

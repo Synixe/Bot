@@ -1,9 +1,24 @@
 """Arma 3 Mods for Synixe"""
-import pymysql.cursors
+import logger
+try:
+    import pymysql.cursors
+    PYMYSQL = True
+except ImportError:
+    import dep
+    if dep.ask("pymysql"):
+        try:
+            import pymysql.cursors
+            PYMYSQL = True
+            logger.info("pymysql Installed!", "green")
+        except ImportError:
+            logger.error("Failed to install pymysql")
+    else:
+        logger.error("Mod Updates will be inactive as it requires pymysql")
+        PYMYSQL = False
+
 import asyncio
 import discord
 import tokens
-import logger
 
 from . import armaholic
 from . import github
@@ -15,6 +30,7 @@ class BotExtension:
         self.author = "Brett"
         self.version = "1.0"
         self.bot = bot
+        self.active = PYMYSQL
         self.disable_during_test = True
 
     def __loops__(self):

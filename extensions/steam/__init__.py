@@ -2,8 +2,22 @@
 import argparse
 import asyncio
 import discord
-import valve.source.a2s
 import logger
+try:
+    import valve.source.a2s
+    PYVALVE = True
+except ImportError:
+    import dep
+    if dep.ask("python-valve"):
+        try:
+            import valve.source.a2s
+            PYMYSQL = True
+            logger.info("pymysql Installed!", "green")
+        except ImportError:
+            logger.error("Failed to install python-valve")
+    else:
+        logger.error("Steam Server Monitor will be inactive as it requires python-valve")
+        PYVALVE = False
 
 class BotExtension:
     """This handles steam API for the bot"""
@@ -12,6 +26,7 @@ class BotExtension:
         self.author = "nameless + Brett"
         self.version = "1.0"
         self.bot = bot
+        self.active = PYVALVE
         self.disable_during_test = True
 
     def __loops__(self):

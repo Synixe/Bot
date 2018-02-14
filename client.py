@@ -1,7 +1,15 @@
 """Bot Core Component"""
-import discord
-import logger
 import sys
+import logger
+try:
+    import discord
+    if discord.__version__.startswith("0"):
+        logger.error("You need to be using a newer version of discord.py.")
+        logger.error("Run setup.py to update")
+        sys.exit(1)
+except ImportError:
+    logger.error("You are missing discord.py.")
+    logger.error("Run setup.py to install it")
 import importlib
 import os
 import io
@@ -37,7 +45,12 @@ class BotClient(discord.Client):
         self._num_loops = 0
         logger.info("Connected as {0.name} ({0.id})".format(self.user), "green")
         logger.debug("Loading Extensions")
+        clock = 0
         for exten in self.extension_list:
+            clock += 1
+            if clock == 13:
+                clock = 1
+            logger.loading(":clock"+str(clock)+":\r")
             loaded = importlib.import_module(exten).BotExtension(self)
             self.extensions[exten] = loaded
             if hasattr(loaded, "active"):
@@ -91,12 +104,12 @@ class BotClient(discord.Client):
                         self._ext_handlers[exten].append(handler)
                     else:
                         logger.debug("\tHandler Registered: {0}".format(handler), "red")
-        logger.info("{} Extension Loaded".format(len(self.extension_list)))
+        logger.info(":heavy_check_mark: {} Extensions Loaded".format(len(self.extension_list)))
         logger.debug("Commands: {}".format(self._num_commands))
         logger.debug("Handlers: {}".format(self._num_handlers))
         logger.debug("Loops: {}".format(self._num_loops))
         logger.info("Prefix: {}".format(self.prefix))
-        logger.info("Bot Ready!","green")
+        logger.info("Bot Ready! :heavy_check_mark:", "green")
 
     async def execute(self, message):
         """Execute a command"""

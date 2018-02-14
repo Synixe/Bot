@@ -3,6 +3,8 @@ import datetime
 import time
 import sys
 
+sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
+
 DEBUG = False
 
 if sys.platform == "win32":
@@ -64,7 +66,7 @@ def clear():
 def write(tag, text):
     """Write to the log file"""
     text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
-    print(text)
+    sys.stdout.write(text+"\n")
     with open("bot.log", 'a') as f:
         f.write(text+"\n")
 
@@ -114,3 +116,34 @@ def color(color):
             sys.stdout.write('\033[94m')
         elif color == "reset":
             sys.stdout.write('\033[0m')
+
+try:
+    import emoji
+except ImportError:
+    error("You are missing emoji, would you like to download it?")
+    if input("(Y/N): ").lower() == "y":
+        from sys import platform
+        import os
+        if platform == "linux" or platform == "linux2":
+            os.system("sudo python3 -m pip install emoji")
+        else:
+            os.system("python -m pip install emoji")
+        try:
+            import emoji
+            info("emoji Installed!", "green")
+        except ImportError:
+            error("Failed to install emoji")
+    else:
+        error("emoji is required")
+        sys.exit(1)
+
+def write(tag, text):
+    """Write to the log file"""
+    text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
+    sys.stdout.write(emoji.emojize(text, use_aliases=True)+"\n")
+    sys.stdout.flush()
+    with open("bot.log", 'a') as f:
+        f.write(text+"\n")
+
+def loading(text):
+    sys.stdout.write(emoji.emojize(text, use_aliases=True))
