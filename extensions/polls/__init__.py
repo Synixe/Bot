@@ -21,12 +21,14 @@ class BotExtension:
     async def poll(self, args, message):
         """Create a poll"""
         parser = argparse.ArgumentParser(description=self.poll.__doc__)
-        parser.add_argument(
-            "-t", "--title", default=None, help="Title of the poll"
-        )
+        parser.add_argument("-t", "--title", default=None, help="Title of the poll")
+        parser.add_argument("-m", "--mention", default=None, help="Allows you to mention a role")
         parser.add_argument("text", nargs="+", help="Text of the poll")
         args = await self.bot.parse_args(parser, args, message)
         if args != False:
+            if args.mention != None:
+                role = discord.utils.find(lambda r: r.name.lower() == args.mention.lower(), message.channel.guild.roles)
+                args.text.prepend("<@{}>".format(role.id))
             if args.title == None:
                 msg = await message.channel.send(" ".join(args.text))
             else:

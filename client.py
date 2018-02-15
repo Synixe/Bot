@@ -25,7 +25,7 @@ class BotClient(discord.Client):
         """Load the extensions for the bot"""
         if self.user.id == 403101852771680258:
             self.prefix = "?"
-        elif socket.gethostname() in ["yehuda"]:
+        elif socket.gethostname() in ["yehuda", "DESKTOP-5CJEEUH"]:
             self.prefix = "."
         else:
             self.prefix = ">"
@@ -45,12 +45,7 @@ class BotClient(discord.Client):
         self._num_loops = 0
         logger.info("Connected as {0.name} ({0.id})".format(self.user), "green")
         logger.debug("Loading Extensions")
-        clock = 0
         for exten in self.extension_list:
-            clock += 1
-            if clock == 13:
-                clock = 1
-            logger.loading(":clock"+str(clock)+":\r")
             loaded = importlib.import_module(exten).BotExtension(self)
             self.extensions[exten] = loaded
             if hasattr(loaded, "active"):

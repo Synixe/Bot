@@ -4,6 +4,7 @@ import time
 import sys
 
 sys.stdout = open(sys.stdout.fileno(), mode='w', encoding='utf8', buffering=1)
+sys.stderr = open(sys.stderr.fileno(), mode='w', encoding='utf8', buffering=1)
 
 DEBUG = False
 

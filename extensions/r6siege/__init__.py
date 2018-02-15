@@ -24,7 +24,7 @@ class BotExtension:
     async def rainbow6(self, args, message):
         """Display Rainbow 6 Siege stats"""
         async with message.channel.typing():
-            parser = argparse.ArgumentParser(description=self.r6.__doc__)
+            parser = argparse.ArgumentParser(description=self.rainbow6.__doc__)
             parser.add_argument("user", help="The Rainbow 6 Siege username you want to fetch")
             parser.add_argument("--psn", help="Search for a PSN account", action="store_true")
             parser.add_argument("--xbox", help="Search for a Xbox account", action="store_true")
