@@ -38,11 +38,6 @@ class BotExtension:
             "anon" : {
                 "function" : self.anon,
                 "roles" : ["@everyone"]
-            },
-            "stop" : {
-                "function" : self.stop,
-                "roles" : ["code contributer"],
-                "alias" : ["quit"]
             }
         }
 
@@ -179,10 +174,6 @@ class BotExtension:
             if channel is not None:
                 await channel.send(" ".join(args))
                 await message.channel.send("Message sent!")
-
-    async def stop(self, args, message):
-        """Stop the bot"""
-        sys.exit(0)
 
     @classmethod
     def getRole(cls, guild, name):
