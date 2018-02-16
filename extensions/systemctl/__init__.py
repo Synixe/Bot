@@ -73,47 +73,42 @@ class BotExtension:
         if args != False:
             if args.service in self.services:
                 if self.is_active(self.services[args.service]["unit"]):
-                    embed = self.unit_embed(
-                        self.services[args.service]["name"],
-                        discord.Colour.from_rgb(r=0, g=255, b=0),
-                        "Already Active"
+                    embed = discord.Embed(
+                        title=self.services[args.service]["name"],
+                        color=discord.Colour.from_rgb(r=0, g=255, b=0),
+                        description="Already Active"
                     )
                     await message.channel.send(embed=embed)
                 else:
-                    embed = self.unit_embed(
-                        self.services[args.service]["name"],
-                        discord.Color.from_rgb(r=255, g=255, b=0),
-                        "Starting..."
+                    embed = discord.Embed(
+                        title=self.services[args.service]["name"],
+                        color=discord.Colour.from_rgb(r=255, g=255, b=0),
+                        description="Starting"
                     )
                     holder = await message.channel.send(embed=embed)
                     os.system("sudo systemctl start "+self.services[args.service]["unit"])
                     await asyncio.sleep(20)
                     if self.is_active(self.services[args.service]["unit"]):
-                        embed = self.unit_embed(
-                            self.services[args.service]["name"],
-                            discord.Colour.from_rgb(r=0, g=255, b=0),
-                            "Active"
+                        embed = discord.Embed(
+                            title=self.services[args.service]["name"],
+                            color=discord.Colour.from_rgb(r=0, g=255, b=0),
+                            description="Active"
                         )
                     else:
-                        embed = self.unit_embed(
-                            self.services[args.service]["name"],
-                            discord.Colour.from_rgb(r=255, g=0, b=0),
-                            "Inactive"
+                        embed = discord.Embed(
+                            title=self.services[args.service]["name"],
+                            color=discord.Colour.from_rgb(r=255, g=0, b=0),
+                            description="Inactive"
                         )
                     await holder.edit(embed=embed)
             else:
                 await message.channel.send("Unknown Service")
 
     @classmethod
-    def unit_embed(cls, title, text, color):
-        """Wrapper for creating embed, can probably be removed"""
-        return discord.Embed(title=title, color=color, description=text)
-
-    @classmethod
     def is_active(cls, unit):
         """Checks if a unit is active"""
         subprocess.run(
-            ["systemctl","is-active",self.services[args.service]["unit"]],
+            ["systemctl","is-active",unit],
             stdout=subprocess.PIPE
         )
         return is_active.stdout.decode("UTF-8")[:-1] == "active"

@@ -28,7 +28,7 @@ class BotExtension:
         if args != False:
             if args.mention != None:
                 role = discord.utils.find(lambda r: r.name.lower() == args.mention.lower(), message.channel.guild.roles)
-                args.text.prepend("<@{}>".format(role.id))
+                args.text.insert(0, "<@{}>".format(role.id))
             if args.title == None:
                 msg = await message.channel.send(" ".join(args.text))
             else:
