@@ -102,7 +102,7 @@ class BotExtension:
 
     async def ext(self, args, message):
         """Get info about loaded extensions"""
-        parser = argparse.ArgumentParser(description=self.ext.__doct__)
+        parser = argparse.ArgumentParser(description=self.ext.__doc__)
         parser.add_argument("extension", nargs="?", type=str, help="The extension to get info about")
         args = await self.bot.parse_args(parser, args, message)
         if args != False:
