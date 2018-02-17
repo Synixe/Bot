@@ -3,7 +3,7 @@ import discord
 
 async def display_event(extension, target, event, message):
     """Display an event sheet in #events"""
-    connection = extension.getConnection()
+    connection = extension.get_connection()
     try:
         with connection.cursor() as cursor:
             sql = "SELECT * FROM `events` WHERE `id` = '" + str(event) + "'"
