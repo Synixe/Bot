@@ -75,7 +75,7 @@ class BotExtension:
             "We play at 7pm PST / 10pm EST. "+
             "We have some mods you'll need to download from #{}. "+
             "If you have any questions while getting those setup we're more than "+
-            "happy to help in #{}.").format(member, events, info, repohelp)
+            "happy to help in #{}.").format(member.id, events, info, repohelp)
         )
         await member.add_roles(self.get_role(g, "new"))
 
