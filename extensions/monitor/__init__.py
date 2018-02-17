@@ -69,13 +69,13 @@ class BotExtension:
             elif channel.name == "repohelp":
                 repohelp = channel
         await lobby.send(
-            ("@{}! Welcome to Synixe!"+
+            ("<@{}>! Welcome to Synixe!"+
             "Here is some basic info about our group: "+
-            "If you check out #{} you can see our upcoming missions. "+
+            "If you check out <#{}> you can see our upcoming missions. "+
             "We play at 7pm PST / 10pm EST. "+
-            "We have some mods you'll need to download from #{}. "+
+            "We have some mods you'll need to download from <#{}>. "+
             "If you have any questions while getting those setup we're more than "+
-            "happy to help in #{}.").format(member.id, events.id, info.id, repohelp.id)
+            "happy to help in <#{}>.").format(member.id, events.id, info.id, repohelp.id)
         )
         await member.add_roles(self.get_role(g, "new"))
 
