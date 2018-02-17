@@ -142,8 +142,8 @@ class BotExtension:
                 i += 1
                 desc += "{}. {}\n".format(i, tex.process_ref(item))
             embed = discord.Embed(
-                title=args.section + " " + rule["name"],
+                title=section + " " + rule["name"],
                 description=desc,
-                color=discord.Colour.from_rgb(r=255,g=192,b=60)
+                color=discord.Colour.from_rgb(r=255, g=192, b=60)
             )
             return embed

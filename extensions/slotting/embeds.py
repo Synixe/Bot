@@ -1,3 +1,4 @@
+"""Embed Creator for Event Sheets"""
 import discord
 
 async def display_event(extension, target, event, message):
