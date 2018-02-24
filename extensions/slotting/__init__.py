@@ -96,7 +96,7 @@ class BotExtension:
                             except AttributeError:
                                 pass
                         else:
-                            if msg.embeds[0].title.lower() == args.mission.lower():
+                            if msg.embeds[0].title.lower() == args.mission.lower() or msg.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
                                 event_id = int(msg.embeds[0].footer.text.split(": ")[1])
                                 target = msg
                 if target != None:
@@ -152,7 +152,7 @@ class BotExtension:
                             except AttributeError:
                                 pass
                         else:
-                            if m.embeds[0].title.lower() == args.mission.lower():
+                            if m.embeds[0].title.lower() == args.mission.lower() or m.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
                                 event_id = int(m.embeds[0].footer.text.split(": ")[1])
                                 target = m
                 if target != None:
@@ -162,7 +162,7 @@ class BotExtension:
                             sql = "UPDATE `slots` SET `playerid` = NULL WHERE `playerid` = '"+str(message.author.id)+"'"
                             cursor.execute(sql)
                             connection.commit()
-                            await message.channel.send("Unslotted")
+                            await message.channel.send("Unslotted from {}".format(target.embeds[0].title))
                             await embeds.display_event(self, target, event_id, message)
                     finally:
                         connection.close()

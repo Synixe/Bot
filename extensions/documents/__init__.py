@@ -54,7 +54,7 @@ class BotExtension:
                     except discord.errors.HTTPException:
                         await message.channel.send("That section is too large, you'll need to be more specific")
                 else:
-                    await message.chanel.send(embed)
+                    await message.channel.send(embed)
 
     async def rules(self, args, message):
         """Display the link to the rules"""
