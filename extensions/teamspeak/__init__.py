@@ -5,7 +5,7 @@ import discord
 class BotExtension:
     """TeamSpeak Utilities"""
     def __init__(self, bot):
-        self.name = "Mini Commands"
+        self.name = "TeamSpeak IP"
         self.author = "Brett"
         self.version = "1.1"
         self.bot = bot
