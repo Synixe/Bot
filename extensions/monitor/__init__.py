@@ -77,7 +77,7 @@ class BotExtension:
             "If you have any questions while getting those setup we're more than "+
             "happy to help in <#{}>.").format(member.id, events.id, info.id, repohelp.id)
         )
-        await member.add_roles(self.get_role(g, "new"))
+        await member.add_roles(self.get_role(guild, "new"))
 
     async def on_member_remove(self, member):
         self.insert('member_remove', str(member.id))
@@ -102,7 +102,7 @@ class BotExtension:
                 await channel.send(embed=embed)
 
     async def on_member_ban(self, _, member):
-        self.insert('member_ban', str(after.id))
+        self.insert('member_ban', str(member.id))
         """Post a message in #botevents when someone is banned"""
         await self.post_to_bot_events(
             member,
@@ -110,7 +110,7 @@ class BotExtension:
         )
 
     async def on_member_unban(self, _, member):
-        self.insert('member_unban', str(after.id))
+        self.insert('member_unban', str(member.id))
         """Post a message in #botevents when someone is unbanned"""
         await self.post_to_bot_events(
             member,
