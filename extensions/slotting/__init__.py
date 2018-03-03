@@ -209,7 +209,7 @@ class BotExtension:
                     embed = discord.Embed(
                         title="Upcoming Events",
                         color=discord.Colour.from_rgb(r=255, g=192, b=60),
-                        description="Sunday Missions: 2pm PST / 5pm EST / 2pm AEDT\nAll other Missions: 7pm PST / 10pm EST\nUnless stated otherwise\n\n"
+                        description="Sunday Missions: 2pm PST / 5pm EST / 9am Monday AEDT\nAll other Missions: 7pm PST / 10pm EST / 2pm AEDT\nUnless stated otherwise\n\n"
                     )
                     for event in events:
                         date = [x.replace(",", "") for x in event['date'].strip().split(" ")]
