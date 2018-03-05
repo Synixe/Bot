@@ -46,7 +46,7 @@ class BotExtension:
                 if isinstance(embed, discord.Embed):
                     embed.set_author(
                         name="Synixe Rules",
-                        url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
+                        url="http://synixe.com/rules.html",
                         icon_url=self.bot.user.avatar_url
                     )
                     try:
@@ -66,7 +66,7 @@ class BotExtension:
         )
         embed.set_author(
             name="Synixe Rules",
-            url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
+            url="http://synixe.com/rules.html",
             icon_url=self.bot.user.avatar_url
         )
         await message.channel.send(embed=embed)
@@ -86,7 +86,7 @@ class BotExtension:
                     if isinstance(embed, discord.Embed):
                         embed.set_author(
                             name="Synixe Constitution",
-                            url="https://github.com/Synixe/Documents/blob/master/SynixeConstitution.pdf",
+                            url="http://synixe.com/const.html",
                             icon_url=self.bot.user.avatar_url
                         )
                         try:
@@ -101,7 +101,7 @@ class BotExtension:
                 )
                 embed.set_author(
                     name="Synixe Constitution",
-                    url="https://github.com/Synixe/Documents/blob/master/SynixeConstitution.pdf",
+                    url="http://synixe.com/const.html",
                     icon_url=self.bot.user.avatar_url
                 )
                 await message.channel.send(embed=embed)
