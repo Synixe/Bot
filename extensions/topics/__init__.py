@@ -9,7 +9,7 @@ class BotExtension:
         self.author = "Brett"
         self.version = "1.0"
         self.bot = bot
-        self.topics = {"R6S": "Rainbow 6 Siege", "ED": "Elite: Dangerous", "PUBG": "PUBG"}
+        self.topics = {"R6S": "Rainbow 6 Siege", "ED": "Elite: Dangerous", "PUBG": "PUBG", "LOL": "League of Legends"}
 
     def __register__(self):
         return {

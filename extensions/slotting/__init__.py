@@ -203,7 +203,7 @@ class BotExtension:
             try:
                 now = datetime.datetime.now()
                 with connection.cursor() as cursor:
-                    sql = "SELECT * FROM `events`"
+                    sql = "SELECT * FROM `events` ORDER BY date ASC"
                     cursor.execute(sql)
                     events = cursor.fetchall()
                     embed = discord.Embed(
