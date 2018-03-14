@@ -71,6 +71,7 @@ class BotExtension:
                                 url="http://www.armaholic.com/page.php?id="+mid
                             elif service == "G": #GitHub
                                 latest = github.latest(mid)
+                                logger.info("Synixe Mod: "+latest)
                                 url = "http://github.com/"+mid
 
                             if latest != mod['notified']:

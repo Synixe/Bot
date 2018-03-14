@@ -1,3 +1,6 @@
+import urllib.request
+import json
+
 """GitHub Helper Functions"""
 def latest(repo):
     """Get the latest release version"""
