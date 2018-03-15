@@ -1,6 +1,5 @@
 """Slotting For Mission Sheets"""
 import argparse
-import random
 import logger
 try:
     import pymysql.cursors
@@ -20,7 +19,6 @@ except ImportError:
 
 import datetime
 import asyncio
-import os, sys
 import discord
 import tokens
 
@@ -96,7 +94,11 @@ class BotExtension:
                             except AttributeError:
                                 pass
                         else:
+<<<<<<< HEAD
                             if msg.embeds[0].title.lower() == args.mission.lower() or m.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
+=======
+                            if msg.embeds[0].title.lower() == args.mission.lower() or msg.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
+>>>>>>> 3f98b0de4339a434a0bc9783c50b9411ac67f16e
                                 event_id = int(msg.embeds[0].footer.text.split(": ")[1])
                                 target = msg
                 if target != None:
@@ -152,7 +154,11 @@ class BotExtension:
                             except AttributeError:
                                 pass
                         else:
+<<<<<<< HEAD
                             if m.embeds[0].title.lower() == args.mission.lower() || m.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
+=======
+                            if m.embeds[0].title.lower() == args.mission.lower() or m.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
+>>>>>>> 3f98b0de4339a434a0bc9783c50b9411ac67f16e
                                 event_id = int(m.embeds[0].footer.text.split(": ")[1])
                                 target = m
                 if target != None:
@@ -162,7 +168,7 @@ class BotExtension:
                             sql = "UPDATE `slots` SET `playerid` = NULL WHERE `playerid` = '"+str(message.author.id)+"'"
                             cursor.execute(sql)
                             connection.commit()
-                            await message.channel.send("Unslotted")
+                            await message.channel.send("Unslotted from {}".format(target.embeds[0].title))
                             await embeds.display_event(self, target, event_id, message)
                     finally:
                         connection.close()
@@ -205,13 +211,13 @@ class BotExtension:
             try:
                 now = datetime.datetime.now()
                 with connection.cursor() as cursor:
-                    sql = "SELECT * FROM `events`"
+                    sql = "SELECT * FROM `events` ORDER BY date ASC"
                     cursor.execute(sql)
                     events = cursor.fetchall()
                     embed = discord.Embed(
                         title="Upcoming Events",
                         color=discord.Colour.from_rgb(r=255, g=192, b=60),
-                        description="Sunday Missions: 2pm PST / 5pm EST\nAll other Missions: 7pm PST / 10pm EST\nUnless stated otherwise\n\n"
+                        description="Sunday Missions: 2pm PST / 5pm EST / 9am Monday AEDT\nAll other Missions: 7pm PST / 10pm EST / 2pm AEDT\nUnless stated otherwise\n\n"
                     )
                     for event in events:
                         date = [x.replace(",", "") for x in event['date'].strip().split(" ")]

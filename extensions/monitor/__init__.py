@@ -24,7 +24,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Server Monitor"
         self.author = "Brett + nameless"
-        self.version = "1.1"
+        self.version = "1.2"
         self.bot = bot
         self.disable_during_test = True
 
@@ -72,10 +72,10 @@ class BotExtension:
             ("<@{}>! Welcome to Synixe!"+
             "Here is some basic info about our group: "+
             "If you check out <#{}> you can see our upcoming missions. "+
-            "We play at 7pm PST / 10pm EST. "+
+            "We play at 7pm PST / 10pm EST / 2pm AEDT."+
             "We have some mods you'll need to download from <#{}>. "+
             "If you have any questions while getting those setup we're more than "+
-            "happy to help in <#{}>.").format(member, events, info, repohelp)
+            "happy to help in <#{}>.").format(member.id, events.id, info.id, repohelp.id)
         )
         await member.add_roles(self.get_role(guild, "new"))
 
@@ -102,7 +102,7 @@ class BotExtension:
                 await channel.send(embed=embed)
 
     async def on_member_ban(self, _, member):
-        self.insert('member_ban', str(after.id))
+        self.insert('member_ban', str(member.id))
         """Post a message in #botevents when someone is banned"""
         await self.post_to_bot_events(
             member,
@@ -110,7 +110,7 @@ class BotExtension:
         )
 
     async def on_member_unban(self, _, member):
-        self.insert('member_unban', str(after.id))
+        self.insert('member_unban', str(member.id))
         """Post a message in #botevents when someone is unbanned"""
         await self.post_to_bot_events(
             member,

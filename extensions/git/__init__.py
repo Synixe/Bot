@@ -29,10 +29,10 @@ class BotExtension:
         """Find out which commit the bot is on"""
         embed = discord.Embed(
             title=subprocess.getoutput("git log --pretty=format:'%h' -n 1"),
-            url="https://github.com/Synixe/Bot/commit/" + subprocess.getoutput("git log --pretty=format:'%H' -n 1").trim("'"),
+            url="https://github.com/Synixe/Bot/commit/" + subprocess.getoutput("git log --pretty=format:'%H' -n 1").strip("'"),
             color=discord.Colour.from_rgb(r=255, g=192, b=60)
         )
-        embed.add_field(name="Last Change", value=subprocess.getoutput("git log -1 --pretty=format:'%an'").trim("'").split(" ")[0])
+        embed.add_field(name="Last Change", value=subprocess.getoutput("git log -1 --pretty=format:'%an'").strip("'").split(" ")[0])
         embed.add_field(name="Title", value=subprocess.getoutput("git log -1 --pretty=%B"), inline=False)
         await message.channel.send(embed=embed)
 

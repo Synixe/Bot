@@ -46,7 +46,7 @@ class BotExtension:
                 if isinstance(embed, discord.Embed):
                     embed.set_author(
                         name="Synixe Rules",
-                        url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
+                        url="http://synixe.com/rules.html",
                         icon_url=self.bot.user.avatar_url
                     )
                     try:
@@ -54,7 +54,7 @@ class BotExtension:
                     except discord.errors.HTTPException:
                         await message.channel.send("That section is too large, you'll need to be more specific")
                 else:
-                    await message.chanel.send(embed)
+                    await message.channel.send(embed)
 
     async def rules(self, args, message):
         """Display the link to the rules"""
@@ -66,7 +66,7 @@ class BotExtension:
         )
         embed.set_author(
             name="Synixe Rules",
-            url="https://github.com/Synixe/Documents/blob/master/SynixeRules.pdf",
+            url="http://synixe.com/rules.html",
             icon_url=self.bot.user.avatar_url
         )
         await message.channel.send(embed=embed)
@@ -86,7 +86,7 @@ class BotExtension:
                     if isinstance(embed, discord.Embed):
                         embed.set_author(
                             name="Synixe Constitution",
-                            url="https://github.com/Synixe/Documents/blob/master/SynixeConstitution.pdf",
+                            url="http://synixe.com/const.html",
                             icon_url=self.bot.user.avatar_url
                         )
                         try:
@@ -101,7 +101,7 @@ class BotExtension:
                 )
                 embed.set_author(
                     name="Synixe Constitution",
-                    url="https://github.com/Synixe/Documents/blob/master/SynixeConstitution.pdf",
+                    url="http://synixe.com/const.html",
                     icon_url=self.bot.user.avatar_url
                 )
                 await message.channel.send(embed=embed)
@@ -142,8 +142,8 @@ class BotExtension:
                 i += 1
                 desc += "{}. {}\n".format(i, tex.process_ref(item))
             embed = discord.Embed(
-                title=args.section + " " + rule["name"],
+                title=section + " " + rule["name"],
                 description=desc,
-                color=discord.Colour.from_rgb(r=255,g=192,b=60)
+                color=discord.Colour.from_rgb(r=255, g=192, b=60)
             )
             return embed

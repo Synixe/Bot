@@ -38,11 +38,6 @@ class BotExtension:
             "anon" : {
                 "function" : self.anon,
                 "roles" : ["@everyone"]
-            },
-            "stop" : {
-                "function" : self.stop,
-                "roles" : ["code contributer"],
-                "alias" : ["quit"]
             }
         }
 
@@ -107,7 +102,7 @@ class BotExtension:
 
     async def ext(self, args, message):
         """Get info about loaded extensions"""
-        parser = argparse.ArgumentParser(description=self.ext.__doct__)
+        parser = argparse.ArgumentParser(description=self.ext.__doc__)
         parser.add_argument("extension", nargs="?", type=str, help="The extension to get info about")
         args = await self.bot.parse_args(parser, args, message)
         if args != False:
@@ -179,10 +174,6 @@ class BotExtension:
             if channel is not None:
                 await channel.send(" ".join(args))
                 await message.channel.send("Message sent!")
-
-    async def stop(self, args, message):
-        """Stop the bot"""
-        sys.exit(0)
 
     @classmethod
     def getRole(cls, guild, name):
