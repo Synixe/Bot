@@ -123,7 +123,7 @@ class BotExtension:
                 x = 0
                 for sub in rule["subsections"]:
                     x += 1
-                    desc += "\n__{}.{} - {}__\n{}\n".format(args.section.split(".")[0], x, sub["name"], tex.process_ref(sub["text"]))
+                    desc += "\n__{}.{} - {}__\n{}\n".format(section.split(".")[0], x, sub["name"], tex.process_ref(sub["text"]))
                     i = 0
                     for item in sub['items']:
                         i += 1
@@ -131,12 +131,12 @@ class BotExtension:
                     y = 0
                     for ss in sub["subsubsections"]:
                         y += 1
-                        desc += "\n*{}.{}.{} - {}*\n{}\n".format(args.section.split(".")[0], x, y, ss["name"], tex.process_ref(ss["text"]))
+                        desc += "\n*{}.{}.{} - {}*\n{}\n".format(section.split(".")[0], x, y, ss["name"], tex.process_ref(ss["text"]))
             elif "subsubsections" in rule:
                 y = 0
                 for ss in rule["subsubsections"]:
                     y += 1
-                    desc += "\n*{}.{}.{} - {}*\n{}\n".format(args.section.split(".")[0], args.section.split(".")[1], y, ss["name"], tex.process_ref(ss["text"]))
+                    desc += "\n*{}.{}.{} - {}*\n{}\n".format(section.split(".")[0], section.split(".")[1], y, ss["name"], tex.process_ref(ss["text"]))
             i = 0
             for item in rule['items']:
                 i += 1
