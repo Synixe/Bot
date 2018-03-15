@@ -94,11 +94,7 @@ class BotExtension:
                             except AttributeError:
                                 pass
                         else:
-<<<<<<< HEAD
-                            if msg.embeds[0].title.lower() == args.mission.lower() or m.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
-=======
                             if msg.embeds[0].title.lower() == args.mission.lower() or msg.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
->>>>>>> 3f98b0de4339a434a0bc9783c50b9411ac67f16e
                                 event_id = int(msg.embeds[0].footer.text.split(": ")[1])
                                 target = msg
                 if target != None:
@@ -154,11 +150,7 @@ class BotExtension:
                             except AttributeError:
                                 pass
                         else:
-<<<<<<< HEAD
-                            if m.embeds[0].title.lower() == args.mission.lower() || m.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
-=======
                             if m.embeds[0].title.lower() == args.mission.lower() or m.embeds[0].title.lower().replace("operation ","") == args.mission.lower():
->>>>>>> 3f98b0de4339a434a0bc9783c50b9411ac67f16e
                                 event_id = int(m.embeds[0].footer.text.split(": ")[1])
                                 target = m
                 if target != None:
