@@ -77,7 +77,7 @@ class BotExtension:
             "If you have any questions while getting those setup we're more than "+
             "happy to help in <#{}>.").format(member, events, info, repohelp)
         )
-        await member.add_roles(self.get_role(g, "new"))
+        await member.add_roles(self.get_role(guild, "new"))
 
     async def on_member_remove(self, member):
         self.insert('member_remove', str(member.id))
