@@ -1,5 +1,4 @@
 """Bot Controls"""
-import argparse
 import sys
 import discord
 import logger
@@ -9,7 +8,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Bot Controls"
         self.author = "Brett"
-        self.version = "1.0"
+        self.version = "1.1"
         self.bot = bot
 
     def __register__(self):
@@ -24,4 +23,5 @@ class BotExtension:
     async def stop(self, args, message):
         """Stop the Bot"""
         await message.channel.send("Shutting down...")
-        sys.exit(0)
+        logger.info("Bot shutdown by {0.display_name} ({0.id})".format(message.author))
+        await self.bot.logout()

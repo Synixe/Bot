@@ -14,6 +14,8 @@ import importlib
 import os
 import io
 import socket
+import traceback
+import asyncio
 from sys import platform
 from contextlib import redirect_stdout, redirect_stderr
 
@@ -106,6 +108,33 @@ class BotClient(discord.Client):
         logger.info("Prefix: {}".format(self.prefix))
         logger.info("Bot Ready! :heavy_check_mark:", "green")
 
+        self.loop.create_task(self.loop_monitor())
+
+    async def loop_monitor(self):
+        alerted = []
+        guild = discord.utils.find(
+            lambda g: g.name == "Synixe",
+            self.guilds
+        )
+        while not self.is_closed():
+            for l in self.loops:
+                task = self.loops[l]
+                if l not in alerted and task.done():
+                    print("{} done".format(l))
+                    if task.exception() != None:
+                        alerted.append(l)
+                        exception = task.exception()
+                        message = "`{0}` occured in task `{1}`\n`{2.f_code.co_filename}: {2.f_lineno}`".format(
+                            exception, l, task.get_stack()[0]
+                        )
+                        if self.user.id == 403101852771680258:
+                            channel = discord.utils.find(lambda c: c.name == "errors", guild.channels)
+                        else:
+                            channel = discord.utils.find(lambda c: c.name == "bot", guild.channels)
+                        await channel.send(message)
+                        logger.error(message)
+            await asyncio.sleep(10)
+
     async def execute(self, message):
         """Execute a command"""
         if message.author.id == self.user.id:
@@ -121,14 +150,29 @@ class BotClient(discord.Client):
         args = new
         if cmd in self.commands:
             if self.in_role_list(message.author, self.commands[cmd]["roles"]) or (isinstance(message.channel, discord.DMChannel) and "@everyone" in self.commands[cmd]["roles"]):
-                await self.commands[cmd]["function"](args, message)
+                try:
+                    await self.commands[cmd]["function"](args, message)
+                except Exception as e:
+                    exc_type, exc_obj, exc_tb = sys.exc_info()
+                    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                    tb = traceback.format_exc()
+                    if self.user.id == 403101852771680258:
+                        await message.channel.send("Oh no! :cry: An error occurred. It has been reported to the Code Contributers.")
+                        channel = discord.utils.find(lambda c: c.name == "errors", message.guild.channels)
+                    else:
+                        channel = message.channel
+                    await channel.send(
+                        "An error occured during the execution of `{}` by {} in {}\n\n```py\n{}\n```"
+                        .format(message.content, message.author.display_name, message.channel.mention, tb)
+                    )
+                    logger.error("An error occured: "+str(tb))
             else:
                 if isinstance(message.channel, discord.DMChannel):
                     await message.channel.send("This command can not be used in a direct message channel.")
                 else:
                     await message.channel.send("Sorry, you are not allowed to use that command.")
         else:
-            await message.channel.send("That command doesn't exist... You can use `?ext` to learn about what I can do")
+            await message.channel.send("That command doesn't exist... You can use `{}ext` to learn about what I can do".format(self.prefix))
 
     async def on_message(self, message):
         """Execute commands, if the message is not a command pass it on to extensions"""
