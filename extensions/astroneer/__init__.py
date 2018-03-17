@@ -57,8 +57,8 @@ class BotExtension:
                         for matchNum, match in enumerate(matches):
                             matchNum = matchNum + 1
 
-                            key = match.group(1).split(">",1)[-1].split("<")[0]
-                            value = match.group(2).split(">",1)[-1].split("<")[0]
+                            key = match.group(1).split("<a",1)[0] + " " + match.group(1).split(">",1)[-1].split("<")[0]
+                            value = match.group(2).split("<a",1)[0] + " " + match.group(2).split(">",1)[-1].split("<")[0]
                             embed.add_field(name=key, value=value)
 
                         await message.channel.send(embed=embed)
