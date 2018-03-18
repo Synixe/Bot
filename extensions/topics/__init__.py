@@ -63,7 +63,7 @@ class BotExtension:
                     await message.author.remove_roles(self.getRole(
                         message.channel.guild, self.topics[args.topic.upper()]
                     ))
-                    await message.channel.send("Unsubscribed!")
+                    await message.delete()
                 else:
                     await message.channel.send("That topic doesn't exist")
 

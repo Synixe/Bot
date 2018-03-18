@@ -184,8 +184,8 @@ class BotExtension:
     async def schedule_task(self):
         """Checks for changes to the schedule and posts them in #events"""
         await self.bot.wait_until_ready()
+        channel = discord.utils.find(lambda c: c.name == "events", discord.utils.find(lambda g: g.name == "Synixe", self.bot.guilds).channels)
         while not self.bot.is_closed():
-            channel = discord.utils.find(lambda c: c.name == "events", discord.utils.find(lambda g: g.name == "Synixe", self.bot.guilds).channels)
             target = None
             if channel is not None:
                 messages = channel.history(limit=10)
