@@ -63,6 +63,7 @@ class BotExtension:
                         cursor.execute(sql)
                         mods = cursor.fetchall()
                         for mod in mods:
+                            asyncio.sleep(60)
                             if mod["url"] == "N":
                                 continue
                             service, mid = mod['url'].split("@")
@@ -70,8 +71,10 @@ class BotExtension:
                                 latest = armaholic.latest(mid)
                                 url="http://www.armaholic.com/page.php?id="+mid
                             elif service == "G": #GitHub
-                                latest = github.latest(mid)
-                                logger.info("Synixe Mod: "+latest)
+                                try:
+                                    latest = github.latest(mid)
+                                except Exception as e:
+                                    continue
                                 url = "http://github.com/"+mid
 
                             if latest != mod['notified']:

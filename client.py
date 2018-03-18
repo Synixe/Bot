@@ -124,9 +124,13 @@ class BotClient(discord.Client):
                     if task.exception() != None:
                         alerted.append(l)
                         exception = task.exception()
-                        message = "`{0}` occured in task `{1}`\n`{2.f_code.co_filename}: {2.f_lineno}`".format(
-                            exception, l, task.get_stack()[0]
+                        message = "`{0}` occured in task `{1}`".format(
+                            exception, l
                         )
+                        stack = task.get_stack()
+                        for frame in stack:
+                            message += "\n`{0.f_code.co_filename}: {0.f_lineno}`".format(frame)
+
                         if self.user.id == 403101852771680258:
                             channel = discord.utils.find(lambda c: c.name == "errors", guild.channels)
                         else:
