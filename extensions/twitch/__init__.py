@@ -1,10 +1,10 @@
-"""Streaming notification"""
+"""Twitch Extension"""
 import random
 import discord
 import logger
 
 class BotExtension:
-    """Streaming notification"""
+    """Twitch Extension"""
     def __init__(self, bot):
         self.name = "Twitch"
         self.author = "Brett + nameless"
@@ -13,7 +13,7 @@ class BotExtension:
         self.disable_during_test = True
 
     async def on_member_update(self, before, after):
-        """Streaming notification"""
+        """Posts to #streams if a user starts streaming"""
         if self.bot.in_role_list(after, ["active"]):
             if after.activity != None and isinstance(after.activity, discord.Streaming):
                 print(after.activity.details)
