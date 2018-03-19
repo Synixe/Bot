@@ -30,7 +30,7 @@ class BotExtension:
         self.version = "1.0"
         self.bot = bot
         self.active = PYMYSQL
-        self.disable_during_test = False
+        self.disable_during_test = True
 
     def __loops__(self):
         return {
