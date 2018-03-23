@@ -8,7 +8,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Twitch"
         self.author = "Brett + nameless"
-        self.version = "1.0"
+        self.version = "1.1"
         self.bot = bot
         self.disable_during_test = True
 
@@ -16,7 +16,6 @@ class BotExtension:
         """Posts to #streams if a user starts streaming"""
         if self.bot.in_role_list(after, ["active"]):
             if after.activity != None and isinstance(after.activity, discord.Streaming):
-                print(after.activity.details)
                 if before.activity == None or not isinstance(before.activity, discord.Streaming):
                     channel = discord.utils.find(lambda c: c.name == "streams", after.guild.channels)
                     if channel != None:
