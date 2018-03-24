@@ -192,12 +192,13 @@ class BotExtension:
         if args != False:
             user = message.channel.guild.get_member(self.bot.get_from_tag(args.member))
             if user != None:
+                if args.command[0].startswith(self.bot.prefix):
+                    args.command[0] = args.command[0][len(self.bot.prefix):]
                 if args.command[0] in self.bot.commands:
                     cmd = args.command[0]
                     if self.bot.in_role_list(message.author, self.bot.commands[cmd]["roles"]) or "@everyone" in self.bot.commands[cmd]["roles"]:
                         message.author = user
-                        if not args.command[0].startswith(self.bot.prefix):
-                            args.command[0] = self.bot.prefix + args.command[0]
+                        args.command[0] = self.bot.prefix + args.command[0]
                         message.content = " ".join(args.command)
                         await message.channel.send("Executing `{}` as {}".format(message.content, user.display_name))
                         await self.bot.execute(message)
