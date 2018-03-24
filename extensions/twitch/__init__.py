@@ -30,7 +30,7 @@ class BotExtension:
                         embed.set_thumbnail(url=after.avatar_url)
                         embed.set_footer(text=after.display_name)
                         await channel.send(embed=embed, content=random.choice(lines).format(after.display_name))
-                elif after.activity == None:
+                elif after.activity == None or not isinstance(after.activity, discord.Streaming):
                     if before.activity != None and isinstance(before.activity, discord.Streaming):
                         messages = channel.history(limit=50)
                         target = None
