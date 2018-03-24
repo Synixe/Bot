@@ -16,6 +16,7 @@ import io
 import socket
 import traceback
 import asyncio
+import re
 from sys import platform
 from contextlib import redirect_stdout, redirect_stderr
 
@@ -146,7 +147,6 @@ class BotClient(discord.Client):
         raw = message.content[len(self.prefix):].split()
         cmd = raw[0]
         args = " ".join(raw[1:])
-        import re
         args = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''').split(args)[1::2]
         new = []
         for arg in args:

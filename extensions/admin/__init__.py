@@ -4,6 +4,7 @@ import random
 import logger
 import sys
 import discord
+import re
 
 class BotExtension:
     """Admin Utilites"""
@@ -38,6 +39,10 @@ class BotExtension:
             "anon" : {
                 "function" : self.anon,
                 "roles" : ["@everyone"]
+            },
+            "runas": {
+                "function" :self.runas,
+                "roles" : ["manager","moderator","helper"]
             }
         }
 
@@ -174,6 +179,34 @@ class BotExtension:
             if channel is not None:
                 await channel.send(" ".join(args))
                 await message.channel.send("Message sent!")
+
+    async def runas(self, args, message):
+        """Run a command as a different member"""
+        parser = argparse.ArgumentParser(description=self.runas.__doc__)
+        parser.add_argument("member", help="User to run the command as")
+        parser.add_argument("command", nargs="+", type=str)
+        args = await self.bot.parse_args(parser, args, message)
+        if isinstance(message.channel, discord.DMChannel):
+            await message.channel.send("You can not use `runas` in a DM")
+            return
+        if args != False:
+            user = message.channel.guild.get_member(self.bot.get_from_tag(args.member))
+            if user != None:
+                if args.command[0] in self.bot.commands:
+                    cmd = args.command[0]
+                    if self.bot.in_role_list(message.author, self.bot.commands[cmd]["roles"]) or "@everyone" in self.bot.commands[cmd]["roles"]:
+                        message.author = user
+                        if not args.command[0].startswith(self.bot.prefix):
+                            args.command[0] = self.bot.prefix + args.command[0]
+                        message.content = " ".join(args.command)
+                        await message.channel.send("Executing `{}` as {}".format(message.content, user.display_name))
+                        await self.bot.execute(message)
+                    else:
+                        await message.channel.send("You are not allowed to run commands with elevated privileges.")
+                else:
+                    await message.channel.send("That command does not exist!")
+            else:
+                await message.channel.send("That member was not found.")
 
     @classmethod
     def getRole(cls, guild, name):
