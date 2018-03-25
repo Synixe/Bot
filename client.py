@@ -125,6 +125,8 @@ class BotClient(discord.Client):
                     if task.exception() != None:
                         alerted.append(l)
                         exception = task.exception()
+                        if str(exception) == "[Errno None] Cannot connect to host discordapp.com:443 ssl:True [Can not connect to discordapp.com:443 [None]]":
+                            continue
                         message = "`{0}` occured in task `{1}`".format(
                             exception, l
                         )

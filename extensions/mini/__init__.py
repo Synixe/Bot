@@ -2,6 +2,7 @@
 import argparse
 import random
 import discord
+import logger
 
 class BotExtension:
     """Pack of small commands"""

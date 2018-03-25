@@ -88,7 +88,7 @@ class BotExtension:
         )
 
     async def on_member_update(self, before, after):
-        """Post a message in #botevents when someone leaves the server"""
+        """Post a message in #botevents when someone changes their name"""
         if before.display_name != after.display_name:
             self.insert('member_update_name', str(after.id)+"::"+before.display_name+"::"+after.display_name)
             channel = discord.utils.find(lambda c: c.name == "botevents", after.guild.channels)
