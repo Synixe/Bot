@@ -9,7 +9,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Mini Commands"
         self.author = "Brett + nameless"
-        self.version = "1.3"
+        self.version = "1.4"
         self.bot = bot
 
     def __register__(self):
@@ -61,9 +61,10 @@ class BotExtension:
     async def color(self, args, message):
         """Obtain the color of a role on the server"""
         parser = argparse.ArgumentParser(description=self.color.__doc__)
-        parser.add_argument("role", nargs="?", default=str(message.author.roles[-1].name), help="The role to get the color of")
+        parser.add_argument("role", nargs="?+", default=[str(message.author.roles[-1].name)], help="The role to get the color of")
         args = await self.bot.parse_args(parser, args, message)
         if args != False:
+            args.role = " ".join(args.role)
             role = discord.utils.find(lambda m: m.name.lower() == args.role.lower(), message.channel.guild.roles)
             if role != None:
                 embed = discord.Embed(
