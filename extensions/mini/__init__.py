@@ -34,7 +34,7 @@ class BotExtension:
         }
 
     async def card(self, args, message):
-        """Display a pretty card with information about a member"""
+        """Display a card with information about a member"""
         parser = argparse.ArgumentParser(self.card.__doc__)
         parser.add_argument("user", nargs="?", default=str(message.author.id), help="The subject of the card. Defaults to the message's author.")
         args = await self.bot.parse_args(parser, args, message)

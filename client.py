@@ -89,7 +89,7 @@ class BotClient(discord.Client):
                     self._num_loops += len(newloops)
                     for loop in newloops:
                         logger.debug("\tLoop Registered: {0}".format(loop))
-            for handler in ["on_message", "on_member_join", "on_member_remove", "on_member_update", "on_member_ban", "on_member_unban"]:
+            for handler in ["on_message", "on_member_join", "on_member_remove", "on_member_update", "on_member_ban", "on_member_unban", "on_reaction_add"]:
                 if handler not in self.handlers:
                     self.handlers[handler] = []
                 if hasattr(loaded, handler):
@@ -178,7 +178,7 @@ class BotClient(discord.Client):
                 else:
                     await message.channel.send("Sorry, you are not allowed to use that command.")
         else:
-            await message.channel.send("That command doesn't exist... You can use `{}ext` to learn about what I can do".format(self.prefix))
+            await message.channel.send("That command doesn't exist... You can use `{}help` to learn about what I can do".format(self.prefix))
 
     async def on_message(self, message):
         """Execute commands, if the message is not a command pass it on to extensions"""
@@ -219,6 +219,12 @@ class BotClient(discord.Client):
         await self.wait_until_ready()
         for handler in self.handlers["on_member_update"]:
             await handler.on_member_update(before, after)
+
+    async def on_reaction_add(self, reaction, member):
+        """Call on_reaction_add inside extensions"""
+        await self.wait_until_ready()
+        for handler in self.handlers["on_reaction_add"]:
+            await handler.on_reaction_add(reaction, member)
 
     async def disabled(self, args, message):
         """This function is not allowed during testing"""

@@ -41,8 +41,16 @@ class BotExtension:
                 "roles" : ["@everyone"]
             },
             "runas": {
-                "function" :self.runas,
+                "function" : self.runas,
                 "roles" : ["manager","moderator","helper"]
+            },
+            "kick": {
+                "function" : self.kick,
+                "roles" : ["manager","moderator"]
+            },
+            "ban": {
+                "function" : self.ban,
+                "roles" : ["manager"]
             }
         }
 
@@ -93,7 +101,7 @@ class BotExtension:
                 await message.channel.send("Can't find that user.")
 
     async def unfreeze(self, args, message):
-        """"Unfreeze a user from sending messages"""
+        """Unfreeze a user from sending messages"""
         parser = argparse.ArgumentParser(description=self.unfreeze.__doc__)
         parser.add_argument("user", help="The user to unfreeze")
         args = await self.bot.parse_args(parser, args, message)
@@ -148,7 +156,7 @@ class BotExtension:
                         description = ""
                         for name, c in self.bot._ext_commands[args.extension].items():
                             description += name+"\n"
-                            description += "    "+c['description']+"\n"
+                            description += "    "+c['function'].__doc__+"\n"
                         await message.channel.send(
                             embed=embed,
                             content="```\n"+description+"```"
@@ -159,7 +167,7 @@ class BotExtension:
                     await message.channel.send("That extension does not exist.")
 
     async def speak(self, args, message):
-        """"Makes the bot say something funny"""
+        """Makes the bot say something"""
         parser = argparse.ArgumentParser(description=self.speak.__doc__)
         parser.add_argument("channel", help="The channel")
         parser.add_argument("words", nargs="+", type=str)
@@ -170,7 +178,7 @@ class BotExtension:
                 await channel.send(" ".join(args.words))
 
     async def anon(self, args, message):
-        """Send a message to the Moderators anonymously"""
+        """Send a message to the Manager anonymously"""
         if not isinstance(message.channel, discord.DMChannel):
             await message.delete()
             await message.channel.send("Only use this command in a direct message.")
@@ -208,6 +216,43 @@ class BotExtension:
                     await message.channel.send("That command does not exist!")
             else:
                 await message.channel.send("That member was not found.")
+
+    async def kick(self, args, message):
+        """Kick a user"""
+        parser = argparse.ArgumentParser(description=self.kick.__doc__)
+        parser.add_argument("member", help="User to kick")
+        parser.add_argument("reason", nargs="+", type=str)
+        args = await self.bot.parse_args(parser, args, message)
+        args.reason = " ".join(args.reason)
+        if isinstance(message.channel, discord.DMChannel):
+            await message.channel.send("This is a DM, nobody here to kick.")
+            return
+        if args != False:
+            user = message.channel.guild.get_member(self.bot.get_from_tag(args.member))
+            if user != None:
+                channel = discord.utils.find(lambda c: c.name == "botevents", message.guild.channels)
+                if channel != None:
+                    await channel.send("{} was kicked by {}\nReason: {}".format(user.display_name, message.author.display_name, args.reason))
+                await message.guild.kick(user=user, reason=args.reason)
+
+    async def ban(self, args, message):
+        """Ban a user"""
+        parser = argparse.ArgumentParser(description=self.kick.__doc__)
+        parser.add_argument("member", help="User to kick")
+        parser.add_argument("reason", nargs="+", type=str)
+        args = await self.bot.parse_args(parser, args, message)
+        args.reason = " ".join(args.reason)
+        if isinstance(message.channel, discord.DMChannel):
+            await message.channel.send("This is a DM, nobody here to ban.")
+            return
+        if args != False:
+            user = message.channel.guild.get_member(self.bot.get_from_tag(args.member))
+            if user != None:
+                channel = discord.utils.find(lambda c: c.name == "botevents", message.guild.channels)
+                if channel != None:
+                    await channel.send("{} was banned by {}\nReason: {}".format(user.display_name, message.author.display_name, args.reason))
+                await message.guild.ban(user=user, reason=args.reason)
+
 
     @classmethod
     def getRole(cls, guild, name):
