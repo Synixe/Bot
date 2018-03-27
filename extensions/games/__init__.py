@@ -1,8 +1,10 @@
 """Games for Discord"""
 import argparse
 import random
+import itertools
+import collections
 import discord
-
+import logger
 
 class BotExtension:
     """Games for Discord"""
@@ -10,7 +12,7 @@ class BotExtension:
         self.bot = bot
         self.name = "Games"
         self.author = "nameless"
-        self.version = "1.1"
+        self.version = "1.2"
 
     def __register__(self):
         return {
@@ -25,6 +27,11 @@ class BotExtension:
             "flip" : {
                 "function" : self.flip,
                 "roles" : ["@everyone"]
+            },
+            "8ball" : {
+                "function" : self.ball,
+                "roles" : ["@everyone"],
+                "alias" : ["🎱"]
             }
         }
 
@@ -68,3 +75,18 @@ class BotExtension:
             else:
                 output = "It lands on tails"
             await message.channel.send(output)
+
+    async def ball(self, args, message):
+        """8-Ball Magic"""
+        parser = argparse.ArgumentParser(self.ball.__doc__)
+        parser.add_argument("question", nargs="+", help="A question for the 8-Ball")
+        args = await self.bot.parse_args(parser, args, message)
+        if args != False:
+            lines = {}
+            for line in open("./extensions/games/8ball.txt").read().splitlines():
+                value, text = line.split(":", 1)
+                lines[text] = int(value)
+            lines = collections.Counter(lines)
+            i = random.randrange(sum(lines.values()))
+            text = next(itertools.islice(lines.elements(), i, None))
+            await message.channel.send(text)
