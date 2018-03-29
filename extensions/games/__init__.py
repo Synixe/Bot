@@ -12,7 +12,7 @@ class BotExtension:
         self.bot = bot
         self.name = "Games"
         self.author = "nameless"
-        self.version = "1.2"
+        self.version = "1.3"
 
     def __register__(self):
         return {
@@ -37,7 +37,7 @@ class BotExtension:
 
     async def rps(self, args, message):
         """Play Rock Paper Scissors against the bot"""
-        valid = ["paper", "rock", "scissors"]
+        valid = ["rock", "paper", "scissors"]
         parser = argparse.ArgumentParser(description=self.rps.__doc__)
         parser.add_argument("choice", help="Your choice")
         args = await self.bot.parse_args(parser, args, message)
@@ -45,13 +45,21 @@ class BotExtension:
             if not args.choice.lower() in valid:
                 await message.channel.send("That is not a valid choice")
                 return
-            hand = random.randint(0, 2)
-            if hand == 0:
+            bot = random.randint(0, 2)
+            if bot == 0:
                 output = "Rock"
-            if hand == 1:
+            if bot == 1:
                 output = "Paper"
-            if hand == 2:
+            if bot == 2:
                 output = "Scissors"
+            player = valid.index(args.choice.lower())
+            if player == bot:
+                output += ", it's a tie."
+
+            elif player == bot - 1 or player == bot + 2:
+                output += ", you lose."
+            elif player == bot + 1 or player == bot - 2:
+                output += ", you win."
             await message.channel.send(output)
 
     async def dice(self, args, message):
