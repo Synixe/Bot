@@ -49,7 +49,7 @@ class BotExtension:
                 embed.set_thumbnail(url=user.avatar_url)
                 await message.channel.send(embed=embed)
             else:
-               await message.channel.send("Unable to find that user. Try using @ to mention them or use their Discord ID.")
+                await message.channel.send("Unable to find that user. Try using @ to mention them or use their Discord ID.")
 
     async def ping(self, args, message):
         """Ping the bot for a response"""

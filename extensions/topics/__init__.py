@@ -12,7 +12,6 @@ class BotExtension:
         self.topics = {
             "R6S": "Rainbow 6 Siege",
             "ED": "Elite: Dangerous",
-            "PUBG": "PUBG",
             "LOL": "League of Legends",
             "ASTRO": "Astroneer"
         }
