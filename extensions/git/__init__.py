@@ -2,6 +2,7 @@
 import argparse
 import subprocess
 import discord
+import os
 
 from . import blame
 
@@ -22,8 +23,26 @@ class BotExtension:
             "blame" : {
                 "function": self.blame,
                 "roles" : ["@everyone"]
+            },
+            "update" : {
+                "function": self.update,
+                "roles" : ["code contributer"]
             }
         }
+
+    def __loops__(self):
+        return {
+            "update-check" : self.bot.loop.create_task(self.update_task())
+        }
+
+    async def update_task(self):
+        await self.bot.wait_until_ready()
+        if os.path.isfile("/tmp/restart-synixe-bot"):
+            with open("/tmp/restart-synixe-bot") as f:
+                data = f.read().split("|")
+            channel = self.bot.get_channel(int(data[0]))
+            message = await channel.get_message(int(data[1]))
+            await message.edit(embed=discord.Embed(title="Restarted",color=discord.Color.from_rgb(r=0,g=255,b=0)))
 
     async def current(self, args, message):
         """Find out which commit the bot is on"""
@@ -62,3 +81,10 @@ class BotExtension:
                             authors[author], round(authors[author] / total * 100, 0))
                         )
                     await message.channel.send(embed=embed)
+
+    async def update(self, args, message):
+        subprocess.getoutput("git pull")
+        mid = await message.channel.send(embed=discord.Embed(title="Restarting",color=discord.Color.from_rgb(r=255,g=255,b=0)))
+        with open("/tmp/restart-synixe-bot",'w') as f:
+            f.write(str(message.channel.id)+"|"+str(mid.id))
+        os.system("sudo systemctl restart synixebot")
