@@ -5,6 +5,23 @@ import logger
 import discord
 import tokens
 
+import logger
+try:
+    import pymysql.cursors
+    PYMYSQL = True
+except ImportError:
+    import dep
+    if dep.ask("pymysql"):
+        try:
+            import pymysql.cursors
+            PYMYSQL = True
+            logger.info("pymysql Installed!", "green")
+        except ImportError:
+            logger.error("Failed to install pymysql")
+    else:
+        logger.error("Monitor will be inactive as it requires pymysql")
+        PYMYSQL = False
+
 class BotExtension:
     """Admin Utilites"""
     def __init__(self, bot):
@@ -12,6 +29,7 @@ class BotExtension:
         self.author = "Brett"
         self.version = "1.0"
         self.bot = bot
+        self.enabled = PYMYSQL
 
     def __register__(self):
         return {
