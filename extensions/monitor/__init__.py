@@ -45,18 +45,18 @@ class BotExtension:
             cursorclass=pymysql.cursors.DictCursor
         )
 
-    def insert(self, event_type, content):
+    def insert(self, event_type, member, content):
         connection = self.get_connection()
         try:
             with connection.cursor() as cursor:
-                sql = "INSERT INTO `bot_events` (`type`, `content`) VALUES (%s, %s)"
-                cursor.execute(sql, (event_type, content ))
+                sql = "INSERT INTO `bot_events` (`type`, `id`, `content`) VALUES (%s, %s, %s)"
+                cursor.execute(sql, (event_type, str(member.id), content ))
                 connection.commit()
         finally:
             connection.close()
 
     async def on_member_join(self, member):
-        self.insert('member_join', str(member.id))
+        self.insert('member_join', member, member.display_name)
         """Print a welcome message to new members"""
         guild = member.guild
         for channel in guild.channels:
@@ -72,7 +72,7 @@ class BotExtension:
             ("<@{}>! Welcome to Synixe! "+
             "Here is some basic info about our group: "+
             "If you check out <#{}> you can see our upcoming missions. "+
-            "We play at 7pm PST / 10pm EST / 2pm AEDT. "+
+            "We play at 7pm PST / 10pm EST. "+
             "We have some mods you'll need to download from <#{}>. "+
             "If you have any questions while getting those setup we're more than "+
             "happy to help in <#{}>.").format(member.id, events.id, info.id, repohelp.id)
@@ -80,7 +80,7 @@ class BotExtension:
         await member.add_roles(self.get_role(guild, "new"))
 
     async def on_member_remove(self, member):
-        self.insert('member_remove', str(member.id))
+        self.insert('member_remove', member, member.display_name)
         """Post a message in #botevents when someone leaves the server"""
         await self.post_to_bot_events(
             member,
@@ -90,7 +90,7 @@ class BotExtension:
     async def on_member_update(self, before, after):
         """Post a message in #botevents when someone changes their name"""
         if before.display_name != after.display_name:
-            self.insert('member_update_name', str(after.id)+"::"+before.display_name+"::"+after.display_name)
+            self.insert('member_update_name', member, before.display_name+"::"+after.display_name)
             channel = discord.utils.find(lambda c: c.name == "botevents", after.guild.channels)
             if channel != None:
                 embed = discord.Embed(
@@ -102,7 +102,7 @@ class BotExtension:
                 await channel.send(embed=embed)
 
     async def on_member_ban(self, _, member):
-        self.insert('member_ban', str(member.id))
+        self.insert('member_ban', member, member.display_name)
         """Post a message in #botevents when someone is banned"""
         await self.post_to_bot_events(
             member,
@@ -110,7 +110,7 @@ class BotExtension:
         )
 
     async def on_member_unban(self, _, member):
-        self.insert('member_unban', str(member.id))
+        self.insert('member_unban', member, member.display_name)
         """Post a message in #botevents when someone is unbanned"""
         await self.post_to_bot_events(
             member,

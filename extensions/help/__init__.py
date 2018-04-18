@@ -1,6 +1,5 @@
 """Help"""
 import argparse
-import logger
 import discord
 import math
 

@@ -121,7 +121,6 @@ class BotClient(discord.Client):
             for l in self.loops:
                 task = self.loops[l]
                 if l not in alerted and task.done():
-                    print("{} done".format(l))
                     if task.exception() != None:
                         alerted.append(l)
                         exception = task.exception()

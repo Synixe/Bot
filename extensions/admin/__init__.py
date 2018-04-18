@@ -2,9 +2,8 @@
 import argparse
 import random
 import logger
-import sys
 import discord
-import re
+import tokens
 
 class BotExtension:
     """Admin Utilites"""
@@ -54,6 +53,27 @@ class BotExtension:
             }
         }
 
+    @classmethod
+    def get_connection(cls):
+        """Gets a connection to the database"""
+        return pymysql.connect(
+            host=tokens.MYSQL.HOST,
+            user=tokens.MYSQL.USER,
+            password=tokens.MYSQL.PASS,
+            db=tokens.MYSQL.DATA,
+            cursorclass=pymysql.cursors.DictCursor
+        )
+
+    def insert(self, event_type, member, content):
+        connection = self.get_connection()
+        try:
+            with connection.cursor() as cursor:
+                sql = "INSERT INTO `bot_events` (`type`, `id`, `content`) VALUES (%s, %s, %s)"
+                cursor.execute(sql, (event_type, str(member.id), content ))
+                connection.commit()
+        finally:
+            connection.close()
+
     async def clear(self, args, message):
         """Clears the past n number of messages (Default: 20)"""
         parser = argparse.ArgumentParser(description=self.clear.__doc__)
@@ -97,6 +117,7 @@ class BotExtension:
                 else:
                     await user.add_roles(self.getRole(message.channel.guild,"Silenced"))
                     await message.channel.send("Froze {0.display_name}".format(user))
+                    self.insert("froze", user, "{0.display_name} ({0.id}) was frozen by {1.display_name} ({1.id})".fomrat(user, message.author))
             else:
                 await message.channel.send("Can't find that user.")
 
@@ -110,6 +131,7 @@ class BotExtension:
             if user != None:
                 await user.remove_roles(self.getRole(message.channel.guild,"Silenced"))
                 await message.channel.send("Unfroze {0.display_name}".format(user))
+                self.insert("unfroze", user, "{0.display_name} ({0.id}) was unfrozen by {1.display_name} ({1.id})".fomrat(user, message.author))
             else:
                 await message.channel.send("Can't find that user.")
 
@@ -176,6 +198,7 @@ class BotExtension:
             channel = discord.utils.find(lambda c: c.name == args.channel, message.channel.guild.channels)
             if channel is not None:
                 await channel.send(" ".join(args.words))
+                self.insert("bot-speak", message.author, "{0.display_name} ({0.id}) used the bot to post in {1.name} ({1.id}): {2}".format(message.author, channel, " ".join(args.words)))
 
     async def anon(self, args, message):
         """Send a message to the Manager anonymously"""
@@ -232,7 +255,9 @@ class BotExtension:
             if user != None:
                 channel = discord.utils.find(lambda c: c.name == "botevents", message.guild.channels)
                 if channel != None:
-                    await channel.send("{} was kicked by {}\nReason: {}".format(user.display_name, message.author.display_name, args.reason))
+                    text = "{0.display_name} ({0.id}) was kicked by {1.display_name} ({1.display_name})\nReason: {2}".format(user.display_name, message.author.display_name, args.reason)
+                    await channel.send(text)
+                    self.insert('kicked', user, text)
                 await message.guild.kick(user=user, reason=args.reason)
 
     async def ban(self, args, message):
@@ -250,7 +275,9 @@ class BotExtension:
             if user != None:
                 channel = discord.utils.find(lambda c: c.name == "botevents", message.guild.channels)
                 if channel != None:
-                    await channel.send("{} was banned by {}\nReason: {}".format(user.display_name, message.author.display_name, args.reason))
+                    text = "{0.display_name} ({0.id}) was banned by {1.display_name} ({1.display_name})\nReason: {2}".format(user.display_name, message.author.display_name, args.reason)
+                    await channel.send(text)
+                    self.insert('banned', user, text)
                 await message.guild.ban(user=user, reason=args.reason)
 
 
