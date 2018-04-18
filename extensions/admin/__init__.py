@@ -86,7 +86,7 @@ class BotExtension:
         connection = self.get_connection()
         try:
             with connection.cursor() as cursor:
-                sql = "INSERT INTO `bot_events` (`type`, `id`, `content`) VALUES (%s, %s, %s)"
+                sql = "INSERT INTO `bot_events` (`type`, `user`, `content`) VALUES (%s, %s, %s)"
                 cursor.execute(sql, (event_type, str(member.id), content ))
                 connection.commit()
         finally:
