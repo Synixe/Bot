@@ -102,12 +102,12 @@ class BotClient(discord.Client):
                         self._ext_handlers[exten].append(handler)
                     else:
                         logger.debug("\tHandler Registered: {0}".format(handler), "red")
-        logger.info(":heavy_check_mark: {} Extensions Loaded".format(len(self.extension_list)))
+        logger.info("✔️ {} Extensions Loaded".format(len(self.extension_list)))
         logger.debug("Commands: {}".format(self._num_commands))
         logger.debug("Handlers: {}".format(self._num_handlers))
         logger.debug("Loops: {}".format(self._num_loops))
         logger.info("Prefix: {}".format(self.prefix))
-        logger.info("Bot Ready! :heavy_check_mark:", "green")
+        logger.info("Bot Ready! ✔️", "green")
 
         self.loop.create_task(self.loop_monitor())
 
