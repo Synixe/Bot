@@ -27,6 +27,10 @@ class BotExtension:
             "update" : {
                 "function": self.update,
                 "roles" : ["code contributer"]
+            },
+            "log" : {
+                "function": self.log,
+                "roles" : ["code contributer"]
             }
         }
 
@@ -42,7 +46,7 @@ class BotExtension:
                 data = f.read().split("|")
             channel = self.bot.get_channel(int(data[0]))
             message = await channel.get_message(int(data[1]))
-            await message.edit(embed=discord.Embed(title="Restarted",color=discord.Color.from_rgb(r=0,g=255,b=0)))
+            await message.edit(embed=discord.Embed(title="Restarted! Current Commit: {}".format(subprocess.getoutput("git log --pretty=format:'%h' -n 1")),color=discord.Color.from_rgb(r=0,g=255,b=0)))
 
     async def current(self, args, message):
         """Find out which commit the bot is on"""
@@ -83,8 +87,14 @@ class BotExtension:
                     await message.channel.send(embed=embed)
 
     async def update(self, args, message):
+        """Update the Bot and restart"""
         subprocess.getoutput("git pull")
         mid = await message.channel.send(embed=discord.Embed(title="Restarting",color=discord.Color.from_rgb(r=255,g=255,b=0)))
         with open("/tmp/restart-synixe-bot",'w') as f:
             f.write(str(message.channel.id)+"|"+str(mid.id))
         os.system("sudo systemctl restart synixebot")
+
+    async def log(self, args, message):
+        """Get the bot log"""
+        with open("./bot.log") as log:
+          await message.channel.send("```\n"+log.read()+"\n```")

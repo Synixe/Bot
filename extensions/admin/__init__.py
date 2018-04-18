@@ -117,7 +117,7 @@ class BotExtension:
                 else:
                     await user.add_roles(self.getRole(message.channel.guild,"Silenced"))
                     await message.channel.send("Froze {0.display_name}".format(user))
-                    self.insert("froze", user, "{0.display_name} ({0.id}) was frozen by {1.display_name} ({1.id})".fomrat(user, message.author))
+                    self.insert("froze", user, "{0.display_name} ({0.id}) was frozen by {1.display_name} ({1.id})".format(user, message.author))
             else:
                 await message.channel.send("Can't find that user.")
 
@@ -131,7 +131,7 @@ class BotExtension:
             if user != None:
                 await user.remove_roles(self.getRole(message.channel.guild,"Silenced"))
                 await message.channel.send("Unfroze {0.display_name}".format(user))
-                self.insert("unfroze", user, "{0.display_name} ({0.id}) was unfrozen by {1.display_name} ({1.id})".fomrat(user, message.author))
+                self.insert("unfroze", user, "{0.display_name} ({0.id}) was unfrozen by {1.display_name} ({1.id})".format(user, message.author))
             else:
                 await message.channel.send("Can't find that user.")
 
