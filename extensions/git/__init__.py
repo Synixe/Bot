@@ -96,5 +96,5 @@ class BotExtension:
 
     async def log(self, args, message):
         """Get the bot log"""
-        with open("./bot.log") as log:
+        with open("./bot.log", encoding="utf-8") as log:
           await message.channel.send("```\n"+log.read()+"\n```")

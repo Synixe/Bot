@@ -146,7 +146,7 @@ class BotClient(discord.Client):
         if message.author.id == self.user.id:
             return #Do not allow responding to it's own commands
         raw = message.content[len(self.prefix):].split()
-        cmd = raw[0]
+        cmd = raw[0].lower()
         args = " ".join(raw[1:])
         args = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''').split(args)[1::2]
         new = []
