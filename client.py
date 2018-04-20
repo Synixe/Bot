@@ -145,7 +145,7 @@ class BotClient(discord.Client):
         """Execute a command"""
         if message.author.id == self.user.id:
             return #Do not allow responding to it's own commands
-        raw = message.content[len(self.prefix):].split()
+        raw = message.content.lower()[len(self.prefix):].split()
         cmd = raw[0]
         args = " ".join(raw[1:])
         args = re.compile(r'''((?:[^\s"']|"[^"]*"|'[^']*')+)''').split(args)[1::2]

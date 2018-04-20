@@ -143,7 +143,7 @@ def write(tag, text):
     text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
     sys.stdout.write(emoji.emojize(text, use_aliases=True)+"\n")
     sys.stdout.flush()
-    with open("bot.log", 'a') as f:
+    with open("bot.log", 'a', encoding="utf-8") as f:
         f.write(text+"\n")
 
 def loading(text):
