@@ -63,12 +63,20 @@ def clear():
     """Empty the log file"""
     with open("bot.log", 'w') as f:
         f.write("")
+    with open("botdebug.log", 'w') as f:
+        f.write("")
 
 def write(tag, text):
     """Write to the log file"""
     text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
     sys.stdout.write(text+"\n")
     with open("bot.log", 'a') as f:
+        f.write(text+"\n")
+    dwrite(tag, text)
+
+def dwrite(tag, text):
+    text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
+    with open("botdebug.log", 'a') as f:
         f.write(text+"\n")
 
 def info(text, c="grey"):
@@ -87,6 +95,8 @@ def debug(text, c="blue"):
         color(c)
         write("DBUG", text)
         color("reset")
+    else:
+        dwrite("DBUG", text)
 
 def set_debug(debug):
     """Set the debug setting"""
