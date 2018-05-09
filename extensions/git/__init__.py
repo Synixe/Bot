@@ -96,13 +96,13 @@ class BotExtension:
 
     async def log(self, args, message):
         """Get the bot log"""
-        parser = argparse.ArugmentParser(log.__doc__)
-        parser.add_arguemtn("--debug", action="store_true")
+        parser = argparse.ArgumentParser(self.log.__doc__)
+        parser.add_argument("--debug", action="store_true")
         args = await self.bot.parse_args(parser, args, message)
         if args != False:
             if args.debug:
                 with open("./botdebug.log", encoding="utf-8") as log:
-                    await message.channel.send("```\n"+log.read()+"\n```")
+                    await message.channel.send("```\n"+log.read()[-1900:]+"\n```")
                 return
             with open("./bot.log", encoding="utf-8") as log:
-                await message.channel.send("```\n"+log.read()+"\n```")
+                await message.channel.send("```\n"+log.read()[-1900:]+"\n```")

@@ -60,7 +60,7 @@ class BotClient(discord.Client):
                     disable = loaded.disable_during_test
                     logger.debug("Ignoring {0.name} {0.version} by {0.author}".format(loaded), "red")
             if not disable:
-                logger.debug("Loading {0.name} {0.version} by {0.author}".format(loaded))
+                logger.debug("{0.name} {0.version} by {0.author}".format(loaded))
             if hasattr(loaded, "__register__"):
                 newcmds = loaded.__register__()
                 if not disable:
@@ -68,7 +68,7 @@ class BotClient(discord.Client):
                     self._ext_commands[exten] = newcmds
                     self._num_commands += len(newcmds)
                     for command in newcmds:
-                        logger.debug("\tCommand Registered: {0}".format(command))
+                        logger.debug("\tCommand: {0}".format(command))
                         if "alias" in newcmds[command]:
                             for alias in newcmds[command]["alias"]:
                                 logger.debug("\t\tAlias: {}".format(alias))
@@ -88,7 +88,7 @@ class BotClient(discord.Client):
                     self._ext_loops[exten] = newloops
                     self._num_loops += len(newloops)
                     for loop in newloops:
-                        logger.debug("\tLoop Registered: {0}".format(loop))
+                        logger.debug("\tLoop: {0}".format(loop))
             for handler in ["on_message", "on_member_join", "on_member_remove", "on_member_update", "on_member_ban", "on_member_unban", "on_reaction_add"]:
                 if handler not in self.handlers:
                     self.handlers[handler] = []
@@ -96,12 +96,12 @@ class BotClient(discord.Client):
                     if exten not in self._ext_handlers:
                         self._ext_handlers[exten] = []
                     if not disable:
-                        logger.debug("\tHandler Registered: {0}".format(handler))
+                        logger.debug("\tHandler: {0}".format(handler))
                         self._num_handlers += 1
                         self.handlers[handler].append(loaded)
                         self._ext_handlers[exten].append(handler)
                     else:
-                        logger.debug("\tHandler Registered: {0}".format(handler), "red")
+                        logger.debug("\tHandler: {0}".format(handler), "red")
         logger.info("✔️ {} Extensions Loaded".format(len(self.extension_list)))
         logger.debug("Commands: {}".format(self._num_commands))
         logger.debug("Handlers: {}".format(self._num_handlers))

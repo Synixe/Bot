@@ -68,15 +68,16 @@ def clear():
 
 def write(tag, text):
     """Write to the log file"""
+    otext = text
     text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
     sys.stdout.write(text+"\n")
-    with open("bot.log", 'a') as f:
+    with open("bot.log", 'a', encoding="utf-8") as f:
         f.write(text+"\n")
-    dwrite(tag, text)
+    dwrite(tag, otext)
 
 def dwrite(tag, text):
-    text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
-    with open("botdebug.log", 'a') as f:
+    text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%d %H:%M:%S')+"] " + str(text)
+    with open("botdebug.log", 'a', encoding="utf-8") as f:
         f.write(text+"\n")
 
 def info(text, c="grey"):
@@ -150,11 +151,13 @@ except ImportError:
 
 def write(tag, text):
     """Write to the log file"""
+    otext = text
     text = "["+tag+"]["+datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')+"] " + str(text)
     sys.stdout.write(emoji.emojize(text, use_aliases=True)+"\n")
     sys.stdout.flush()
     with open("bot.log", 'a', encoding="utf-8") as f:
         f.write(text+"\n")
+    dwrite(tag, otext)
 
 def loading(text):
     sys.stdout.write(emoji.emojize(text, use_aliases=True))
