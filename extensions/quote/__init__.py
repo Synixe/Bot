@@ -34,7 +34,7 @@ class BotExtension:
         return {
             "quote" : {
                 "function": self.quote,
-                "roles" : ["active, new"]
+                "roles" : ["active", "new"]
             },
             "save" : {
                 "function" : self.save,
