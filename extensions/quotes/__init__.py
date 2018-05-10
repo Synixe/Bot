@@ -25,7 +25,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Quote System"
         self.author = "nameless + Brett"
-        self.version = "1.1"
+        self.version = "1.0.2"
         self.bot = bot
         self.active = PYMYSQL
         self.disable_during_test = False
@@ -111,6 +111,8 @@ class BotExtension:
                 embed.set_author(name=first.author.display_name, icon_url=first.author.avatar_url)
                 embed.set_footer(text=first.created_at.strftime("%m/%d/%y"))
                 await message.channel.send("Saved the following quote to the database:", embed=embed)
+            except discord.errors.NotFound:
+                await message.channel.send("Message was not found in this channel")
             finally:
                 if connection != None:
                     connection.close()
