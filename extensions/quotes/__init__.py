@@ -113,7 +113,6 @@ class BotExtension:
                 await message.channel.send("Saved the following quote to the database:", embed=embed)
             except discord.errors.NotFound:
                 await message.channel.send("Message was not found in this channel")
-                return
             finally:
                 if connection != None:
                     connection.close()
