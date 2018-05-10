@@ -63,11 +63,12 @@ class BotExtension:
                 east = stc
                 ausi = stc.astimezone(pytz.timezone("Australia/Sydney"))
 
+                special = None
                 if args.timezone:
                     if args.timezone in pytz.all_timezones:
                         special = stc.astimezone(pytz.timezone(args.timezone))
-                else:
-                    special = None
+                    else:
+                        await message.channel.send("That timezone couldn't be found")
 
                 strfmt = "%A **%I:%M** %p %Z"
                 m = "Western: {}\nEastern: {}\nSydney: {}\n".format(
