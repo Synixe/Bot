@@ -1,4 +1,4 @@
-"""Quotes from database"""
+"""Database to save and pull quotes"""
 import logger
 try:
     import pymysql.cursors
@@ -16,8 +16,6 @@ except ImportError:
         logger.error("Quoter will be unavailable as it requires pymysql")
         PYMYSQL = False
 
-import asyncio
-import random
 import discord
 import tokens
 import argparse
@@ -27,7 +25,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Quote System"
         self.author = "nameless + Brett"
-        self.version = "1.0"
+        self.version = "1.1"
         self.bot = bot
         self.active = PYMYSQL
         self.disable_during_test = False
@@ -36,7 +34,7 @@ class BotExtension:
         return {
             "quote" : {
                 "function": self.quote,
-                "roles" : ["@everyone"]
+                "roles" : ["active, new"]
             },
             "save" : {
                 "function" : self.save,
@@ -47,10 +45,10 @@ class BotExtension:
     async def quote(self, args, message):
         """Pulls Quotes from the Database"""
         parser = argparse.ArgumentParser(description=self.quote.__doc__)
-        parser.add_argument("user", nargs="?", default="%", help="user to quote") #what is an % meant to be, a wildcard, it will match anything
+        parser.add_argument("user", nargs="?", default="%", help="user to quote")
         args = await self.bot.parse_args(parser, args, message)
         if args != False:
-            id = str(self.bot.get_from_tag(args.user))
+            uid = str(self.bot.get_from_tag(args.user))
             connection = pymysql.connect(
                 host=tokens.MYSQL.HOST,
                 user=tokens.MYSQL.USER,
@@ -60,7 +58,7 @@ class BotExtension:
             )
             try:
                 with connection.cursor() as cursor:
-                    sql = "SELECT * FROM `quotes` WHERE `user` LIKE '"+id+"' ORDER BY RAND() LIMIT 1"
+                    sql = "SELECT * FROM `quotes` WHERE `user` LIKE '"+uid+"' ORDER BY RAND() LIMIT 1"
                     cursor.execute(sql)
                     quote = cursor.fetchone()
                     if quote != None:
@@ -69,7 +67,7 @@ class BotExtension:
                             color=discord.Colour.from_rgb(r=255, g=192, b=60),
                             description=quote['text']
                         )
-                        embed.set_author(name=user.name, icon_url=user.avatar_url)
+                        embed.set_author(name=user.display_name, icon_url=user.avatar_url)
                         embed.set_footer(text=quote["date"].strftime("%m/%d/%y"))
                         await message.channel.send(embed=embed)
                     else:
@@ -110,7 +108,7 @@ class BotExtension:
                     color=discord.Colour.from_rgb(r=255, g=192, b=60),
                     description=text
                 )
-                embed.set_author(name=first.author.name, icon_url=first.author.avatar_url)
+                embed.set_author(name=first.author.display_name, icon_url=first.author.avatar_url)
                 embed.set_footer(text=first.created_at.strftime("%m/%d/%y"))
                 await message.channel.send("Saved the following quote to the database:", embed=embed)
             finally:
