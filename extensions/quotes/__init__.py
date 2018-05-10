@@ -25,7 +25,7 @@ class BotExtension:
     def __init__(self, bot):
         self.name = "Quote System"
         self.author = "nameless + Brett"
-        self.version = "1.2"
+        self.version = "1.0.2"
         self.bot = bot
         self.active = PYMYSQL
         self.disable_during_test = False
