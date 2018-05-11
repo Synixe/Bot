@@ -34,6 +34,10 @@ class Arguments:
                         current += 1
                 else:
                     setattr(self, arg[0][1:-1], arg[2])
+                    if arg[0][-2] == "+":
+                        setattr(self, arg[0][1:-2], arg[2])
+                    else:
+                        setattr(self, arg[0][1:-1], arg[2])
             else:
                 if current == len(raw):
                     raise ArgumentException("Not Enough Args", [self, arg[0]])
@@ -69,12 +73,18 @@ class Arguments:
                 value = int(value)
                 member = self._ctx.message.channel.guild.get_member(value)
             except:
-                member = discord.utils.find(lambda m: m.name == value or m.display_name == value, self._ctx.message.channel.guild.members)
+                value = value.lower()
+                member = discord.utils.find(lambda m: m.name.lower() == value or m.display_name.lower() == value, self._ctx.message.channel.guild.members)
                 if member == None:
                     raise ArgumentException("Member Not Found", [self, arg, value])
             if member == None:
                 raise ArgumentException("Member Not Found", [self, arg, value])
             return member
+        elif argtype == discord.Role:
+            role = discord.utils.find(lambda m: m.name.lower() == value.lower() or str(m.id) == value, self._ctx.message.channel.guild.roles)
+            if role == None:
+                raise ArgumentException("Role Not Found", [self, arg, value])
+            return role
         elif argtype == int:
             try:
                 value = int(value)
@@ -147,6 +157,11 @@ class Command:
                 embed = discord.Embed(
                     title="Member Not Found",
                     description="The user `{}` was not found.".format(e.data[2])
+                )
+            elif str(e) == "Role Not Found":
+                embed = discord.Embed(
+                    title="Role Not Found",
+                    description="The role `{}` was not found.".format(e.data[2])
                 )
             elif str(e) == "TypeError":
                 embed = discord.Embed(
