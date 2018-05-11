@@ -1,8 +1,6 @@
 import sys
 import os
 
-from bot import Profile
-
 class App:
     def installdeps(self):
         try:
@@ -16,7 +14,7 @@ class App:
                 deps = deptxt.read().split("\n")
             for dep in deps:
                 if dep.strip() != "":
-                    pip.main(["install", dep])
+                    pip.main(["install", dep, "--upgrade"])
             import hashlib
             with open(".data/deps.md5", "w") as dephash:
                 dephash.write(hashlib.md5(open("deps.txt", 'rb').read()).hexdigest())
@@ -61,6 +59,7 @@ class App:
             import json
             logger.debug("Reading profile from {}".format(profilepath))
             with open(profilepath) as profile:
+                from bot import Profile
                 self.profile = Profile(json.load(profile))
             logger.info("Profile: {}".format(self.profile.name))
         else:
@@ -88,5 +87,5 @@ if __name__ == "__main__":
         import logger
     except:
         pass
-        
+
     app.run()

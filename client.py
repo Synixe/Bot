@@ -8,6 +8,9 @@ import sys
 import importlib
 import inspect
 import re
+import io
+from contextlib import redirect_stdout, redirect_stderr
+import site
 
 class Client(discord.Client):
     async def on_connect(self):
@@ -22,7 +25,7 @@ class Client(discord.Client):
         self.extensions = extensions.get('extensions') + self.base_extensions
         logger.info("Ready", "green")
 
-    async def execute(self, message):
+    async def execute(self, message, profile=False):
         if message.author.id == self.user.id:
             return
         if message.content.startswith(self.profile.prefix):
@@ -40,10 +43,18 @@ class Client(discord.Client):
             for c in ext.commands:
                 if c.name == cmd:
                     if bot.in_role_list(message.author, c.roles):
-                        try:
+                        if profile:
+                            import pprofile
+                            profiler = pprofile.Profile()
+                            with profiler():
+                                await c.run(bot.Context(self, ext, message), args)
+                            out = io.StringIO()
+                            with redirect_stdout(out):
+                                profiler.print_stats()
+                            resp = out.getvalue().split("\n")
+                            await bot.send_stats(c, self.profile.prefix, resp, raw, message.channel)
+                        else:
                             await c.run(bot.Context(self, ext, message), args)
-                        except discord.errors.Forbidden as e:
-                            print("lol u cant", str(e))
                     else:
                         await message.channel.send("You are not allowed to run that command.")
 
@@ -53,6 +64,9 @@ class Client(discord.Client):
             return
         if (message.content.startswith(self.profile.prefix) and message.content.replace(self.profile.prefix, "").strip() != "") or (message.content.startswith(self.user.mention)):
             await self.execute(message)
+        elif message.content.startswith("profile{}".format(self.profile.prefix)):
+            message.content = message.content[7:]
+            await self.execute(message, profile = True)
         else:
             for ext in self.extensions:
                 for h in ext.handlers:

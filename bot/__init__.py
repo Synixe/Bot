@@ -129,8 +129,23 @@ class Command:
         self.usage = " ".join([x[0] for x in self.args])
 
         self.file = kwargs.get("file")
-        self.lineno = kwargs.get("lineno")
         self.help = kwargs.get("help")
+
+        with open(self.file) as source:
+            lines = source.read().split("\n")
+            for l in range(len(lines)):
+                line = lines[l]
+                if line.strip().startswith("async def {}(".format(self.func.__name__)):
+                    for i in range(l - 1, 0, -1):
+                        if lines[i].strip().startswith("@"):
+                            self.start = i + 1
+                        else:
+                            break
+                    self.end = len(lines) - 1
+                    for i in range(l, len(lines)):
+                        if lines[i].strip().startswith("@") or lines[i].strip().startswith("class "):
+                            self.end = i - 1
+                            break
 
     async def run(self, ctx, args):
         if self.args == []:
@@ -285,3 +300,48 @@ def in_role_list(member, roles):
         if role.name.lower() in roles:
             return True
     return False
+
+async def send_stats(c, prefix, resp, raw, channel):
+    printing = False
+    header = False
+    inside = False
+    text = ""
+    info = ""
+    for line in resp:
+        if line.strip().startswith("File: {}".format(c.file)):
+            printing = True
+        elif line.strip().startswith("File:"):
+            printing = False
+        elif printing and line.startswith("----"):
+            header = True
+        if printing and not header:
+            if not line.startswith("Line #"):
+                info += line + "\n"
+        elif printing and not inside:
+            if line.split("|",1)[0].strip() == str(c.start - 1):
+                inside = True
+        elif printing and inside:
+            if line.split("|",1)[0].strip() == str(c.end + 1):
+                inside = False
+            if inside:
+                fields = line.split("|")
+                data = [x.strip() for x in fields[:-1]]
+                if len(data) == 0:
+                    continue
+                if data[0] != "(call)":
+                    data.append(fields[-1][4:])
+                else:
+                    try:
+                        data.append("#"+fields[-1].split("site-packages/")[1])
+                    except IndexError:
+                        data.append("#"+fields[-1])
+                del fields
+                dec =  "{}{}: {} ({}, {})".format(data[0], " " * (6 - len(data[0])), data[1], data[2], data[4])
+                text += "{}{}| {}".format(dec, " " * (30 - len(dec)), data[-1]) + "\n"
+    embed = discord.Embed(
+        title="{}{} {}".format(prefix, c.name, " ".join(raw[1:])),
+        description=info
+    )
+    print(text)
+    print(len(text))
+    await channel.send("```py\n"+text+"```", embed=embed)
