@@ -3,18 +3,15 @@ import os
 
 class App:
     def installdeps(self):
-        try:
-            import pip
-        except:
-            print("pip is not installed")
-            sys.exit(1)
+        import subprocess
         if os.path.exists("deps.txt"):
             deps = ""
             with open("deps.txt") as deptxt:
                 deps = deptxt.read().split("\n")
             for dep in deps:
                 if dep.strip() != "":
-                    pip.main(["install", dep, "--upgrade"])
+                    logger.info("  Installing {}".format(dep))
+                    subprocess.check_call([sys.executable, '-m', 'pip', 'install', dep, '--upgrade', '--user'], stdout=subprocess.PIPE, stderr = subprocess.PIPE)
             import hashlib
             with open(".data/deps.md5", "w") as dephash:
                 dephash.write(hashlib.md5(open("deps.txt", 'rb').read()).hexdigest())
@@ -43,7 +40,7 @@ class App:
         logger.set_debug(args.debug)
 
         if not os.path.exists(".data/deps.md5"):
-            logger.debug("No dependency hashes, reinstall dependencies")
+            logger.info("No dependency hashes, reinstalling dependencies")
             self.installdeps()
         else:
             with open(".data/deps.md5") as dephash:
