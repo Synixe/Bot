@@ -293,7 +293,7 @@ class BotExtension:
             if user != None:
                 channel = discord.utils.find(lambda c: c.name == "botevents", message.guild.channels)
                 if channel != None:
-                    text = "{0.display_name} ({0.id}) was banned by {1.display_name} ({1.display_name})\nReason: {2}".format(user, message.author, args.reason)
+                    text = "{0.display_name} ({0.id}) was banned by {1.display_name} ({1.id})\nReason: {2}".format(user, message.author, args.reason)
                     await channel.send(text)
                     self.insert('banned', user, text)
                 await message.guild.ban(user=user, reason=args.reason)
