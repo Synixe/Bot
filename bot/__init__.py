@@ -265,6 +265,7 @@ class Context:
         self.profile = bot.profile
         self.extension = extension
         self.message = message
+        self.loop = bot.loop
 
         self._bot = bot
 
@@ -342,6 +343,4 @@ async def send_stats(c, prefix, resp, raw, channel):
         title="{}{} {}".format(prefix, c.name, " ".join(raw[1:])),
         description=info
     )
-    print(text)
-    print(len(text))
     await channel.send("```py\n"+text+"```", embed=embed)
