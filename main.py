@@ -32,11 +32,13 @@ class App:
             os.mkdir(".data/")
 
         try:
-            import logger
+          import logger
         except ModuleNotFoundError:
             print("Running first time setup")
             self.installdeps()
             import logger
+
+        logger.clear()
 
         logger.set_debug(args.debug)
 
@@ -51,7 +53,6 @@ class App:
                     logger.info("Updating Dependencies")
                     self.installdeps()
 
-        logger.clear()
         logger.info("Starting")
 
         profilepath = ".profiles/{}.json".format(args.profile)

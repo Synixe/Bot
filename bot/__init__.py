@@ -1,6 +1,8 @@
 import inspect
 import discord
 import copy
+import logger
+import sys
 
 class ArgumentException(Exception):
     def __init__(self, text, data):
