@@ -63,7 +63,7 @@ class BotExtension:
                         cursor.execute(sql)
                         mods = cursor.fetchall()
                         for mod in mods:
-                            asyncio.sleep(60)
+                            asyncio.sleep(120)
                             if mod["url"] == "N":
                                 continue
                             service, mid = mod['url'].split("@")
@@ -91,4 +91,4 @@ class BotExtension:
                                 logger.info("Published update for "+mod['name'])
                 finally:
                     connection.close()
-                await asyncio.sleep(60 * 60)
+                await asyncio.sleep(60 * 60 * 2)
