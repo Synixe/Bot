@@ -236,7 +236,7 @@ class BotExtension:
         parser.add_argument("member", help="User to run the command as")
         parser.add_argument("command", nargs="+", type=str)
         args = await self.bot.parse_args(parser, args, message)
-        if args.member.id == 259593664030965760 and message.author.id == 206663073769979904 and "slot" in args.command:
+        if message.channel.guild.get_member(self.bot.get_from_tag(args.member)).id == 259593664030965760 and message.author.id == 206663073769979904 and "slot" in args.command:
             self.nonameless += 1
             if self.nonameless == 1:
                 await message.channel.send("I'm sorry nameless, I can't let you do that.")
