@@ -30,6 +30,7 @@ class BotExtension:
         self.version = "1.0"
         self.bot = bot
         self.enabled = PYMYSQL
+        self.nonameless = 0
 
     def __register__(self):
         return {
@@ -235,6 +236,15 @@ class BotExtension:
         parser.add_argument("member", help="User to run the command as")
         parser.add_argument("command", nargs="+", type=str)
         args = await self.bot.parse_args(parser, args, message)
+        if args.member.id == 259593664030965760 and message.author.id == 206663073769979904 and "slot" in args.command:
+            self.nonameless += 1
+            if self.nonameless == 1:
+                await message.channel.send("I'm sorry nameless, I can't let you do that.")
+            elif self.nonameless == 2:
+                await message.channel.send("You fucking deaf m8")
+            elif self.nonameless == 3:
+                await message.channel.send("No")
+            return
         if isinstance(message.channel, discord.DMChannel):
             await message.channel.send("You can not use `runas` in a DM")
             return
