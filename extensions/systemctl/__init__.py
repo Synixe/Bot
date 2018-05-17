@@ -107,7 +107,7 @@ class BotExtension:
     @classmethod
     def is_active(cls, unit):
         """Checks if a unit is active"""
-        subprocess.run(
+        is_active = subprocess.run(
             ["systemctl","is-active",unit],
             stdout=subprocess.PIPE
         )
