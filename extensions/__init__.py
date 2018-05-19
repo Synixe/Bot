@@ -11,7 +11,7 @@ def get(dir):
     if sys.platform == "linux" or sys.platform == "linux2":
         extensions = [x[0].split('/')[1] for x in os.walk(dir) if x[0].count('/') == 1 and "__pycache__" not in x[0]]
     else:
-        extensions = [x[0][13:] for x in os.walk('./{}'.format(dir)) if x[0].count('/') == 1 and "__pycache__" not in x[0]][1:]
+        extensions = [x[0].split('\\')[-1] for x in os.walk('./{}'.format(dir)) if x[0].count('/') == 1 and "__pycache__" not in x[0]][1:]
     for ext in extensions:
         extname = "{}.{}".format(dir, ext)
         #try:
