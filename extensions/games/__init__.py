@@ -25,7 +25,7 @@ class SimpleGames(bot.Extension):
             ["The value is {0}", "You rolled a {0}", "It lands on {0}"]
         ).format(random.randint(1, ctx.args.sides)))
 
-    @bot.argument("Rock, Paper or Scissors")
+    @bot.argument("choice")
     @bot.command()
     async def rps(ctx, message):
         """Rock, Paper, Scissors Game"""
@@ -33,12 +33,12 @@ class SimpleGames(bot.Extension):
         if not ctx.args.choice.lower() in valid:
             await message.channel.send("That is not a valid choice")
             return
-        choice = random.randint(0, 2)
-        if choice == 0:
+        bot = random.randint(0, 2)
+        if bot == 0:
             output = "Rock"
-        if choice == 1:
+        if bot == 1:
             output = "Paper"
-        if choice == 2:
+        if bot == 2:
             output = "Scissors"
         player = valid.index(ctx.args.choice.lower())
         if player == bot:
