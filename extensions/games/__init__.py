@@ -1,7 +1,11 @@
-import bot
+"""Games for Disco"""
+import itertools
+import collections
 import random
+import bot
 
 class SimpleGames(bot.Extension):
+    """Games for Disco"""
 
     @bot.command()
     async def flip(ctx, message):
@@ -20,3 +24,41 @@ class SimpleGames(bot.Extension):
         await message.channel.send(random.choice(
             ["The value is {0}", "You rolled a {0}", "It lands on {0}"]
         ).format(random.randint(1, ctx.args.sides)))
+
+    @bot.argument("Rock, Paper or Scissors")
+    @bot.command()
+    async def rps(ctx, message):
+        """Rock, Paper, Scissors Game"""
+        valid = ["rock", "paper", "scissors"]
+        if not ctx.args.choice.lower() in valid:
+            await message.channel.send("That is not a valid choice")
+            return
+        choice = random.randint(0, 2)
+        if choice == 0:
+            output = "Rock"
+        if choice == 1:
+            output = "Paper"
+        if choice == 2:
+            output = "Scissors"
+        player = valid.index(ctx.args.choice.lower())
+        if player == bot:
+            output += ", it's a tie."
+
+        elif player == bot - 1 or player == bot + 2:
+            output += ", you lose."
+        elif player == bot + 1 or player == bot - 2:
+            output += ", you win."
+        await message.channel.send(output)
+
+    @bot.argument("question")
+    @bot.command()
+    async def ball(ctx, message):
+        """8-Baller"""
+        lines = {}
+        for line in open("./extensions/games/8ball.txt").read().splitlines():
+            value, text = line.split(":", 1)
+            lines[text] = int(value)
+        lines = collections.Counter(lines)
+        i = random.randrange(sum(lines.values()))
+        text = next(itertools.islice(lines.elements(), i, None))
+        await message.channel.send(text)
