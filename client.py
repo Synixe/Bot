@@ -63,10 +63,37 @@ class Client(discord.Client):
             message.content = message.content[7:]
             await self.execute(message, profile = True)
         else:
-            for ext in self.extensions:
-                for h in ext.handlers:
-                    if h.event == "on_message":
-                        try:
-                            await h.run(bot.Context(self, ext, message))
-                        except discord.errors.Forbidden as e:
-                            print("lol u cant", str(e))
+            await self.fire_event(message, "on_message")
+
+    async def on_message_delete(self, message):
+        await self.fire_event(message, "on_message_delete")
+
+    async def on_message_edit(self, before, after):
+        await self.fire_event([before, after], "on_message_edit")
+
+    async def on_reaction_add(self, reaction, user):
+        await self.fire_event([reaction, user], "on_reaction_add")
+
+    async def on_reaction_remove(self, reaction, user):
+        await self.fire_event([reaction, user], "on_reaction_remove")
+
+    async def on_reaction_clear(self, message, reactions):
+        await self.fire_event([message, reactions], "on_reaction_clear")
+
+    async def on_member_join(self, member):
+        await self.fire_event(member, "on_member_join")
+
+    async def on_member_remove(self, member):
+        await self.fire_event(member, "on_member_remove")
+
+    async def on_member_update(self, before, after):
+        await self.fire_event([before, after], "on_member_update")
+
+    async def fire_event(self, args, event):
+        for ext in self.extension:
+            for h in ext.handlers:
+                if h.event == event:
+                    try:
+                        await h.run(bot.Context(self, ext, args))
+                    except Exception as e:
+                        print("Error in "+event, str(e))
