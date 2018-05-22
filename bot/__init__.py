@@ -50,7 +50,8 @@ class Arguments:
                 else:
                     setattr(self, arg[0][1:-1], arg[2])
         elif arg[0].startswith("(") and arg[0].endswith(")"):
-            pass
+            if not hasattr(self, arg[0][1:-1]):
+                setattr(self, arg[0][1:-1], None)
         else:
             if self._current == len(self._raw):
                 raise ArgumentException("Not Enough Args", [self, arg[0]])
