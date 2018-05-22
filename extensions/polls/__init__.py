@@ -9,9 +9,20 @@ class Polls(bot.Extension):
     @bot.role("new")
     @bot.role("inactive")
     @bot.argument("text+")
+    @bot.argument("title")
     @bot.command()
     async def poll(ctx, message):
         """Birth of Polls"""
-        msg = await message.channel.send(ctx.args.text)
+        if ctx.args.title == None:
+            msg = await message.channel.send(" ".join(ctx.args.text))
+        else:
+            embed = discord.Embed(
+                title=ctx.args.title,
+                color=discord.Colour.from_rgb(r=255, g=192, b=60),
+                description=ctx.args.text
+            )
+            embed.set_footer(text="Created by: {}".format(message.author.display_name))
+            msg = await message.channel.send(embed=embed)
+        await message.delete()
         await msg.add_reaction("👍")
         await msg.add_reaction("👎")
