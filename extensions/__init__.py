@@ -16,14 +16,14 @@ def get(dir):
         extname = "{}.{}".format(dir, ext)
         #try:
         ext = importlib.import_module(extname)
-        #    logger.debug("Loading Container: {}".format(extname))
+        logger.debug("  {}".format(extname))
         #except:
-        #    logger.error("Container Load Failed: {}".format(extname))
+        #    logger.error("Load Failed: {}".format(extname))
         #    continue
         clsmembers = inspect.getmembers(sys.modules[extname], inspect.isclass)
         for c in clsmembers:
             if issubclass(c[1], bot.Extension):
-                logger.debug("  Loading Extension: {0[0]} ({0[1]})".format(c))
+                logger.debug("    {0[0]}".format(c))
                 c[1].commands = []
                 c[1].handlers = []
                 c[1].fullname = str(c[1]).split("'",2)[1]
