@@ -90,7 +90,7 @@ class Client(discord.Client):
         await self.fire_event([before, after], "on_member_update")
 
     async def fire_event(self, args, event):
-        for ext in self.extension:
+        for ext in self.extensions:
             for h in ext.handlers:
                 if h.event == event:
                     try:
