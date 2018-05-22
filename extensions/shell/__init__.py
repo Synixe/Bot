@@ -1,10 +1,9 @@
 import bot
-import discord
 import subprocess
 import asyncio
 import os
 
-class TeamSpeak(bot.Extension):
+class Shell(bot.Extension):
     """Provides TeamSpeak commands"""
 
     async def shell(ctx, channel):

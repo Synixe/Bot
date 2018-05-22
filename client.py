@@ -3,14 +3,9 @@ import logger
 import bot
 import extensions
 
-import os
-import sys
-import importlib
-import inspect
 import re
 import io
-from contextlib import redirect_stdout, redirect_stderr
-import site
+from contextlib import redirect_stdout
 
 class Client(discord.Client):
     async def on_connect(self):
