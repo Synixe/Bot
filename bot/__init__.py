@@ -21,40 +21,48 @@ class Arguments:
 
         self._usage = " ".join([x[0] for x in args])
 
-        current = 0
+        self._current = 0
 
         for arg in self._args:
-            if arg[0].startswith("[") and arg[0].endswith("]"):
-                if current < len(raw):
-                    if arg[0][-2] == "+":
-                        value = self._parse(arg, " ".join(raw[current:]))
-                        setattr(self, arg[0][1:-2], value)
-                        current = len(raw)
-                    else:
-                        value = self._parse(arg, raw[current])
-                        setattr(self, arg[0][1:-1], value)
-                        current += 1
-                else:
-                    setattr(self, arg[0][1:-1], arg[2])
-                    if arg[0][-2] == "+":
-                        setattr(self, arg[0][1:-2], arg[2])
-                    else:
-                        setattr(self, arg[0][1:-1], arg[2])
-            else:
-                if current == len(raw):
-                    raise ArgumentException("Not Enough Args", [self, arg[0]])
-                else:
-                    if arg[0][-1] == "+":
-                        value = self._parse(arg, " ".join(raw[current:]))
-                        setattr(self, arg[0][:-1], value)
-                        current = len(raw)
-                    else:
-                        value = self._parse(arg, raw[current])
-                        setattr(self, arg[0], value)
-                        current += 1
+            self._getNext(arg)
 
         self._ctx = None
         del self._ctx
+
+    def _getNext(self, arg):
+        if self._raw[self._current].startswith("-"):
+            setattr(self, self._raw[self._current][2:], self._raw[self._current + 1])
+            self._current += 2
+        if arg[0].startswith("[") and arg[0].endswith("]"):
+            if self._current < len(self._raw):
+                if arg[0][-2] == "+":
+                    value = self._parse(arg, " ".join(self._raw[self._current:]))
+                    setattr(self, arg[0][1:-2], value)
+                    self._current = len(self._raw)
+                else:
+                    value = self._parse(arg, self._raw[self._current])
+                    setattr(self, arg[0][1:-1], value)
+                    self._current += 1
+            else:
+                setattr(self, arg[0][1:-1], arg[2])
+                if arg[0][-2] == "+":
+                    setattr(self, arg[0][1:-2], arg[2])
+                else:
+                    setattr(self, arg[0][1:-1], arg[2])
+        elif arg[0].startswith("(") and arg[0].endswith(")"):
+            pass
+        else:
+            if self._current == len(self._raw):
+                raise ArgumentException("Not Enough Args", [self, arg[0]])
+            else:
+                if arg[0][-1] == "+":
+                    value = self._parse(arg, " ".join(self._raw[self._current:]))
+                    setattr(self, arg[0][:-1], value)
+                    self._current = len(self._raw)
+                else:
+                    value = self._parse(arg, self._raw[self._current])
+                    setattr(self, arg[0], value)
+                    self._current += 1
 
     def _parse(self, arg, value):
         argtype = arg[1]
@@ -256,7 +264,9 @@ def role(role):
 
 def argument(name, argtype=str, default=None):
     def decorator(func):
-        func.args.append([name, argtype, default])
+        if len(func.args) != 0 and "+" in name:
+            raise Exception("Unexpceted argument after multi-length argument")
+        func.args.insert(0, [name, argtype, default])
         func.usage = " ".join([x[0] for x in func.args])
         return func
     return decorator
