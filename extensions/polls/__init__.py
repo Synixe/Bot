@@ -6,10 +6,8 @@ class Polls(bot.Extension):
     """Polls for Disco"""
 
     @bot.role("active")
-    @bot.role("new")
-    @bot.role("inactive")
-    @bot.argument("text+")
     @bot.argument("(title)")
+    @bot.argument("text+")
     @bot.command()
     async def poll(ctx, message):
         """Birth of Polls"""
