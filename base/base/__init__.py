@@ -1,6 +1,8 @@
 import bot
 import discord
 
+import os
+
 class Info(bot.Extension):
     """Provides information about the Bot and loaded extensions"""
 
@@ -17,7 +19,8 @@ class Info(bot.Extension):
         else:
             embed = discord.Embed(
                 title="{0.profile.prefix}{0.args.command.name} {0.args.command.usage}".format(ctx),
-                description=ctx.args.command.help
+                description=ctx.args.command.help,
+                url="https://github.com/Synixe/Bot/blame/master/{0}#L{1.start}L{1.end}".format(ctx.args.command.file.replace(os.getcwd(), ""), ctx.args.command)
             )
             embed.set_footer(text=ctx.args.command.extension.fullname + "." + ctx.args.command.name)
             await message.channel.send(embed=embed)
