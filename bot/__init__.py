@@ -133,7 +133,7 @@ class Command:
         self.file = kwargs.get("file")
         self.help = kwargs.get("help")
 
-        with open(self.file) as source:
+        with open(self.file, encoding="utf-8") as source:
             lines = source.read().split("\n")
             for l in range(len(lines)):
                 line = lines[l]
