@@ -8,7 +8,7 @@ class Polls(bot.Extension):
     @bot.role("active")
     @bot.role("new")
     @bot.role("inactive")
-    @bot.argument("[title]+")
+    @bot.argument("[title+]")
     @bot.argument("text+")
     @bot.command()
     async def poll(ctx, message):
