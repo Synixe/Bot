@@ -5,3 +5,4 @@ logs/
 discord
 .data
 .profiles
+*.pyc
