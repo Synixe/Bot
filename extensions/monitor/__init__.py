@@ -76,7 +76,7 @@ class BotExtension:
             "We have some mods you'll need to download from <#{}>. "+
             "If you have any questions while getting those setup we're more than "+
             "happy to help in <#{}>. We do more than just Arma too, use `?sub`"+
-            "to see what other games you can subscribe to.").format(member.id, events.id, info.id, repohelp.id)
+            " to see what other games you can subscribe to.").format(member.id, events.id, info.id, repohelp.id)
         )
         await member.add_roles(self.get_role(guild, "new"))
 
