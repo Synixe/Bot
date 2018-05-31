@@ -13,7 +13,8 @@ class BotExtension:
             "R6S": "Rainbow 6 Siege",
             "ED": "Elite: Dangerous",
             "LOL": "League of Legends",
-            "ASTRO": "Astroneer"
+            "ASTRO": "Astroneer",
+            "D&D": "Dungeons & Dragons"
         }
 
     def __register__(self):
