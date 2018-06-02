@@ -2,6 +2,8 @@
 import itertools
 import collections
 import random
+import asyncio
+import requests
 import bot
 
 class SimpleGames(bot.Extension):
@@ -62,3 +64,13 @@ class SimpleGames(bot.Extension):
         i = random.randrange(sum(lines.values()))
         text = next(itertools.islice(lines.elements(), i, None))
         await message.channel.send(text)
+
+    @bot.role("active")
+    @bot.command()
+    async def joke(ctx, message):
+        """Prints a joke"""
+        joke = requests.get("https://08ad1pao69.execute-api.us-east-1.amazonaws.com/dev/random_joke")
+        data = joke.json()
+        await message.channel.send(data["setup"])
+        await asyncio.sleep(4)
+        await message.channel.send(data["punchline"])
