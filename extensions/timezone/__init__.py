@@ -1,15 +1,13 @@
 """Timezone checker for Disco"""
-import random
 import datetime
-import discord
 import pytz
 import bot
 
 class TimeZone(bot.Extension):
     """Timezone checker for Disco"""
 
-    @bot.argument("[offset]")
-    @bot.argument("[timezone]")
+    @bot.argument("[offset]", str, "0000")
+    @bot.argument("[timezone+]", datetime.tzinfo)
     @bot.command()
     async def time(ctx, message):
         """Displays a list of different timezones"""
@@ -32,20 +30,13 @@ class TimeZone(bot.Extension):
         east = stc
         ausi = stc.astimezone(pytz.timezone("Australia/Sydney"))
 
-        special = None
-        if ctx.args.timezone:
-            if ctx.args.timezone in pytz.all_timezones:
-                special = stc.astimezone(pytz.timezone(ctx.args.timezone))
-            else:
-                await message.channel.send("That timezone couldn't be found")
-
         strfmt = "%A **%I:%M** %p %Z"
         m = "Western: {}\nEastern: {}\nSydney: {}\n".format(
             west.strftime(strfmt),
             east.strftime(strfmt),
             ausi.strftime(strfmt))
 
-        if special != None:
-            m += "\n{}: {}".format(ctx.args.timezone, special.strftime(strfmt))
+        if ctx.args.timezone != None:
+            m += "\n{}: {}".format(ctx.args.timezone, stc.astimezone(ctx.args.timezone).strftime(strfmt))
 
         await message.channel.send(m)

@@ -3,6 +3,7 @@ import discord
 import copy
 import logger
 import sys
+import datetime
 
 class ArgumentException(Exception):
     def __init__(self, text, data):
@@ -30,12 +31,10 @@ class Arguments:
         del self._ctx
 
     def _getNext(self, arg):
-        if self._current > len(self._raw) - 1:
-            raise ArgumentException("Missing Argument", [self, "idk lol"])
-        if self._raw[self._current].startswith("-"):
+        if self._current < len(self._raw) - 1 and self._raw[self._current].startswith("-"):
             setattr(self, self._raw[self._current][2:], self._raw[self._current + 1])
             self._current += 2
-        if arg[0].startswith("[") and arg[0].endswith("]"):
+        if arg[0].startswith("[") and arg[0].endswith("]") and not hasattr(self, arg[0][1:-1]):
             if self._current < len(self._raw):
                 if arg[0][-2] == "+":
                     value = self._parse(arg, " ".join(self._raw[self._current:]))
@@ -98,6 +97,15 @@ class Arguments:
             if role == None:
                 raise ArgumentException("Role Not Found", [self, arg, value])
             return role
+        elif argtype == datetime.tzinfo:
+            import pytz
+            if value in pytz.all_timezones:
+                return pytz.timezone(value)
+            else:
+                for tz in pytz.all_timezones:
+                    if value.replace(" ","_").lower() in tz.lower():
+                        return pytz.timezone(tz)
+            raise ArgumentException("Timezone Not Found", [self, arg, value])
         elif argtype == int:
             try:
                 value = int(value)
@@ -196,10 +204,10 @@ class Command:
                     title="Invalid Type",
                     description="`{}` must be a {}".format(e.data[1], e.data[3])
                 )
-            elif str(e) == "Missing Argument":
+            elif str(e) == "Timezone Not Found":
                 embed = discord.Embed(
-                    title="Shit is missing yo",
-                    description="idk what though cause I ain't writing this code right now"
+                    title="Timezone Not Found",
+                    description="`{}` is not a valid timezone. You can visit <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List> to see a list of valid timezones.".format(e.data[2])
                 )
             await ctx.message.channel.send(embed=embed)
 
