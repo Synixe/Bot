@@ -1,7 +1,9 @@
-import bot
+"""Profiles for Disco"""
 import discord
+import bot
 
 class Profiles(bot.Extension):
+    """Profiles for Disco"""
 
     @bot.argument("member+", discord.Member)
     @bot.command()

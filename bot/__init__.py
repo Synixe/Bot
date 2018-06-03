@@ -30,6 +30,8 @@ class Arguments:
         del self._ctx
 
     def _getNext(self, arg):
+        if self._current > len(self._raw) - 1:
+            raise ArgumentException("Missing Argument", [self, "idk lol"])
         if self._raw[self._current].startswith("-"):
             setattr(self, self._raw[self._current][2:], self._raw[self._current + 1])
             self._current += 2
@@ -193,6 +195,11 @@ class Command:
                 embed = discord.Embed(
                     title="Invalid Type",
                     description="`{}` must be a {}".format(e.data[1], e.data[3])
+                )
+            elif str(e) == "Missing Argument":
+                embed = discord.Embed(
+                    title="Shit is missing yo",
+                    description="idk what though cause I ain't writing this code right now"
                 )
             await ctx.message.channel.send(embed=embed)
 

@@ -1,5 +1,6 @@
-import bot
+"""Teamspeak for Disco"""
 import discord
+import bot
 
 class TeamSpeak(bot.Extension):
     """Provides TeamSpeak commands"""
@@ -15,6 +16,6 @@ class TeamSpeak(bot.Extension):
     @bot.event("on_message")
     async def delete_ts(ctx, message):
         """Deletes any messages containing the TeamSpeak Server"""
-        if "ts.synixe.com" in message.content.lower().replace(" ",""):
+        if "ts.synixe.com" in message.content.lower().replace(" ", ""):
             await message.channel.send("Please don't post the TeamSpeak Server, a member of @Active can use {}ts to send someone the server.".format(ctx.profile.prefix))
             await message.delete()
