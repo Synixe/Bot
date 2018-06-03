@@ -31,9 +31,12 @@ class Arguments:
         del self._ctx
 
     def _getNext(self, arg):
-        if self._current < len(self._raw) - 1 and self._raw[self._current].startswith("-"):
-            setattr(self, self._raw[self._current][2:], self._raw[self._current + 1])
-            self._current += 2
+        if len(self._raw) != 0 and self._current < len(self._raw):
+            if self._raw[self._current] == "-h":
+                raise ArgumentException("Display Help", [self])
+            if self._raw[self._current].startswith("-"):
+                setattr(self, self._raw[self._current][2:], self._raw[self._current + 1])
+                self._current += 2
         if arg[0].startswith("[") and arg[0].endswith("]") and not hasattr(self, arg[0][1:-1]):
             if self._current < len(self._raw):
                 if arg[0][-2] == "+":
@@ -177,7 +180,16 @@ class Command:
             ctx.args = Arguments(ctx, args, self.args)
             await self.func(ctx.safe(), ctx.message)
         except ArgumentException as e:
-            if str(e) == "Invalid Command":
+            if str(e) == "Display Help":
+                embed = discord.Embed(
+                    title = "{0._ctx.profile.prefix}{1} {0._usage}".format(e.data[0], self.name)
+                )
+                for arg in self.args:
+                    if arg[2] == None:
+                        embed.add_field(name=arg[0], value=str(arg[1]).split("'")[1])
+                    else:
+                        embed.add_field(name=arg[0], value="{} ({})".format(str(arg[1]).split("'")[1], arg[2]))
+            elif str(e) == "Invalid Command":
                 embed = discord.Embed(
                     title="Command Not Found",
                     description="The command `{}` provided for `{}` was not found".format(e.data[2], e.data[1])

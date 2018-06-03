@@ -5,6 +5,7 @@ import sys
 import os
 import importlib
 import inspect
+import subprocess
 
 def get(dir):
     extlist = []
@@ -14,6 +15,37 @@ def get(dir):
         extensions = [x[0].split('\\')[-1] for x in os.walk('./{}'.format(dir)) if x[0].count('/') == 1 and "__pycache__" not in x[0]][1:]
     for ext in extensions:
         extname = "{}.{}".format(dir, ext)
+
+        if os.path.exists(os.path.join(dir, ext, "deps.txt")):
+            install = False
+            if not os.path.exists(".data/"):
+                os.mkdir(".data/")
+            if not os.path.exists(os.path.join(".data/", dir)):
+                os.mkdir(os.path.join(".data/", dir))
+            if not os.path.exists(os.path.join(".data/", dir, ext)):
+                os.mkdir(os.path.join(".data/", dir, ext))
+            if os.path.exists(os.path.join(".data/", dir, ext, "deps.md5")):
+                with open(os.path.join(".data/", dir, ext, "deps.md5")) as dephash:
+                    import hashlib
+                    logger.debug("Comparing dependency hashes for {}".format(extname))
+                    if hashlib.md5(open(os.path.join(dir, ext, "deps.txt"), 'rb').read()).hexdigest() != dephash.read().strip():
+                        logger.info("Updating Dependencies for {}".format(extname))
+                        install = True
+            else:
+                install = True
+
+            if install:
+                deps = ""
+                with open(os.path.join(dir, ext, "deps.txt")) as deptxt:
+                    deps = deptxt.read().split("\n")
+                for dep in deps:
+                    if dep.strip() != "":
+                        logger.info("Installing {} for {}".format(dep, extname))
+                        subprocess.check_call([sys.executable, '-m', 'pip', 'install', dep, '--upgrade', '--user'], stdout=subprocess.PIPE, stderr = subprocess.PIPE)
+                import hashlib
+                with open(os.path.join(".data/", dir, ext, "deps.md5"), "w") as dephash:
+                    dephash.write(hashlib.md5(open(os.path.join(dir, ext, "deps.txt"), 'rb').read()).hexdigest())
+
         #try:
         ext = importlib.import_module(extname)
         logger.debug("  {}".format(extname))
