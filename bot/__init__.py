@@ -148,6 +148,8 @@ class Command:
         self.func = callback
         self.name = name
 
+        self.dev = False
+
         self.roles = ["@everyone"]
         self.args = []
         self.usage = " ".join([x[0] for x in self.args])
@@ -178,7 +180,12 @@ class Command:
             return
         try:
             ctx.args = Arguments(ctx, args, self.args)
-            await self.func(ctx.safe(), ctx.message)
+            if self.dev:
+                if ctx.profile.mode == "test":
+                    await self.func(ctx, ctx.message)
+                await ctx.message.channel.send("That command is only available in dev mode.")
+            else:
+                await self.func(ctx.safe(), ctx.message)
         except ArgumentException as e:
             if str(e) == "Display Help":
                 embed = discord.Embed(
@@ -296,6 +303,12 @@ def argument(name, argtype=str, default=None):
             raise Exception("Unexpceted argument after multi-length argument")
         func.args.insert(0, [name, argtype, default])
         func.usage = " ".join([x[0] for x in func.args])
+        return func
+    return decorator
+
+def dev():
+    def decorator(func):
+        func.dev = True
         return func
     return decorator
 
