@@ -13,15 +13,13 @@ class Polls(bot.Extension):
     @bot.command()
     async def poll(ctx, message):
         """Birth of Polls"""
-        print(ctx.args.title)
-        if ctx.args.title == None:
-            msg = await message.channel.send(ctx.args.text)
-        else:
-            embed = discord.Embed(
-                title=ctx.args.title,
-                color=discord.Colour.from_rgb(r=255, g=192, b=60),
-                description=" ".join(ctx.args.text)
-            )
-            msg = await message.channel.send(embed=embed)
+        embed = discord.Embed(
+            title=ctx.args.title or "Poll",
+            color=discord.Colour.from_rgb(r=255, g=192, b=60),
+            description=ctx.args.text
+        )
+        embed.set_footer(text="Created by: {}".format(message.author.display_name))
+        msg = await message.channel.send(embed=embed)
         await msg.add_reaction("👍")
         await msg.add_reaction("👎")
+        await message.delete()
