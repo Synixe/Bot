@@ -1,11 +1,13 @@
-import discord
-import logger
 import bot
+import discord
 import extensions
+import logger
 
-import re
-import io
 from contextlib import redirect_stdout
+import io
+import re
+import sys
+import traceback
 
 class Client(discord.Client):
     async def on_connect(self):
@@ -42,16 +44,33 @@ class Client(discord.Client):
                             import pprofile
                             profiler = pprofile.Profile()
                             with profiler():
-                                await c.run(bot.Context(self, ext, message), args)
+                                await self.command(c, bot.Context(self, ext, message), args)
                             out = io.StringIO()
                             with redirect_stdout(out):
                                 profiler.print_stats()
                             resp = out.getvalue().split("\n")
                             await bot.send_stats(c, self.profile.prefix, resp, raw, message.channel)
                         else:
-                            await c.run(bot.Context(self, ext, message), args)
+                            await self.command(c, bot.Context(self, ext, message), args)
                     else:
                         await message.channel.send("You are not allowed to run that command.")
+
+    async def command(self, c, ctx, args):
+        try:
+            await c.run(ctx, args)
+        except Exception as e:
+            exc_type, exc_obj, exc_tb = sys.exc_info()
+            tb = traceback.format_exc()
+            if self.profile.mode == "live":
+                await ctx.message.channel.send("Oh no! :cry: An error occurred. It has been reported to the Code Contributers.")
+                channel = discord.utils.find(lambda c: c.name == "errors", ctx.message.guild.channels)
+            else:
+                channel = ctx.message.channel
+            await channel.send(
+                "An error occured during the execution of `{}` by {} in {}\n\n```py\n{}\n```"
+                .format(ctx.message.content, ctx.message.author.display_name, ctx.message.channel.mention, tb)
+            )
+            logger.error("An error occured: "+str(tb))
 
     async def on_message(self, message):
         await self.wait_until_ready()

@@ -1,10 +1,10 @@
 """Timezone checker for Disco"""
+import bot
 import datetime
 import pytz
-import bot
 
 class TimeZone(bot.Extension):
-    """Timezone checker for Disco"""
+    """Timezone checker for Discord"""
 
     @bot.argument("[offset]", str, "0000")
     @bot.argument("[timezone+]", datetime.tzinfo)
