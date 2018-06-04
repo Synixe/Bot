@@ -22,6 +22,11 @@ class Client(discord.Client):
         self.extensions = extensions.get('extensions') + self.base_extensions
         logger.info("Ready", "green")
 
+        #Start tasks
+        for e in self.extensions:
+            for t in e.tasks:
+                await t.start(self, e)
+
     async def execute(self, message, profile=False):
         if message.author.id == self.user.id:
             return
@@ -114,6 +119,13 @@ class Client(discord.Client):
             for h in ext.handlers:
                 if h.event == event:
                     try:
-                        await h.run(bot.Context(self, ext, args))
+                        if h.dev and self.profile.mode == "test":
+                            await h.run(bot.Context(self, ext, args))
+                        else:
+                            if h.live:
+                                if self.profile.mode == "live":
+                                    await h.run(bot.Context(self, ext, args))
+                            else:
+                                await h.run(bot.Context(self, ext, args))
                     except Exception as e:
                         print("Error in "+event, str(e))

@@ -58,11 +58,14 @@ def get(dir):
                 logger.debug("    {0[0]}".format(c))
                 c[1].commands = []
                 c[1].handlers = []
+                c[1].tasks    = []
                 c[1].fullname = str(c[1]).split("'",2)[1]
                 for method in inspect.getmembers(c[1]):
                     if isinstance(method[1], bot.Command):
                         c[1].commands.append(method[1])
                     elif isinstance(method[1], bot.EventHandler):
                         c[1].handlers.append(method[1])
+                    elif isinstance(method[1], bot.Task):
+                        c[1].tasks.append(method[1])
                 extlist.append(c[1])
     return extlist

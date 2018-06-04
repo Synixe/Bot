@@ -1,11 +1,15 @@
+import bot
+import logger
+
+import asyncio
 import inspect
 
-class EventHandler:
+class Task:
     def __init__(self, name, callback, **kwargs):
         self.func = callback
         self.name = name
 
-        self.event = kwargs.get("event")
+        self.time = kwargs.get("time")
 
         self.live = False
         self.dev = False
@@ -14,17 +18,29 @@ class EventHandler:
         self.lineno = kwargs.get("lineno")
         self.help = kwargs.get("help")
 
-    async def run(self, ctx):
-        await self.func(ctx.safe(), ctx.message)
+    async def start(self, client, ext):
+        if self.dev and client.profile.mode == "test":
+            await self.run(client, ext)
+        elif self.live:
+            if client.profile.mode == "live":
+                await self.run(client, ext)
+        else:
+            await self.run(client, ext)
 
-def event(event, **attrs):
+    async def run(self, client, ext):
+        logger.debug("Starting {}".format(self.name))
+        while not client.is_closed():
+            client.loop.create_task(self.func(bot.Context(client, ext, None)))
+            await asyncio.sleep(self.time)
+
+def task(time, **attrs):
     def decorator(func):
         frame = inspect.stack()[1]
         attrs["file"] = frame[1]
         attrs["lineno"] = frame[2]
-        attrs["event"] = event
-        if isinstance(func, EventHandler):
-            raise TypeError("Callback is already a event handler.")
+        attrs["time"] = time
+        if isinstance(func, Task):
+            raise TypeError("Callback is already a task.")
         import asyncio
         if not asyncio.iscoroutinefunction(func):
             raise TypeError("Callback must be a coroutine.")
@@ -36,5 +52,5 @@ def event(event, **attrs):
             if isinstance(help_doc, bytes):
                 help_doc = help_doc.decode('utf-8')
         attrs['help'] = help_doc
-        return EventHandler(name=func.__name__, callback=func, **attrs)
+        return Task(name=func.__name__, callback=func, **attrs)
     return decorator

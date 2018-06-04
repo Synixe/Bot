@@ -9,6 +9,7 @@ class Command:
         self.name = name
 
         self.dev = False
+        self.live = False
 
         self.roles = ["@everyone"]
         self.args = []
@@ -45,7 +46,11 @@ class Command:
                     await self.func(ctx, ctx.message)
                 await ctx.message.channel.send("That command is only available in dev mode.")
             else:
-                await self.func(ctx.safe(), ctx.message)
+                if self.live:
+                    if ctx.profile.mode == "live":
+                        await self.func(ctx.safe(), ctx.message)
+                else:
+                    await self.func(ctx.safe(), ctx.message)
         except ArgumentException as e:
             if str(e) == "Display Help":
                 embed = discord.Embed(
@@ -132,6 +137,16 @@ def argument(name, argtype=str, default=None):
 
 def dev():
     def decorator(func):
+        if func.live:
+            raise Exception("Function can't be both dev and live only")
         func.dev = True
+        return func
+    return decorator
+
+def live():
+    def decorator(func):
+        if func.dev:
+            raise Exception("Function can't be both dev and live only")
+        func.live = True
         return func
     return decorator

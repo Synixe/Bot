@@ -1,10 +1,11 @@
 import discord
 
 from bot.arguments import Arguments, ArgumentException
-from bot.command import Command, command, role, dev, argument
+from bot.command import Command, command, role, dev, live, argument
 from bot.events import EventHandler, event
 from bot.profile import Profile
 from bot.context import Context
+from bot.task import Task, task
 
 class Extension:
     pass
