@@ -10,7 +10,7 @@ class Polls(bot.Extension):
     @bot.argument("text+")
     @bot.command()
     async def poll(ctx, message):
-        """Birth of Polls"""
+        """Create a simple Thumbsup or Thumbsdown poll"""
         embed = discord.Embed(
             title=ctx.args.title or "Poll",
             color=discord.Colour.from_rgb(r=255, g=192, b=60),
