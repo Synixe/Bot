@@ -54,7 +54,9 @@ class BotExtension:
                 user=tokens.MYSQL.USER,
                 password=tokens.MYSQL.PASS,
                 db=tokens.MYSQL.DATA,
-                cursorclass=pymysql.cursors.DictCursor
+                cursorclass=pymysql.cursors.DictCursor,
+                use_unicode=True,
+                charset="utf8"
             )
             connection.set_character_set("utf8_general_ci")
             try:
