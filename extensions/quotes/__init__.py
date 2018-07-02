@@ -56,6 +56,7 @@ class BotExtension:
                 db=tokens.MYSQL.DATA,
                 cursorclass=pymysql.cursors.DictCursor
             )
+            connection.set_character_set("utf8_general_ci")
             try:
                 with connection.cursor() as cursor:
                     sql = "SELECT * FROM `quotes` WHERE `user` LIKE '"+uid+"' ORDER BY RAND() LIMIT 1"
