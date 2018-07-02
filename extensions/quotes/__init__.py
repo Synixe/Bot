@@ -56,7 +56,7 @@ class BotExtension:
                 db=tokens.MYSQL.DATA,
                 cursorclass=pymysql.cursors.DictCursor,
                 use_unicode=True,
-                charset="utf8mb4_general_ci"
+                charset="utf8"
             )
             try:
                 with connection.cursor() as cursor:
@@ -94,7 +94,7 @@ class BotExtension:
                 db=tokens.MYSQL.DATA,
                 cursorclass=pymysql.cursors.DictCursor,
                 use_unicode=True,
-                charset="utf8mb4_general_ci"
+                charset="utf8"
             )
             try:
                 text = ""
