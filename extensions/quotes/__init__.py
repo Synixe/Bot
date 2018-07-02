@@ -56,13 +56,13 @@ class BotExtension:
                 db=tokens.MYSQL.DATA,
                 cursorclass=pymysql.cursors.DictCursor,
                 use_unicode=True,
-                charset="utf8"
+                charset="utf8mb4_general_ci"
             )
             try:
                 with connection.cursor() as cursor:
-                    cursor.execute('SET NAMES utf8;')
-                    cursor.execute('SET CHARACTER SET utf8;')
-                    cursor.execute('SET character_set_connection=utf8;')
+                    cursor.execute('SET NAMES utf8mb4_general_ci;')
+                    cursor.execute('SET CHARACTER SET utf8mb4_general_ci;')
+                    cursor.execute('SET character_set_connection=utf8mb4_general_ci;')
                     sql = "SELECT * FROM `quotes` WHERE `user` LIKE '"+uid+"' ORDER BY RAND() LIMIT 1"
                     cursor.execute(sql)
                     quote = cursor.fetchone()
@@ -94,7 +94,7 @@ class BotExtension:
                 db=tokens.MYSQL.DATA,
                 cursorclass=pymysql.cursors.DictCursor,
                 use_unicode=True,
-                charset="utf8"
+                charset="utf8mb4_general_ci"
             )
             try:
                 text = ""
@@ -108,9 +108,9 @@ class BotExtension:
                         await message.channel.send("All messages must have the same author.")
                         return
                 with connection.cursor() as cursor:
-                    cursor.execute('SET NAMES utf8;')
-                    cursor.execute('SET CHARACTER SET utf8;')
-                    cursor.execute('SET character_set_connection=utf8;')
+                    cursor.execute('SET NAMES utf8mb4_general_ci;')
+                    cursor.execute('SET CHARACTER SET utf8mb4_general_ci;')
+                    cursor.execute('SET character_set_connection=utf8mb4_general_ci;')
                     sql = "INSERT INTO `quotes` (`_id`, `text`, `channel`, `user`, `date`) VALUES (NULL, '"+text+"', '"+str(message.channel.id)+"', '"+str(first.author.id)+"', '"+(first.created_at.strftime("%Y-%m-%d"))+"')"
                     cursor.execute(sql)
                 connection.commit()
