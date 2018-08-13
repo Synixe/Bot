@@ -11,7 +11,7 @@ class TeamSpeak(bot.Extension):
     async def ts(ctx, message):
         """Sends a user the TeamSpeak info in a direct message"""
         await ctx.args.member.send("TeamSpeak Server: ts.synixe.com")
-        await message.channel.send("Sent!")
+        await message.add_reaction("✅")
 
     @bot.event("on_message")
     async def delete_ts(ctx, message):
