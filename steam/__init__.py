@@ -9,7 +9,7 @@ class SteamUpdates(bot.Extension):
     @bot.task(120)
     async def arma_player_count(ctx):
         """Post player count to topic of #lookingtoplay"""
-        channel = discord.utils.find(lambda c: c.name == "lookingtoplay", discord.utils.find(lambda g: g.name == "Synixe", ctx._bot.guilds).channels)
+        channel = discord.utils.find(lambda c: c.name == "lookingtoplay", discord.utils.find(lambda g: g.name == "Synixe", ctx.bot.guilds).channels)
         try:
             with valve.source.a2s.ServerQuerier(("arma.synixe.com", 2303)) as server:
                 info = server.info()
