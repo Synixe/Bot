@@ -34,6 +34,5 @@ class Shell(bot.Extension):
                 ctx.loop.create_task(ctx.extension.shell(ctx, message.channel))
             await asyncio.sleep(0.5)
             code = message.content[1:].strip().replace("```py","").strip("```")+"||END||\n"
-            print(code)
             ctx.extension.shells[message.channel.id].stdin.write(code.encode("UTF-8"))
             ctx.extension.shells[message.channel.id].stdin.flush()

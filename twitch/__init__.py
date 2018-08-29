@@ -20,7 +20,7 @@ class Twitch(bot.Extension):
                             title=after.activity.name,
                             url=after.activity.url,
                             description=after.activity.details,
-                            color=discord.Colour.from_rgb(r=255, g=192, b=60)
+                            color=ctx.profile.color
                         )
                         embed.set_author(name=after.display_name)
                         embed.set_thumbnail(url=after.avatar_url)
