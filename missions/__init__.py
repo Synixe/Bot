@@ -5,11 +5,11 @@ import bot
 class Slotting(bot.Extension):
     """Provides commands for Slotting"""
 
-    @bot.argument("slot", str)
+    @bot.argument("role", str)
     @bot.command()
     async def slot(ctx, message):
         """Slot into a role for a mission"""
-        if ";" in ctx.args.slot:
+        if ";" in ctx.args.role:
             return
         channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
         if channel is not None:
@@ -28,7 +28,7 @@ class Slotting(bot.Extension):
                 connection = get_connection(ctx)
                 try:
                     with connection.cursor() as cursor:
-                        sql = f"SELECT * FROM `slots` WHERE (`event` = '{str(event_id)}') AND (LOWER(`name`) LIKE '%{ctx.args.slot.lower()}%') AND (`playerid` IS NULL)"
+                        sql = f"SELECT * FROM `slots` WHERE (`event` = '{str(event_id)}') AND (LOWER(`name`) LIKE '%{ctx.args.role.lower()}%') AND (`playerid` IS NULL)"
                         cursor.execute(sql)
                         data = cursor.fetchall()
                         if data:
