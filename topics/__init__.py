@@ -20,6 +20,7 @@ class Topics(bot.Extension):
                             )
                             await message.author.add_roles(role)
                             await topic.send("<@{}> has just subscribed!".format(message.author.id))
+                            await message.add_reaction("✅")
                             return
 
     @bot.command()
@@ -31,6 +32,6 @@ class Topics(bot.Extension):
                 for topic in category[1]:
                     if isinstance(topic, discord.TextChannel):
                         text += "{}: `{}sub {}`\n".format(
-                            topic.name, ctx.profile.prefix, topic.topic.split(" - ")[0]
+                            topic.topic.split(" - ")[1], ctx.profile.prefix, topic.topic.split(" - ")[0]
                         )
         await message.channel.send(text)
