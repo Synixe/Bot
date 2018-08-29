@@ -7,7 +7,7 @@ class TimeZone(bot.Extension):
     """Timezone checker for Discord"""
 
     @bot.argument("[offset]", str, "0000")
-    @bot.argument("[timezone+]", datetime.tzinfo)
+    @bot.argument("timezone*", datetime.tzinfo)
     @bot.command()
     async def time(ctx, message):
         """Displays a list of different timezones"""
