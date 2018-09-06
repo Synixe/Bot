@@ -15,7 +15,7 @@ class PowerUsage(bot.Extension):
         async with message.channel.typing():
             for dev in Discover.discover().values():
                 info = dev.get_sysinfo()
-                logger.debug(f"Found device with id: {info['deviceID']} ({info['alias']})")
+                logger.debug(f"Found device with id: {info['deviceId']} ({info['alias']})")
                 if info['deviceId'] == "8006F8AF3EDB4523AE048863748E0BAB1873E878":
                     embed = discord.Embed(
                         title="Primary Server (Ludwig)",
