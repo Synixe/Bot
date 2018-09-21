@@ -26,7 +26,7 @@ class ServerEvents(bot.Extension):
     @bot.event("on_member_remove")
     async def member_remove(ctx, member):
         """Display a message when a member leaves"""
-        channel = discord.utils.find(lambda c: c.name == "botevent", member.guild.channels)
+        channel = discord.utils.find(lambda c: c.name == "botevents", member.guild.channels)
         if channel is None: return
         await channel.send(f"Member Left: {member.display_name}#{member.discriminator} <@{member.id}> ({member.id}")
 
