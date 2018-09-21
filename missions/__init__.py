@@ -5,7 +5,7 @@ import bot
 class Slotting(bot.Extension):
     """Provides commands for Slotting"""
 
-    @bot.argument("role", str)
+    @bot.argument("role+", str)
     @bot.command()
     async def slot(ctx, message):
         """Slot into a role for a mission"""
@@ -28,20 +28,48 @@ class Slotting(bot.Extension):
                 connection = get_connection(ctx)
                 try:
                     with connection.cursor() as cursor:
-                        sql = f"SELECT * FROM `slots` WHERE (`event` = '{str(event_id)}') AND (LOWER(`name`) LIKE '%{ctx.args.role.lower()}%') AND (`playerid` IS NULL)"
+                        role_lower = ctx.args.role.lower().replace(" ","-")
+                        sql = f"SELECT * FROM `slots` WHERE (`event` = '{str(event_id)}') AND ((LOWER(`name`) LIKE '%{ctx.args.role.lower()}%') OR (LOWER(`name`) LIKE '%{role_lower}%')) AND (`playerid` IS NULL)"
                         cursor.execute(sql)
                         data = cursor.fetchall()
                         if data:
                             slot = data[0]
-                            sql = "UPDATE `slots` SET `playerid` = NULL WHERE `playerid` = '"+str(message.author.id)+"'"
+                            sql = f"UPDATE `slots` SET `playerid` = NULL WHERE `playerid` = '{str(message.author.id)}' and (`event` = '{str(event_id)}')"
                             cursor.execute(sql)
-                            sql = "UPDATE `slots` SET `playerid` = '"+str(message.author.id)+"' WHERE `id` = '"+str(slot['id'])+"'"
+                            sql = f"UPDATE `slots` SET `playerid` = '{str(message.author.id)}' WHERE `id` = '{str(slot['id'])}'"
                             cursor.execute(sql)
                             connection.commit()
                             await display_event(ctx, target, event_id, message)
                             await message.add_reaction("✅")
                         else:
                             await message.channel.send("🤔 That role was not found for {}.".format(target.embeds[0].title))
+                finally:
+                    connection.close()
+
+    @bot.command()
+    async def unslot(ctx, message):
+        channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
+        if channel is not None:
+            event_id = 0
+            target = None
+            messages = channel.history(limit=10)
+            async for msg in messages:
+                if len(msg.embeds) == 1:
+                    try:
+                        if msg.embeds[0].footer.text.startswith("Mission ID:"):
+                            event_id = int(msg.embeds[0].footer.text.split(": ")[1])
+                            target = msg
+                    except AttributeError:
+                        pass
+            if target != None:
+                connection = get_connection(ctx)
+                try:
+                    with connection.cursor() as cursor:
+                        sql = f"UPDATE `slots` SET `playerid` = NULL WHERE (`playerid` = 'str(message.author.id)') AND (`event` = '{str(event_id)}')"
+                        cursor.execute(sql)
+                        connection.commit()
+                        await message.add_reaction("✅")
+                        await display_event(ctx, target, event_id, message)
                 finally:
                     connection.close()
 
