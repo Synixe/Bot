@@ -65,7 +65,7 @@ class Slotting(bot.Extension):
                 connection = get_connection(ctx)
                 try:
                     with connection.cursor() as cursor:
-                        sql = f"UPDATE `slots` SET `playerid` = NULL WHERE (`playerid` = 'str(message.author.id)') AND (`event` = '{str(event_id)}')"
+                        sql = f"UPDATE `slots` SET `playerid` = NULL WHERE (`playerid` = '{str(message.author.id)}') AND (`event` = '{str(event_id)}')"
                         cursor.execute(sql)
                         connection.commit()
                         await message.add_reaction("✅")
