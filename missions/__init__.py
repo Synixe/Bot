@@ -25,7 +25,7 @@ class Slotting(bot.Extension):
                     except AttributeError:
                         pass
             if target != None:
-                dbclient = pymongo.MongoClient("mongodb://10.0.0.10:32768/")
+                dbclient = pymongo.MongoClient("mongodb://192.168.1.81:27017/")
                 db = dbclient["dynulo-client"]
                 col = db["events"]
 
@@ -49,4 +49,4 @@ class Slotting(bot.Extension):
                     await message.add_reaction("👎")
                 else:
                     col.update_one({"id": event_id}, {"$set": {"squads": event['squads']}})
-                    urllib.request.urlopen("http://10.0.0.10/api/events/update/?id="+event_id+"&msg="+str(target.id)).read()
+                    urllib.request.urlopen("http://192.168.1.81:4200/api/events/update/?id="+event_id+"&msg="+str(target.id)).read()
