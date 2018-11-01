@@ -54,8 +54,6 @@ class Slotting(bot.Extension):
     @bot.command()
     async def unslot(ctx, message):
         """Slot into a role for a mission"""
-        if ";" in ctx.args.role:
-            return
         channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
         if channel is not None:
             event_id = 0
