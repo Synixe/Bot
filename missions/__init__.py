@@ -50,3 +50,35 @@ class Slotting(bot.Extension):
                 else:
                     col.update_one({"id": event_id}, {"$set": {"squads": event['squads']}})
                     urllib.request.urlopen("http://192.168.1.81:4200/api/events/update/?id="+event_id+"&msg="+str(target.id)).read()
+
+    @bot.command()
+    async def unslot(ctx, message):
+        """Slot into a role for a mission"""
+        if ";" in ctx.args.role:
+            return
+        channel = discord.utils.find(lambda c: c.name == "events", message.channel.guild.channels)
+        if channel is not None:
+            event_id = 0
+            target = None
+            messages = channel.history(limit=10)
+            async for msg in messages:
+                if len(msg.embeds) == 1:
+                    try:
+                        event_id = msg.embeds[0].footer.text
+                        target = msg
+                    except AttributeError:
+                        pass
+            if target != None:
+                dbclient = pymongo.MongoClient("mongodb://192.168.1.81:27017/")
+                db = dbclient["dynulo-client"]
+                col = db["events"]
+
+                event = col.find({"id": event_id})[0]
+
+                for squad in event['squads']:
+                    for slot in squad['slots']:
+                        if "player" in slot and str(slot["player"]) == str(message.author.id):
+                            del slot["player"]
+                await message.add_reaction("✅")
+                col.update_one({"id": event_id}, {"$set": {"squads": event['squads']}})
+                urllib.request.urlopen("http://192.168.1.81:4200/api/events/update/?id="+event_id+"&msg="+str(target.id)).read()
