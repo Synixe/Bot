@@ -7,11 +7,10 @@ import logger
 class Twitch(bot.Extension):
     """Twitch Features"""
 
-    @bot.live()
     @bot.event("on_member_update")
     async def streaming_notification(ctx, args):
-        before, after = args
         """Posts to #streams if a user starts streaming"""
+        before, after = args
         if ctx.in_role_list(after, ["active"]):
             channel = discord.utils.find(lambda c: c.name == "streams", after.guild.channels)
             logger.debug(f"Channel {channel}")

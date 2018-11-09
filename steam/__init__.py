@@ -4,8 +4,6 @@ import discord
 import valve.source.a2s
 
 class SteamUpdates(bot.Extension):
-
-    @bot.live()
     @bot.task(120)
     async def arma_player_count(ctx):
         """Post player count to topic of #lookingtoplay"""

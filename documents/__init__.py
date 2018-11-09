@@ -34,6 +34,7 @@ class Documents(bot.Extension):
     @bot.argument("section")
     @bot.command()
     async def const(ctx, message):
+        """Get a section from the Constitution"""
         try:
             embed = get_from_latex(
                 "https://raw.githubusercontent.com/Synixe/Documents/master/SynixeConstitution.tex",
@@ -57,7 +58,7 @@ class Documents(bot.Extension):
                 await message.chanel.send(embed)
 
 def get_from_latex(url, section):
-    """Get a discord embed from latex"""
+    """Get a section from the rules"""
     req = urllib.request.Request(url=url, headers={'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'})
     with urllib.request.urlopen(req) as response:
         tex = parser.Parser(response.read().decode("UTF-8"))

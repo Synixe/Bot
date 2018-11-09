@@ -26,6 +26,7 @@ class Topics(bot.Extension):
 
     @bot.command()
     async def topics(ctx, message):
+        """Display the avaiable topics"""
         categories = message.guild.by_category()
         text = ""
         for category in categories:
