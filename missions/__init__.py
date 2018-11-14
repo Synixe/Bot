@@ -36,7 +36,7 @@ class Slotting(bot.Extension):
                 for squad in event['squads']:
                     counter = 1
                     for slot in squad['slots']:
-                        if not good and (ctx.args.role.lower().replace(" ", "-") in slot['name'].lower().replace(" ", "-") or ctx.args.role.lower() in squad['name'].lower()+"-"+str(counter)):
+                        if not good and (ctx.args.role.lower().replace(" ", "-") in slot['name'].lower().replace(" ", "-") or ctx.args.role.lower().replace(" ", "-") in (squad['name'].lower()+"-"+str(counter)).replace(" ", "-")):
                             if "player" not in slot or slot['player'] == None:
                                 slot['player'] = str(message.author.id)
                                 await message.add_reaction("✅")
