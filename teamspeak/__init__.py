@@ -4,6 +4,7 @@ import bot
 
 class TeamSpeak(bot.Extension):
     """Provides TeamSpeak commands"""
+    @bot.role("active")
     @bot.argument("member+", discord.Member)
     @bot.command()
     async def ts(ctx, message):

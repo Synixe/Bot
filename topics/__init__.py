@@ -5,6 +5,8 @@ import discord
 class Topics(bot.Extension):
     """Gaming Topics for Synixe"""
 
+    @bot.role("active")
+    @bot.role("new")
     @bot.argument("topic", str)
     @bot.command()
     async def sub(ctx, message):
@@ -24,6 +26,8 @@ class Topics(bot.Extension):
                             await message.add_reaction("✅")
                             return
 
+    @bot.role("active")
+    @bot.role("new")
     @bot.command()
     async def topics(ctx, message):
         """Display the avaiable topics"""

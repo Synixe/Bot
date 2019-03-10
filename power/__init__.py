@@ -17,14 +17,9 @@ class PowerUsage(bot.Extension):
             for dev in Discover.discover().values():
                 info = dev.get_sysinfo()
                 logger.debug(f"Found device with id: {info['deviceId']} ({info['alias']})")
-                if info['deviceId'] == "8006F8AF3EDB4523AE048863748E0BAB1873E878":
+                if info['deviceId'] == "800672A01A2AD035078A64A1C1F665FB187369C1":
                     embed = discord.Embed(
-                        title="Primary Server (Ludwig)",
-                        color=ctx.bot.profile.color
-                    )
-                elif info['deviceId'] == "800672A01A2AD035078A64A1C1F665FB187369C1":
-                    embed = discord.Embed(
-                        title="Secondary Server (Gregor)",
+                        title="Server (Gregor)",
                         color=ctx.bot.profile.color
                     )
                 else:
