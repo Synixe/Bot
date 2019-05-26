@@ -2,7 +2,7 @@
 import discord
 import bot
 
-class TeamSpeak(bot.Extension):
+class Swifty(bot.Extension):
     @bot.event("on_message")
     async def swifty_error(ctx, message):
         """Swifty Error Responder"""
