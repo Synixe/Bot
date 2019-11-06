@@ -14,3 +14,5 @@ class Swifty(bot.Extension):
             await message.channel.send("The disk with your mod folder is full, move the mod folder to another disk immediately and change the path. http://repo.synixe.com/swifty3.png")
         elif "System.Exception: Could not locate 'arma3launcher.exe'".lower() in message.content.lower():
             await message.channel.send("The Arma 3 Directory in your settings is not correct, point it to the Arma 3 Directory in your `steamapps/common`.")
+        elif "System.Exception: Steam is not running, Start Steam and try again".lower() in message.content.lower():
+            await message.channel.send("> Steam is not running, Start Steam and try again")
