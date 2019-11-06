@@ -16,3 +16,5 @@ class Swifty(bot.Extension):
             await message.channel.send("The Arma 3 Directory in your settings is not correct, point it to the Arma 3 Directory in your `steamapps/common`.")
         elif "System.Exception: Steam is not running, Start Steam and try again".lower() in message.content.lower():
             await message.channel.send("> Steam is not running, Start Steam and try again")
+        elif "System.IO.IOException: Unable to read data from the transport connection".lower() in message.content.lower():
+            await message.channel.send("You lost your internet connection while Swifty was downloading mods, your computer may have went to sleep")
