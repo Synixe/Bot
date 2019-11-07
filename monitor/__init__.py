@@ -18,8 +18,9 @@ class ServerEvents(bot.Extension):
             "We play at 7pm PST / 10pm EST. "+
             "We have some mods you'll need to download from <#{}>. "+
             "If you have any questions while getting setup "+
-            "ask in <#{}>. We do more than just Arma too, use `?topics` "+
-            "to see what other games you can subscribe to.").format(member.id, info.id, repohelp.id)
+            "ask in <#{}>. Our minimum age is 18, if you are "+
+            "15 or older you can still join, please message a staff member "+
+            "and let them know.").format(member.id, info.id, repohelp.id)
         )
         await member.add_roles(discord.utils.find(lambda m: m.name.lower() == "new", member.guild.roles))
 
